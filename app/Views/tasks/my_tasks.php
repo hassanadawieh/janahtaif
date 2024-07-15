@@ -185,16 +185,19 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before{
 <div id="page-content" class="page-wrapper clearfix">
     <div class="mt20" style="display: none;">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?php echo tasks_count_widget("no_invoice","مهام لا تحتوي على رقم فاتورة"); ?>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?php echo tasks_count_widget("no_christening_number","مهام لا تحتوي على رقم تعميد"); ?>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?php echo tasks_count_widget("no_project","مهام غير مرتبطة ب مشروع"); ?>
+        </div>
+        <div class="col-md-3">
+            <?php echo tasks_count_widget("tasks_deleted","المهام المحزوفة"); ?>
         </div>
     </div>
 </div>
@@ -333,6 +336,7 @@ if ($preview_task_id) {
         $f_dropdownd[] = array("id" => "no_invoice", "text" => "لا تحتوي على رقم فاتورة", "isSelected" => $main_filter=="no_invoice"?true:false);
         $f_dropdownd[] = array("id" => "no_christening_number", "text" => "لا تحت وي على رقم تعميد", "isSelected" => $main_filter=="no_christening_number"?true:false);
         $f_dropdownd[] = array("id" => "no_project", "text" => "مهام غير مربوطه ب مشروع", "isSelected" => $main_filter=="no_project"?true:false);
+        $f_dropdownd[] = array("id" => "tasks_deleted", "text" => "المهام المحزوفة", "isSelected" => $main_filter=="tasks_deleted"?true:false);
         ?>
         var coll=[],filter_col=[],datePicker=[];
         var main_task_col=[],main_task_filter_col=[];

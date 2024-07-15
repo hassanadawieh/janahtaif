@@ -175,6 +175,7 @@ class Subtasks extends Security_Controller {
     }
 
     function supply_mang($task_id=0,$tab = "", $status_id = 0) {
+     
         validate_numeric_value($task_id);
 
         if (!$this->can_show_tasks()) {
@@ -213,6 +214,11 @@ class Subtasks extends Security_Controller {
             foreach ($cities as $city) {
                 $cities_dropdown[] = array("id" => $city->id, "text" => $city->city_name);
             }
+            $cars_type = $this->Cars_type_model->get_details(array( "deleted" => 0))->getResult();
+            $cars_type_dropdown = array(array("id" => "", "text" => app_lang("car_type")));
+            foreach ($cars_type as $car_type) {
+                $cars_type_dropdown[] = array("id" => $car_type->id, "text" => $car_type->car_type);
+            }
 
         $view_data['tab'] = $tab;
         $view_data['task_id'] = $task_id;
@@ -232,6 +238,7 @@ class Subtasks extends Security_Controller {
         $view_data['suppliers_dropdown'] = json_encode($suppliers_dropdown);
         $view_data['cities_dropdown'] = json_encode($cities_dropdown);
         $view_data['drivers_dropdown'] = json_encode($drivers_dropdown);
+        $view_data['cars_type_dropdown'] = json_encode($cars_type_dropdown);
         $view_data['priorities_dropdown'] = $this->_get_priorities_dropdown_list();
         //$view_data['assigned_to_dropdown'] = $this->_get_project_members_dropdown_list($supplier_id);
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("sub_tasks", $this->login_user->is_admin, $this->login_user->user_type);
@@ -609,6 +616,7 @@ class Subtasks extends Security_Controller {
             "rec_inv_status_f" => $this->request->getPost("rec_inv_status_f"),
             "start_date" => $this->request->getPost("start_date"),
             "end_date" => $this->request->getPost("end_date"),
+            "car_type_id" => $this->request->getPost("car_type_id"),
 
         
             "act_out_date" => $this->request->getPost("act_out_date")?$this->request->getPost("act_out_date"):'',
@@ -1332,6 +1340,7 @@ $myoptions = array(
             app_redirect("forbidden");
         }
         $view_type = "";
+        $mang_type = "mang1";
         $is_supplier = $this->request->getPost('is_supplier');
         //$deleted_client = $this->request->getPost('deleted_client');
         if ($task_id) { //details page
@@ -1385,6 +1394,7 @@ $myoptions = array(
         //$view_data['parent_task_title'] = $this->Tasks_model->get_details($model_info->pnt_task_id)->getRow()->company_name;
 
         $view_data["view_type"] = $view_type;
+        $view_data["mang_type"] = $mang_type;
 
     
 

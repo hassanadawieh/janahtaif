@@ -82,7 +82,7 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
                     </div>
 
                     <div class="col-md-6 mb2 mt5" >
-                        <strong><?php echo app_lang('created_date') . ": "; ?></strong>
+                        <strong><?php// echo app_lang('created_date') . ": "; ?></strong>
                         <label dir="ltr"><?php echo $model_info->created_at; ?></label>
                         
                         <?php //echo get_update_task_info_anchor_data($model_info, "created_date", $can_edit_tasks); ?>
@@ -125,9 +125,7 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
      ?>
 
 
-
-
-
+<?php if($mang != 'supplymang'){ ?>
     <div class="col-lg-6 mb15">
         <div class="clearfix">
             <div class="container-fluid px-1">
@@ -227,8 +225,7 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
             </div>
         </div>
     </div>
-
-
+    <?php } ?>
     
 
     <div class="col-lg-6 order-lg-last">

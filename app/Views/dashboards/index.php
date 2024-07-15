@@ -100,7 +100,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <?php
+                    <?php 
                     if ($show_invoice_statistics) {
                         echo invoice_statistics_widget();
                     } else if ($show_project_timesheet) {

@@ -141,6 +141,7 @@ $lang["tasks_without_inv"] = "Tasks without Invoice Number";
 $lang["tasks_without_chri"] = "Tasks without Christening Number";
 $lang["subtasks_to_go"] = "SubTasks, it's time to get out";
 $lang["tasks_without_project"] = "Tasks, Without Projects";
+$lang["tasks_deleted"] = "Deleted Tasks";
 
 $lang["tasks_without_supplier"] = "No Supplier Selected";
 $lang["tasks_without_return_date"] = "No Return Date Selected";

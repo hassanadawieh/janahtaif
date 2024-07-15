@@ -206,7 +206,6 @@ var showOption = true,
         $f_dropdown[] = array("id" => "24houer", "text" => app_lang("subtasks_to_go"), "isSelected" => $filter=="24houer"?true:false);
         ?>
 
-
         
 var cfil={task_id: '<?php echo $task_id ?>',deleted_client: '',sub_tasks_id_f:'',pnt_task_id_f:'',guest_nm_f:'',guest_phone_f:'',pnt_task_id:'',company_name_f:'',clients_contact_f:'',christ_num_f:'',inv_num_f:'',city_name_f:'',driver_nm_f:'',car_type_f:'',inv_day_count_f:'',note_f:'',created_by_f:''
         ,supplier_f:'',car_status_f:'',description_f:'',car_number_f:'',act_return_date_f:'',act_return_date_f_t:'',act_out_date_f:'',act_out_date_f_t:'',day_count_f:'',dres_number_f:'',amount_f:'',note2_f:'',project_nm_f:'',monthly_f:''};
@@ -230,6 +229,7 @@ var cfil={task_id: '<?php echo $task_id ?>',deleted_client: '',sub_tasks_id_f:''
                 {name: "reservmang_status", class: "w200", options: <?php echo json_encode($statuses3); ?>},
                 //{name: "supplier_id", class: "w100", options: <?php echo $suppliers_dropdown; ?>},
                 {name: "filter", class: "w150",options: <?php echo json_encode($f_dropdown) ; ?>},
+                // {name: "car_type_id", class: "w150",options: <?php// echo $cars_type_dropdown; ?>},
                 //{name: "mang", visible: false,value: <?php //echo $mang ; ?>},
                 {name: "priority_id", class: "w100", options: <?php echo $priorities_dropdown; ?>},
                 //{name: "project_id", class: "w200", options: <?php //echo $projects_dropdown; ?>, dependent: ["milestone_id"]}, //reset milestone on changing of project
@@ -278,7 +278,7 @@ var cfil={task_id: '<?php echo $task_id ?>',deleted_client: '',sub_tasks_id_f:''
                 {title: '<?php echo app_lang("driver_name") ?>',"class":'driver_nm_f', order_by: "driver_id",render: function(data, type, full, meta) {
                     return "<div style='white-space:normal;min-width:90px; '>"+data+"</div>";
                 } },
-                {title: '<?php echo app_lang("car_type") ?>',visible: false, searchable: false},
+                {title: '<?php echo app_lang("car_type") ?>',"class":'car_type_f', order_by: "car_type_id"},
                 {title: '<?php echo app_lang("city") ?>',"class":'city_name_f', order_by: "city_id"},
                 {title: '<?php echo app_lang("car_status") ?>',"class":'car_status_f', order_by: "car_status", visible: showOption},
                 {title: '<?php echo app_lang("car_number") ?>',"class":'car_number_f', order_by: "car_number", visible: showOption},
@@ -288,7 +288,7 @@ var cfil={task_id: '<?php echo $task_id ?>',deleted_client: '',sub_tasks_id_f:''
                 {title: '<?php echo app_lang("day_count") ?>',"class": "day_count_f", visible: showOption, order_by: "day_count"},
                 {title: '<?php echo app_lang("dres_number") ?>',"class": "dres_number_f", visible: showOption, order_by: "dres_number"},
                 {title: '<?php echo app_lang("amount") ?>',"class": "amount_f", visible: showOption, order_by: "amount"},
-                {title: '<?php echo app_lang("note") ?>',"class": "note2_f", order_by: "note_2", visible: showOption,render: function(data, type, full, meta) {
+                  {title: '<?php echo app_lang("note") ?>',"class": "note2_f", order_by: "note_2", visible: showOption,render: function(data, type, full, meta) {
                     return "<div style='white-space:normal;min-width:150px;'>"+data+"</div>";
                 } },
                 {visible: false, searchable: false},
@@ -392,11 +392,11 @@ $('#subtask-table thead tr').clone(false).appendTo('#subtask-table thead');
             var clas=$(this).attr("class").split(/\s+/);
             var typ="text";
             typ= clas[0]!=="day_count_f"?"text":"number";
-            if((clas[0]!=="rec_inv_status_f") && (clas[0]!=="created_by_f") && (clas[0]!=="supplier_f") && (clas[0]!=="driver_nm_f") && (clas[0]!=="status_f") && (clas[0]!=="city_name_f") && (clas[0]!=="options_f") && (clas[0]!=="main_task_status_f")){
+            if((clas[0]!=="rec_inv_status_f") && (clas[0]!=="created_by_f") && (clas[0]!=="supplier_f") && (clas[0]!=="driver_nm_f") && (clas[0]!=="car_type_f") && (clas[0]!=="status_f") && (clas[0]!=="city_name_f") && (clas[0]!=="options_f") && (clas[0]!=="main_task_status_f")){
              $(this).html('<input type="'+typ+'" name="'+clas[0]+'" class="form-control text-center " style="padding: 0.11rem 0.135rem; min-width: 70px; " placeholder="<?php echo app_lang('search'); ?> - ' + title + '" />');
 
         }else{
-             if((clas[0]=="rec_inv_status_f" || clas[0]=="created_by_f" || clas[0]=="supplier_f" || clas[0]=="driver_nm_f" || clas[0]=="city_name_f" || clas[0]=="main_task_status_f")){
+             if((clas[0]=="rec_inv_status_f" || clas[0]=="created_by_f" || clas[0]=="car_type_f"  || clas[0]=="supplier_f" || clas[0]=="driver_nm_f" || clas[0]=="city_name_f" || clas[0]=="main_task_status_f")){
             $(this).html('<input type="text" name="'+clas[0]+'" class="oyd-form text-center " autocomplete="nope" style="padding: 0.11rem 0.235rem; min-width: 70px; max-width:120px;" data-select-main="oyd" data-select-name="'+clas[0]+'"   />');
         }else{
             
@@ -413,7 +413,7 @@ $('#subtask-table thead tr').clone(false).appendTo('#subtask-table thead');
                 cfil.description_f=$("input[name=description_f]").val();
                 cfil.city_name_f=$("input[name=city_name_f]").val();
                 cfil.driver_nm_f=$("input[name=driver_nm_f]").val();
-                cfil.car_type_f=$("input[name=car_type_f]").val();
+                // cfil.car_type_f=$("input[name=car_type_f]").val();
                 
 
                 //cfil.inv_day_count_f=$("input[name=inv_day_count_f]").val();
@@ -499,7 +499,7 @@ $('#subtask-table thead tr').clone(false).appendTo('#subtask-table thead');
 $('input[name=driver_nm_f]').select2({data: <?php echo $drivers_dropdown ?>});
 $('input[name=city_name_f]').select2({data: <?php echo $cities_dropdown ?>,minimumResultsForSearch: Infinity});
 $('input[name=created_by_f]').select2({data: <?php echo $team_members_dropdown ?>});
-
+$('input[name=car_type_f]').select2({data: <?php echo  $cars_type_dropdown ?>,minimumResultsForSearch: Infinity});
 $("[data-select-main='oyd']").click(function () {
 
 var mkey=$(this).attr("data-select-name");

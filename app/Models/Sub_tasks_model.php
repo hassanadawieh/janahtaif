@@ -312,7 +312,9 @@ class Sub_tasks_model extends Crud_model {
         
         } if ($main_filter=="no_project") {
            $where .= " AND ($task_table.project_id=0 OR $task_table.project_id IS NULL)";
-        }
+        } if ($main_filter=="tasks_deleted") {
+            $where .= " AND ($sub_tasks_table.deleted=1)";
+         }
         }
 
 
@@ -947,7 +949,9 @@ class Sub_tasks_model extends Crud_model {
         
         } if ($main_filter=="no_project") {
            $where .= " AND ($task_table.project_id=0 OR $task_table.project_id IS NULL)";
-        }
+        } if ($main_filter=="tasks_deleted") {
+            $where .= " AND ($sub_tasks_table.deleted=1)";
+         }
         }
 
 
@@ -1267,7 +1271,12 @@ class Sub_tasks_model extends Crud_model {
         $custom_fields_where = get_array_value($custom_field_query_info, "where_string");
 
         
-
+        $all_tasks ="";
+        if($main_filter=="tasks_deleted"){
+            $all_tasks = "$task_table.deleted IN(0,1) and ($sub_tasks_table.deleted=1)" ; 
+        }else{
+       $all_tasks = "$task_table.deleted IN(0) and ($sub_tasks_table.deleted=0 OR $sub_tasks_table.deleted IS NULL)";     
+        }
 
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $sub_tasks_table.*,$cities.city_name AS city_name,$suppliers.name AS supplier_name,$drivers.driver_nm AS driver_name,$cars_type_table.car_type AS mycar_type, $task_status_table.key_name AS status_key_name, $task_status_table.title AS status_title,  $task_status_table.color AS status_color,$task_table.id as s_id,$task_table.title AS main_task_title,$maintask_clsifications.color AS cls_color, $clients.company_name AS client_name,$task_table.christening_number as chr_number,$task_table.invoice_number as inv_number,$task_table.is_closed AS main_task_status,$task_table.description AS main_description,$task_table.created_date AS main_created_date, CONCAT($clients_contact.first_name, ' ',$clients_contact.last_name) AS clients_contact_name, $supplier_status AS dynamic_status_id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS assigned_to_user, (select CONCAT($users_table.first_name, ' ',$users_table.last_name) from $users_table where $sub_tasks_table.updated_by=$users_table.id) AS updated_by_nm  , $users_table.image as assigned_to_avatar, $users_table.user_type,$task_priority_table.title AS priority_title, $task_priority_table.icon AS priority_icon, $task_priority_table.color AS priority_color,$projects.title AS project_title
@@ -1284,7 +1293,7 @@ class Sub_tasks_model extends Crud_model {
         LEFT JOIN $users_table ON $sub_tasks_table.created_by=$users_table.id
         LEFT JOIN $task_priority_table ON $sub_tasks_table.priority_id = $task_priority_table.id
         LEFT JOIN $task_status_table ON $task_status_table.id =$supplier_status
-        WHERE $task_table.deleted=0 and ($sub_tasks_table.deleted=0 OR $sub_tasks_table.deleted IS NULL) $where $custom_fields_where $order $limit_offset";
+        WHERE  $all_tasks  $where $custom_fields_where $order $limit_offset";
 
 
         $raw_query = $this->db->query($sql);

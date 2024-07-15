@@ -410,6 +410,7 @@ $lang["wait_inv"] = "انتظار الفاتورة ";
 $lang["rec_inv"] = "تم استلام الفاتورة ";
 $lang["tasks_without_inv"] = "مهام لا تحتوي على رقم فاتورة";
 $lang["tasks_without_chri"] = "مهام لا تحتوي على رقم تعميد";
+$lang["tasks_deleted"] = " المهام المحزوفة";
 $lang["subtasks_to_go"] = "مهام فرعية للخروج";
 $lang["tasks_without_project"] = "مهام غير مرتبطة ب مشروع";
 

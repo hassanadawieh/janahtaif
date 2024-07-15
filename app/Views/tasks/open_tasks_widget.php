@@ -3,7 +3,7 @@
 
 <div class="card dashboard-icon-widget"> <div class="card-body" style="padding-left: 10px;padding-right: 10px;"><button style="border: none;background: transparent;width: 100%; padding: 0;" type="submit" >
        
-            <div class="widget-icon <?php echo $my_option=='no_invoice'?"bg-coral":"bg-info";?>">
+            <div class="widget-icon <?php echo $my_option=='no_invoice'?"bg-coral":($my_option == "tasks_deleted"?"bg-danger":"bg-info");?>">
                 <i data-feather="alert-circle" class="icon"></i>
             </div>
             <div class="widget-details">

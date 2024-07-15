@@ -140,7 +140,9 @@ class Tasks_model extends Crud_model {
         
         } if ($filter=="no_project") {
            $where .= " AND ($tasks_table.project_id=0 OR $tasks_table.project_id IS NULL)";
-        }
+        } if ($filter=="tasks_deleted") {
+            $where .= " AND ($sub_tasks_table.deleted=1)";
+         }
         }
 
         
@@ -1250,7 +1252,11 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $no_project = $this->_get_clean_value($options, "no_project");
         if ($no_project) {
             $where .= " AND $tasks_table.project_id=0 OR $tasks_table.project_id IS NULL";
-        }
+        } 
+        $tasks_deleted = $this->_get_clean_value($options, "tasks_deleted");
+        if ($tasks_deleted) {
+            $where .= " AND ($tasks_table.deleted=1)";
+         }
 
         
 

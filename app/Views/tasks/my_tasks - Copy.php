@@ -147,16 +147,19 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before{
 <div id="page-content" class="page-wrapper clearfix">
     <div class="mt20" style="display: none;">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?php echo tasks_count_widget("no_invoice","مهام لا تحتوي على رقم فاتورة"); ?>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?php echo tasks_count_widget("no_christening_number","مهام لا تحتوي على رقم تعميد"); ?>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?php echo tasks_count_widget("no_project","مهام غير مرتبطة ب مشروع"); ?>
+        </div>
+        <div class="col-md-3">
+            <?php echo tasks_count_widget("tasks_deleted","المهام المحزوفة"); ?>
         </div>
     </div>
 </div>
@@ -253,6 +256,7 @@ $statuses = array();
         $f_dropdown[] = array("id" => "no_invoice", "text" => "لا تحتوي على رقم فاتورة", "isSelected" => $filter=="no_invoice"?true:false);
         $f_dropdown[] = array("id" => "no_christening_number", "text" => "لا تحت وي على رقم تعميد", "isSelected" => $filter=="no_christening_number"?true:false);
         $f_dropdown[] = array("id" => "no_project", "text" => "مهام غير مربوطه ب مشروع", "isSelected" => $filter=="no_project"?true:false);
+        $f_dropdown[] = array("id" => "tasks_deleted", "text" => "المهام المحزوفة", "isSelected" => $filter=="tasks_deleted"?true:false);
         ?>
         var main_task_col=[],main_task_filter_col=[];
         if(check_user=="yes"){

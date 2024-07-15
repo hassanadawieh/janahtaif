@@ -309,7 +309,9 @@ class Sub_tasks_model extends Crud_model {
         
         } if ($main_filter=="no_project") {
            $where .= " AND ($task_table.project_id=0 OR $task_table.project_id IS NULL)";
-        }
+        } if ($main_filter=="tasks_deleted") {
+            $where .= " AND ($sub_tasks_table.deleted=1)";
+         }
         }
 
 

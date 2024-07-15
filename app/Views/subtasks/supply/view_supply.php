@@ -64,7 +64,7 @@
             });
         });
     </script>
-
+    
     <div class="modal-body clearfix general-form task-view-modal-body">
         <?php echo view("subtasks/task_view_data"); ?>
     </div>

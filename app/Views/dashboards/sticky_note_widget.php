@@ -5,7 +5,7 @@ if ($custom_class == "h370") {
 }
 ?>
 
-<div class="card bg-white <?php echo $custom_class; ?>">
+<div class="card bg-white <?php //echo $custom_class; ?>">
     <div class="card-header">
         <i data-feather="book" class="icon-16"></i>&nbsp; <?php echo app_lang("sticky_note"); ?>
     </div>
