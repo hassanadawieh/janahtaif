@@ -73,6 +73,23 @@ class Subtasks extends Security_Controller {
             }
     }
 
+    public function undo() {
+        $this->validate_submitted_data(array(
+            "id" => "numeric|required"
+        ));
+    
+        $id = $this->request->getPost('id');
+
+            if ($this->Sub_tasks_model->delete($id, true)) {
+                echo json_encode(array("success" => true, "data" => $this->_row_data($id), "message" => app_lang('record_undone')));
+            } else {
+                echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+            }
+        // } else {
+        //     echo json_encode(array("success" => false, 'message' => "ليس لديك صلاحية"));
+        // }
+    }
+
     function set_year(){
         
         $val=$this->request->getPost('value');
@@ -287,7 +304,7 @@ class Subtasks extends Security_Controller {
             "status_ids" => $status,
             //"main_status_id" => $main_status_id,
             "main_task_status_f" => $this->request->getPost("main_task_status_f"),
-            "mang" => "reserv",
+            "mang" => "supply",
             "is_admin" => $this->login_user->is_admin?"yes":"no",
             "supplier_id" => $this->request->getPost("supplier_id"),
             "service_type" => $this->request->getPost("service_type"),
@@ -394,6 +411,7 @@ class Subtasks extends Security_Controller {
         
 
         $options = "";
+        if($data->deleted == 0){
         if($this->can_update_maintask_after_closed()){
             if ($this->can_edit_subtasks($data->id)) {
                 if($data->dynamic_status_id!=4 || $this->can_edit_subtasks_after_closed()){
@@ -402,7 +420,11 @@ class Subtasks extends Security_Controller {
         }
         if ($this->can_delete_subtasks()) {
             $options.=js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_tasks'), "class" => "delete", "data-odai" => 1, "data-id" => $data->id, "data-action-url" => get_uri("subtasks/delete"), "data-action" => "delete-confirmation"));
-            
+
+        }
+        if (!$this->can_delete_subtasks()) {
+            $options.=js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_tasks'), "class" => "delete", "data-odai" => 0, "data-id" => $data->id, "data-action-url" => get_uri("subtasks/delete"), "data-action" => "delete-confirmation"));
+
         }
         }else{
         if($data->main_task_status==1){
@@ -417,7 +439,9 @@ class Subtasks extends Security_Controller {
         }
     }
 }
-
+        }else{
+            $options.=js_anchor("<i data-feather='check' class='icon-16'></i>", array('title' => app_lang('record_undone'), "class" => "undo", "data-odai" => 1, "data-id" => $data->id, "data-action-url" => get_uri("subtasks/undo"), "data-action" => "delete"));
+        }
        
 
 
@@ -1029,17 +1053,36 @@ class Subtasks extends Security_Controller {
     }
 
     function task_modal_form() {
+
+
+            $id = $this->request->getPost('id');
+            $model_info = $this->Sub_tasks_model->get_one($id);
+    
+            $createBy = $this->Users_model->get_one($model_info->created_by);
+    
+            $login_user_id = $this->Users_model->login_user_id();
+            if (!$login_user_id) {
+                show_404();
+            }
+    
+            $user_info = $this->Users_model->get_one($login_user_id);
+            if ((!($createBy->first_name == $user_info->first_name) && !($createBy->last_name == $user_info->last_name))&&(!$this->login_user->is_admin)) {
+                // $permession_data["permession"] = "Just who create this task and admin can edit";
+                // return $this->template->view('subtasks/modal_form', $permession_data);
+                 return;
+            };
+
         if (!$this->is_reserv_mang()) {
             app_redirect("forbidden");
         }
-        $id = $this->request->getPost('id');
+        // $id = $this->request->getPost('id');
         $add_type = $this->request->getPost('add_type');
         $mang = $this->request->getPost('mang') ? $this->request->getPost('mang') : 'reservmang';
         $last_id = $this->request->getPost('last_id');
         $task_id = $this->request->getPost('task_id');
         $deleted_client = $this->request->getPost('deleted_client');
         
-        $model_info = $this->Sub_tasks_model->get_one($id);
+        // $model_info = $this->Sub_tasks_model->get_one($id);
         $myoptions = array(
             "id" => $id
             ,"mang" => "reserv"
@@ -1132,17 +1175,35 @@ class Subtasks extends Security_Controller {
 
     function task_modal_form_supply() {
 
+
+            $id = $this->request->getPost('id');
+            $model_info = $this->Sub_tasks_model->get_one($id);
+    
+            $createBy = $this->Users_model->get_one($model_info->created_by);
+    
+            $login_user_id = $this->Users_model->login_user_id();
+            if (!$login_user_id) {
+                show_404();
+            }
+    
+            $user_info = $this->Users_model->get_one($login_user_id);
+            if ((!($createBy->first_name == $user_info->first_name) && !($createBy->last_name == $user_info->last_name))&&(!$this->login_user->is_admin)) {
+                // $permession_data["permession"] = "Just who create this task and admin can edit";
+                // return $this->template->view('subtasks/modal_form', $permession_data);
+                 return;
+            };
+
         if (!$this->is_supply_mang()) {
             app_redirect("forbidden");
         }
-        $id = $this->request->getPost('id');
+        // $id = $this->request->getPost('id');
         $add_type = $this->request->getPost('add_type');
         //$mang = $this->request->getPost('mang') ? $this->request->getPost('mang') : 'reservmang';
         $last_id = $this->request->getPost('last_id');
         $task_id = $this->request->getPost('task_id');
         $deleted_client = $this->request->getPost('deleted_client');
         //$model_info = $this->Sub_tasks_model->get_details(array("id" => $id,"deleted_client" => $deleted_client))->getRow();
-        $model_info = $this->Sub_tasks_model->get_one($id);
+        // $model_info = $this->Sub_tasks_model->get_one($id);
         
         
         $task_id = $this->request->getPost('task_id') ? $this->request->getPost('task_id') : $model_info->pnt_task_id;
@@ -1155,6 +1216,11 @@ class Subtasks extends Security_Controller {
             //if we got lastly added task id, then we have to initialize all data of that in order to make dropdowns
             $final_project_id = $model_info->pnt_task_id;
         }
+
+        if ($model_info->rec_inv_status == "rec_inv" && !$this->login_user->is_admin) {
+            return;
+        }
+        ;
 
         $view_data = $this->_initialize_all_related_data_of_project();
 $myoptions = array(

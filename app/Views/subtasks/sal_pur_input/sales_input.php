@@ -36,7 +36,15 @@ $dateTime1 = new DateTime($model_info->exp_out_time ? $model_info->exp_out_time:
 
 
                 
-                   
+<!--                    
+                        <div class="col-md-4 mb5 mt5 floating-label">
+                       <?php
+                         $dis2 = $model_info->service_type == "no_driver" ? "disabled" : "enabled";
+                         $attribute=$drivers_dropdown;
+                         echo form_dropdown("driver_id", array_column($drivers_dropdown, 'text', 'id'), array($model_info->driver_id), "class='select2 validate-hidden' id='driver_id' " . $dis2);
+                           ?>
+                             <label for="driver_nm"><?php echo app_lang('driver_nm'); ?></label>
+                        </div> -->
                         <div class=" col-md-4 mb5 mt5 floating-label" >
                             <?php
                             $dis2=$model_info->service_type=="no_driver" ? "disabled" : "enabled";
@@ -45,7 +53,7 @@ $dateTime1 = new DateTime($model_info->exp_out_time ? $model_info->exp_out_time:
                         
                         ?>
                         <label for="driver_nm"><?php echo app_lang('driver_nm'); ?></label>
-                        </div>
+                        </div>
                     </div>
                 </div>
 

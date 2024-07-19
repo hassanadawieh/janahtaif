@@ -1203,7 +1203,22 @@ if (!function_exists('tasks_count_widget')) {
         $template = new Template();
         return $template->view("clients/widgets/projects_info_widget", $view_data, $return_as_data);*/
         //$Tasks_model = $ci->Tasks_model;
-        $view_data["totals"] = $ci->Tasks_model->count_total_info(array("$option" => "312","selected_year" => $ci->session->get('selected_year')));
+       // Define the conditions based on the $option value
+       switch ($option) {
+        case 'tasks_deleted':
+            $conditions = array("deleted" => 1, "selected_year" => $ci->session->get('selected_year'));
+            break;
+        case 'no_invoice':
+            $conditions = array("no_invoice" => "312", "selected_year" => $ci->session->get('selected_year'));
+            break;
+        case 'no_christening_number':
+            $conditions = array("no_christening_number" => "312", "selected_year" => $ci->session->get('selected_year'));
+            break;
+        default:
+            $conditions = array("selected_year" => $ci->session->get('selected_year'));
+            break;
+    }
+    $view_data["totals"] = $ci->Tasks_model->count_total_info($conditions);
         $view_data["title"] =$title;
         $view_data["my_option"] =$option;
         $template = new Template();

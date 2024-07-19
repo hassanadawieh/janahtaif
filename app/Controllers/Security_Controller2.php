@@ -874,7 +874,7 @@ class Security_Controller extends App_Controller {
     }
 
     protected function _get_drivers_dropdown2($driver_id) {
-        $driver_options = array("deleted" => "0","status" => "1");
+        $driver_options = array("deleted" => "0");
         if ($this->login_user->user_type == "staff") {
             if (!$this->can_manage_all_projects()) {
                 $project_options["user_id"] = $this->login_user->id; //normal user's should be able to see only the projects where they are added as a team mmeber.

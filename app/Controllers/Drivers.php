@@ -20,7 +20,10 @@ class Drivers extends Security_Controller {
 
     function modal_form() {
 
-       
+        if (!$this->login_user->is_admin) {
+            return;
+        };
+        
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
@@ -114,7 +117,10 @@ class Drivers extends Security_Controller {
     }
 
     function delete() {
-
+        if (!$this->login_user->is_admin) {
+            return json_encode(array("success" => false, 'message' => "wrong!! you don't have permission to delete this record"));
+        }
+        ;
         /*if (!$this->can_delete_city() && !$this->can_edit_city()) {
             app_redirect("forbidden");
         }*/

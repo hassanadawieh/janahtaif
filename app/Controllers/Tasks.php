@@ -613,7 +613,6 @@ class Tasks extends Security_Controller {
             "update_status" => 1
         );
         $list_data = $this->Tasks_model->get_details($myoptions)->getResult();
-
         foreach ($list_data as $data) {
              $this->save_task_status_new($data->id,2);
         }

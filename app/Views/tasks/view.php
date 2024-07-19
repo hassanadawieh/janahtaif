@@ -56,6 +56,7 @@
         });
     </script>
 
+
     <div class="modal-body clearfix general-form task-view-modal-body" style="padding-top: 5px;">
         <?php echo view("tasks/task_view_data"); ?>
     </div>

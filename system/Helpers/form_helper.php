@@ -264,7 +264,7 @@ if (! function_exists('form_dropdown')) {
      * @param mixed $selected
      * @param mixed $extra
      */
-    function form_dropdown($data = '', $options = [], $selected = [], $extra = ''): string
+    function form_dropdown($data = '', $options = [], $selected = [], $extra = '',$attributes = []): string
     {
         $defaults = [];
         if (is_array($data)) {
@@ -331,6 +331,7 @@ if (! function_exists('form_dropdown')) {
                 $form .= '<option value="' . htmlspecialchars($key) . '"'
                     . (in_array($key, $selected, true) ? ' selected="selected"' : '') . '>'
                     . $val . "</option>\n";
+
             }
         }
 
