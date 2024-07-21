@@ -68242,7 +68242,7 @@ function replaceAll(a, t, e) {
       }
       window.InstanceCollection = window.InstanceCollection || {}, window.InstanceCollection[u(this).attr("id")] = c, u("body").find(s).on("click", "a[data-action=delete]", function (a) {
          deleteHandler(a, i)
-      }), u("body").find(s).on("click", "a[data-action=delete]", function (a) {
+      }), u("body").find(s).on("click", "a[data-action=delete-confirmation]", function (a) {
          deleteConfirmationHandler(a, i)
       }), u("body").find(s).on("click", "[data-action=update]", function (a) {
          appLoader.show();
