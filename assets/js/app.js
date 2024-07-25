@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $.ajaxSetup({cache: false});
+    $.ajaxSetup({ cache: false });
 
     //set locale of moment js
     moment.locale(AppLanugage.locale);
@@ -19,12 +19,12 @@ $(document).ready(function () {
     //set datepicker language
 
     $('body').on('click', '[data-act=ajax-modal]', function () {
-        var data = {ajaxModal: 1},
-                url = $(this).attr('data-action-url'),
-                isLargeModal = $(this).attr('data-modal-lg'),
-                isFullscreenModal = $(this).attr('data-modal-fullscreen'),
-                isCloseModal = $(this).attr('data-modal-close'),
-                title = $(this).attr('data-title');
+        var data = { ajaxModal: 1 },
+            url = $(this).attr('data-action-url'),
+            isLargeModal = $(this).attr('data-modal-lg'),
+            isFullscreenModal = $(this).attr('data-modal-fullscreen'),
+            isCloseModal = $(this).attr('data-modal-close'),
+            title = $(this).attr('data-title');
         if (!url) {
             console.log('Ajax Modal: Set data-action-url!');
             return false;
@@ -89,12 +89,12 @@ $(document).ready(function () {
                 },
                 404: function () {
                     $("#ajaxModalContent").find('.modal-body').html("");
-                    appAlert.error("404: Page not found.", {container: '.modal-body', animate: false});
+                    appAlert.error("404: Page not found.", { container: '.modal-body', animate: false });
                 }
             },
             error: function () {
                 $("#ajaxModalContent").find('.modal-body').html("");
-                appAlert.error("500: Internal Server Error.", {container: '.modal-body', animate: false});
+                appAlert.error("500: Internal Server Error.", { container: '.modal-body', animate: false });
             }
         });
         return false;
@@ -112,15 +112,15 @@ $(document).ready(function () {
     //common ajax request
     $('body').on('click show.bs.dropdown', '[data-act=ajax-request]', function () {
         var data = {},
-                $selector = $(this),
-                url = $selector.attr('data-action-url'),
-                removeOnSuccess = $selector.attr('data-remove-on-success'),
-                removeOnClick = $selector.attr('data-remove-on-click'),
-                fadeOutOnSuccess = $selector.attr('data-fade-out-on-success'),
-                fadeOutOnClick = $selector.attr('data-fade-out-on-click'),
-                inlineLoader = $selector.attr('data-inline-loader'),
-                reloadOnSuccess = $selector.attr('data-reload-on-success'),
-                showResponse = $selector.attr('data-show-response');
+            $selector = $(this),
+            url = $selector.attr('data-action-url'),
+            removeOnSuccess = $selector.attr('data-remove-on-success'),
+            removeOnClick = $selector.attr('data-remove-on-click'),
+            fadeOutOnSuccess = $selector.attr('data-fade-out-on-success'),
+            fadeOutOnClick = $selector.attr('data-fade-out-on-click'),
+            inlineLoader = $selector.attr('data-inline-loader'),
+            reloadOnSuccess = $selector.attr('data-reload-on-success'),
+            showResponse = $selector.attr('data-show-response');
 
         var $target = "";
         if ($selector.attr('data-real-target')) {
@@ -174,7 +174,7 @@ $(document).ready(function () {
                 if (showResponse && response) {
                     if (response.success) {
                         if (response.message) {
-                            appAlert.success(response.message, {duration: 10000});
+                            appAlert.success(response.message, { duration: 10000 });
                         }
 
                         if (reloadOnSuccess) {
@@ -232,8 +232,8 @@ $(document).ready(function () {
     //bind ajax tab
     $('body').on('click', '[data-bs-toggle="ajax-tab"] a', function () {
         var $this = $(this),
-                loadurl = $this.attr('href'),
-                target = $this.attr('data-bs-target');
+            loadurl = $this.attr('href'),
+            target = $this.attr('data-bs-target');
         if (!target)
             return false;
 
@@ -243,7 +243,7 @@ $(document).ready(function () {
         }
 
         if ($(target).html() === "" || $this.attr("data-reload")) {
-            appLoader.show({container: target, css: "right:50%; bottom:auto;"});
+            appLoader.show({ container: target, css: "right:50%; bottom:auto;" });
 
             $.ajax({
                 url: loadurl,
@@ -270,11 +270,11 @@ $(document).ready(function () {
                 }
             });
 
-//            $.get(loadurl, function (data, test, test2) {
-//                $(target).html(data);
-//                feather.replace();
-//                selectLastlySelectedTab(target);
-//            });
+            //            $.get(loadurl, function (data, test, test2) {
+            //                $(target).html(data);
+            //                feather.replace();
+            //                selectLastlySelectedTab(target);
+            //            });
         }
         window.InstanceCollection = {}; //prevent same filter values from previous tables with same filters
         $this.tab('show');
@@ -290,7 +290,7 @@ $(document).ready(function () {
             sidebar = false;
         }
 
-        appContentModal.init({url: $(this).attr("data-url"), sidebar: sidebar});
+        appContentModal.init({ url: $(this).attr("data-url"), sidebar: sidebar });
         return false;
     });
 
@@ -305,7 +305,7 @@ $(document).ready(function () {
             window[callbackFunction](result, $target);
 
             if (result.message) {
-                appAlert.warning(result.message, {duration: 20000});
+                appAlert.warning(result.message, { duration: 20000 });
             }
 
         }
@@ -327,8 +327,8 @@ $(document).ready(function () {
             event.preventDefault();
 
             var splitClipboardData = clipboardData.split("/"),
-                    splitClipboardDataCount = splitClipboardData.length,
-                    commentId = splitClipboardData[splitClipboardDataCount - 1];
+                splitClipboardDataCount = splitClipboardData.length,
+                commentId = splitClipboardData[splitClipboardDataCount - 1];
 
             if (!commentId) {
                 //there has an extra / at last
@@ -380,8 +380,8 @@ function selectLastlySelectedTab(target) {
 
     $(target + " [data-bs-toggle='ajax-tab']").each(function () {
         var tabList = $(this).attr("id"),
-                lastTab = getCookie("user_" + AppHelper.userId + "_" + tabList),
-                $specificTab = $(this).find("[data-bs-target='" + lastTab + "']");
+            lastTab = getCookie("user_" + AppHelper.userId + "_" + tabList),
+            $specificTab = $(this).find("[data-bs-target='" + lastTab + "']");
 
         if (lastTab && $specificTab.attr("data-bs-target")) {
             setTimeout(function () {
@@ -462,7 +462,7 @@ function selectLastlySelectedTab(target) {
                             });
 
                             if (!settings.isModal && settings.showLoader) {
-                                appLoader.show({container: form, css: "top:2%; right:46%;"});
+                                appLoader.show({ container: form, css: "top:2%; right:46%;" });
                             }
 
 
@@ -492,7 +492,7 @@ function selectLastlySelectedTab(target) {
                                     if (settings.isModal) {
                                         unmaskModal();
                                         if (result.message) {
-                                            appAlert.error(result.message, {container: '.modal-body', animate: false});
+                                            appAlert.error(result.message, { container: '.modal-body', animate: false });
                                         }
                                     } else if (result.message) {
                                         appAlert.error(result.message);
@@ -517,12 +517,12 @@ function selectLastlySelectedTab(target) {
         function convertDateToYMD(date) {
             if (date) {
                 var dateFormat = AppHelper.settings.dateFormat || "Y.m.d",
-                        dateFormat = dateFormat.toLowerCase(),
-                        separator = dateFormat.charAt("1"),
-                        dateFormatArray = dateFormat.split(separator),
-                        yearIndex = 0,
-                        monthIndex = 1,
-                        dayIndex = 2;
+                    dateFormat = dateFormat.toLowerCase(),
+                    separator = dateFormat.charAt("1"),
+                    dateFormatArray = dateFormat.split(separator),
+                    yearIndex = 0,
+                    monthIndex = 1,
+                    dayIndex = 2;
 
                 if (dateFormatArray[1] === "y") {
                     yearIndex = 1;
@@ -552,49 +552,49 @@ function selectLastlySelectedTab(target) {
         function validateForm(form, customSubmit) {
             //add custom method
             $.validator.addMethod("greaterThanOrEqual",
-                    function (value, element, params) {
-                        var paramsVal = params;
-                        if (params && (params.indexOf("#") === 0 || params.indexOf(".") === 0)) {
-                            paramsVal = $(params).val();
-                        }
+                function (value, element, params) {
+                    var paramsVal = params;
+                    if (params && (params.indexOf("#") === 0 || params.indexOf(".") === 0)) {
+                        paramsVal = $(params).val();
+                    }
 
-                        if (typeof $(element).attr("data-rule-required") === 'undefined' && !value) {
-                            return true;
-                        }
+                    if (typeof $(element).attr("data-rule-required") === 'undefined' && !value) {
+                        return true;
+                    }
 
-                        if (!/Invalid|NaN/.test(new Date(convertDateToYMD(value)))) {
-                            return !paramsVal || (new Date(convertDateToYMD(value)) >= new Date(convertDateToYMD(paramsVal)));
-                        }
-                        return isNaN(value) && isNaN(paramsVal)
-                                || (Number(value) >= Number(paramsVal));
-                    }, 'Must be greater than {0}.');
+                    if (!/Invalid|NaN/.test(new Date(convertDateToYMD(value)))) {
+                        return !paramsVal || (new Date(convertDateToYMD(value)) >= new Date(convertDateToYMD(paramsVal)));
+                    }
+                    return isNaN(value) && isNaN(paramsVal)
+                        || (Number(value) >= Number(paramsVal));
+                }, 'Must be greater than {0}.');
 
             //add custom method
             $.validator.addMethod("greaterThan",
-                    function (value, element, params) {
-                        var paramsVal = params;
-                        if (params && (params.indexOf("#") === 0 || params.indexOf(".") === 0)) {
-                            paramsVal = $(params).val();
-                        }
-                        if (!/Invalid|NaN/.test(new Number(value))) {
-                            return new Number((value)) > new Number((paramsVal));
-                        }
-                        return isNaN(value) && isNaN(paramsVal)
-                                || (Number(value) > Number(paramsVal));
-                    }, 'Must be greater than.');
+                function (value, element, params) {
+                    var paramsVal = params;
+                    if (params && (params.indexOf("#") === 0 || params.indexOf(".") === 0)) {
+                        paramsVal = $(params).val();
+                    }
+                    if (!/Invalid|NaN/.test(new Number(value))) {
+                        return new Number((value)) > new Number((paramsVal));
+                    }
+                    return isNaN(value) && isNaN(paramsVal)
+                        || (Number(value) > Number(paramsVal));
+                }, 'Must be greater than.');
 
             //add custom method
             $.validator.addMethod("mustBeSameYear",
-                    function (value, element, params) {
-                        var paramsVal = params;
-                        if (params && (params.indexOf("#") === 0 || params.indexOf(".") === 0)) {
-                            paramsVal = $(params).val();
-                        }
-                        if (!/Invalid|NaN/.test(new Date(convertDateToYMD(value)))) {
-                            var dateA = new Date(convertDateToYMD(value)), dateB = new Date(convertDateToYMD(paramsVal));
-                            return (dateA && dateB && dateA.getFullYear() === dateB.getFullYear());
-                        }
-                    }, 'The year must be same for both dates.');
+                function (value, element, params) {
+                    var paramsVal = params;
+                    if (params && (params.indexOf("#") === 0 || params.indexOf(".") === 0)) {
+                        paramsVal = $(params).val();
+                    }
+                    if (!/Invalid|NaN/.test(new Date(convertDateToYMD(value)))) {
+                        var dateA = new Date(convertDateToYMD(value)), dateB = new Date(convertDateToYMD(paramsVal));
+                        return (dateA && dateB && dateA.getFullYear() === dateB.getFullYear());
+                    }
+                }, 'The year must be same for both dates.');
 
             $(form).validate({
                 submitHandler: function (form) {
@@ -636,7 +636,7 @@ function selectLastlySelectedTab(target) {
             $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
             //check scrollbar
             var height = $maskTarget.outerHeight();
-            $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
+            $('.modal-mask').css({ "width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px" });
             $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
             $maskTarget.addClass("hide");
         }
@@ -679,8 +679,8 @@ var getWeekRange = function (date) {
         date = moment().format("YYYY-MM-DD");
 
     var dayOfWeek = moment(date).format("E"),
-            diff = dayOfWeek - AppHelper.settings.firstDayOfWeek,
-            range = {};
+        diff = dayOfWeek - AppHelper.settings.firstDayOfWeek,
+        range = {};
 
     if (diff < 7) {
         range.firstDateOfWeek = moment(date).subtract(diff, 'days').format("YYYY-MM-DD");
@@ -704,7 +704,7 @@ var prepareDefaultFilters = function (settings) {
             settings.filterParams.end_date = settings.filterParams.start_date;
         } else if (settings.dateRangeType === "monthly") {
             var daysInMonth = moment().daysInMonth(),
-                    yearMonth = moment().format("YYYY-MM");
+                yearMonth = moment().format("YYYY-MM");
             settings.filterParams.start_date = yearMonth + "-01";
             settings.filterParams.end_date = yearMonth + "-" + daysInMonth;
         } else if (settings.dateRangeType === "yearly") {
@@ -722,7 +722,7 @@ var prepareDefaultFilters = function (settings) {
 
     var prepareDefaultCheckBoxFilterParams = function (settings) {
         var values = [],
-                name = "";
+            name = "";
         $.each(settings.checkBoxes, function (index, option) {
             name = option.name;
             if (option.isChecked) {
@@ -737,7 +737,7 @@ var prepareDefaultFilters = function (settings) {
 
         $.each(settings.multiSelect, function (index, option) {
             var saveSelection = option.saveSelection,
-                    selections = getCookie(option.name);
+                selections = getCookie(option.name);
 
             var values = [];
 
@@ -828,9 +828,9 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
             return false;
 
         if ($instance.is("table")) {
-            $instance.appTable({reload: true, filterParams: settings.filterParams});
+            $instance.appTable({ reload: true, filterParams: settings.filterParams });
         } else {
-            $instance.appFilters({reload: true, filterParams: settings.filterParams});
+            $instance.appFilters({ reload: true, filterParams: settings.filterParams });
         }
     };
 
@@ -838,8 +838,8 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
     //prepare search box
     if (settings.search && settings.search.show !== false) {
         var searchDom = '<div class="DTTT_container">'
-                + '<input type="search" class="custom-filter-search" name="' + settings.search.name + '" placeholder="' + settings.customLanguage.searchPlaceholder + '">'
-                + '</div>';
+            + '<input type="search" class="custom-filter-search" name="' + settings.search.name + '" placeholder="' + settings.customLanguage.searchPlaceholder + '">'
+            + '</div>';
         $instanceWrapper.find(".custom-toolbar").append(searchDom);
 
         var wait;
@@ -898,15 +898,15 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
     //build date wise filter selectors
     if (settings.dateRangeType) {
         var dateRangeFilterDom = '<div class="mr15 DTTT_container">'
-                + '<button data-act="prev" class="btn btn-default date-range-selector"><i data-feather="chevron-left" class="icon"></i></button>'
-                + '<button data-act="datepicker" class="btn btn-default" style="margin: -1px"></button>'
-                + '<button data-act="next"  class="btn btn-default date-range-selector"><i data-feather="chevron-right" class="icon"></i></button>'
-                + '</div>';
+            + '<button data-act="prev" class="btn btn-default date-range-selector"><i data-feather="chevron-left" class="icon"></i></button>'
+            + '<button data-act="datepicker" class="btn btn-default" style="margin: -1px"></button>'
+            + '<button data-act="next"  class="btn btn-default date-range-selector"><i data-feather="chevron-right" class="icon"></i></button>'
+            + '</div>';
 
         appendFilterDom(dateRangeFilterDom);
 
         var $datepicker = $instanceWrapper.find("[data-act='datepicker']"),
-                $dateRangeSelector = $instanceWrapper.find(".date-range-selector");
+            $dateRangeSelector = $instanceWrapper.find(".date-range-selector");
 
         //init single day selector
         if (settings.dateRangeType === "daily") {
@@ -974,7 +974,7 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
             }).on('changeDate', function (e) {
                 var date = moment(e.date).format(settings._inputDateFormat);
                 var daysInMonth = moment(date).daysInMonth(),
-                        yearMonth = moment(date).format("YYYY-MM");
+                    yearMonth = moment(date).format("YYYY-MM");
                 settings.filterParams.start_date = yearMonth + "-01";
                 settings.filterParams.end_date = yearMonth + "-" + daysInMonth;
                 initMonthSelectorText($datepicker);
@@ -983,20 +983,20 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
 
             $dateRangeSelector.click(function () {
                 var type = $(this).attr("data-act"),
-                        startDate = moment(settings.filterParams.start_date),
-                        endDate = moment(settings.filterParams.end_date);
+                    startDate = moment(settings.filterParams.start_date),
+                    endDate = moment(settings.filterParams.end_date);
                 if (type === "next") {
                     var nextMonth = startDate.add(1, 'months'),
-                            daysInMonth = nextMonth.daysInMonth(),
-                            yearMonth = nextMonth.format("YYYY-MM");
+                        daysInMonth = nextMonth.daysInMonth(),
+                        yearMonth = nextMonth.format("YYYY-MM");
 
                     startDate = yearMonth + "-01";
                     endDate = yearMonth + "-" + daysInMonth;
 
                 } else if (type === "prev") {
                     var lastMonth = startDate.subtract(1, 'months'),
-                            daysInMonth = lastMonth.daysInMonth(),
-                            yearMonth = lastMonth.format("YYYY-MM");
+                        daysInMonth = lastMonth.daysInMonth(),
+                        yearMonth = lastMonth.format("YYYY-MM");
 
                     startDate = yearMonth + "-01";
                     endDate = yearMonth + "-" + daysInMonth;
@@ -1027,7 +1027,7 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
                 language: "custom"
             }).on('changeDate', function (e) {
                 var date = moment(e.date).format(settings._inputDateFormat),
-                        year = moment(date).format("YYYY");
+                    year = moment(date).format("YYYY");
                 settings.filterParams.start_date = year + "-01-01";
                 settings.filterParams.end_date = year + "-12-31";
                 inityearSelectorText($datepicker);
@@ -1036,8 +1036,8 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
 
             $dateRangeSelector.click(function () {
                 var type = $(this).attr("data-act"),
-                        startDate = moment(settings.filterParams.start_date),
-                        endDate = moment(settings.filterParams.end_date);
+                    startDate = moment(settings.filterParams.start_date),
+                    endDate = moment(settings.filterParams.end_date);
                 if (type === "next") {
                     startDate = startDate.add(1, 'years').format(settings._inputDateFormat);
                     endDate = endDate.add(1, 'years').format(settings._inputDateFormat);
@@ -1056,7 +1056,7 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
         if (settings.dateRangeType === "weekly") {
             var initWeekSelectorText = function ($elector) {
                 var from = moment(settings.filterParams.start_date).format("Do MMM"),
-                        to = moment(settings.filterParams.end_date).format("Do MMM, YYYY");
+                    to = moment(settings.filterParams.end_date).format("Do MMM, YYYY");
                 $datepicker.datepicker({
                     format: "YYYY-MM-DD",
                     autoclose: true,
@@ -1073,8 +1073,8 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
             //bind the click events
             $dateRangeSelector.click(function () {
                 var type = $(this).attr("data-act"),
-                        startDate = moment(settings.filterParams.start_date),
-                        endDate = moment(settings.filterParams.end_date);
+                    startDate = moment(settings.filterParams.start_date),
+                    endDate = moment(settings.filterParams.end_date);
                 if (type === "next") {
                     startDate = startDate.add(7, 'days').format(settings._inputDateFormat);
                     endDate = endDate.add(7, 'days').format(settings._inputDateFormat);
@@ -1127,10 +1127,10 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
         });
         settings.filterParams[name] = values;
         var checkboxDom = '<div class="mr15 DTTT_container">'
-                + '<div class="btn-group filter" data-act="checkbox" data-toggle="buttons">'
-                + checkboxes
-                + '</div>'
-                + '</div>';
+            + '<div class="btn-group filter" data-act="checkbox" data-toggle="buttons">'
+            + checkboxes
+            + '</div>'
+            + '</div>';
 
         appendFilterDom(checkboxDom);
 
@@ -1139,7 +1139,7 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
             var $selector = $(this);
             setTimeout(function () {
                 var values = [],
-                        name = "";
+                    name = "";
                 $selector.parent().find("input:checkbox").each(function () {
                     name = $(this).attr("name");
                     if ($(this).is(":checked")) {
@@ -1162,8 +1162,8 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
         $.each(settings.multiSelect, function (index, option) {
 
             var multiSelect = "", values = [],
-                    saveSelection = option.saveSelection,
-                    selections = getCookie(option.name);
+                saveSelection = option.saveSelection,
+                selections = getCookie(option.name);
 
             if (selections) {
                 selections = selections.split("-");
@@ -1173,10 +1173,10 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
                 var active = "";
 
                 if (
-                        (saveSelection && selections && (selections.indexOf(listOption.value) > -1)) ||
-                        (saveSelection && !selections && listOption.isChecked) ||
-                        (!saveSelection && listOption.isChecked)
-                        ) {
+                    (saveSelection && selections && (selections.indexOf(listOption.value) > -1)) ||
+                    (saveSelection && !selections && listOption.isChecked) ||
+                    (!saveSelection && listOption.isChecked)
+                ) {
                     active = " active";
                     values.push(listOption.value);
                 }
@@ -1191,11 +1191,11 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
 
             settings.filterParams[option.name] = values;
             var multiSelectDom = '<div class="mr15 DTTT_container">'
-                    + '<span class="dropdown inline-block filter-multi-select">'
-                    + '<button class="btn btn-default dropdown-toggle caret " type="button" data-bs-toggle="dropdown" aria-expanded="true">' + option.text + ' </button>'
-                    + multiSelect
-                    + '</span>'
-                    + '</div>';
+                + '<span class="dropdown inline-block filter-multi-select">'
+                + '<button class="btn btn-default dropdown-toggle caret " type="button" data-bs-toggle="dropdown" aria-expanded="true">' + option.text + ' </button>'
+                + multiSelect
+                + '</span>'
+                + '</div>';
 
             appendFilterDom(multiSelectDom);
 
@@ -1205,7 +1205,7 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
                 $selector.toggleClass("active");
                 setTimeout(function () {
                     var values = [],
-                            name = "";
+                        name = "";
                     $selector.parent().find("li").each(function () {
                         name = $(this).attr("data-name");
                         if ($(this).hasClass("active")) {
@@ -1248,10 +1248,10 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
             radiobuttons += '</label>';
         });
         var radioDom = '<div class="mr15 DTTT_container">'
-                + '<div class="btn-group filter" data-act="radio" data-toggle="buttons">'
-                + radiobuttons
-                + '</div>'
-                + '</div>';
+            + '<div class="btn-group filter" data-act="radio" data-toggle="buttons">'
+            + radiobuttons
+            + '</div>'
+            + '</div>';
 
         appendFilterDom(radioDom);
 
@@ -1288,7 +1288,7 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
                 datePicker.options = [];
 
             //add custom datepicker selector
-            datePicker.options.push({value: "show-date-picker", text: AppLanugage.custom});
+            datePicker.options.push({ value: "show-date-picker", text: AppLanugage.custom });
 
             //prepare custom list
             $.each(datePicker.options, function (index, option) {
@@ -1326,19 +1326,19 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
 
             //prepare DOM
             var customList = '<div class="datepicker-custom-list list-group mb0">'
-                    + options
-                    + '</div>';
+                + options
+                + '</div>';
 
             var selectDom = '<div class="mr15 DTTT_container">'
-                    + '<button name="' + datePicker.name + '" class="btn datepicker-custom-selector">'
-                    + getDatePickerText(selectedText)
-                    + '</button>'
-                    + '</div>';
+                + '<button name="' + datePicker.name + '" class="btn datepicker-custom-selector">'
+                + getDatePickerText(selectedText)
+                + '</button>'
+                + '</div>';
 
             appendFilterDom(selectDom);
 
             var $datePicker = $instanceWrapper.find("[name='" + datePicker.name + "']"),
-                    showCustomRange = typeof datePicker.options[1] === 'undefined' ? false : true; //don't show custom range if options not > 1
+                showCustomRange = typeof datePicker.options[1] === 'undefined' ? false : true; //don't show custom range if options not > 1
 
             //init datepicker
             $datePicker.datepicker({
@@ -1394,11 +1394,11 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
         $.each(settings.rangeDatepicker, function (index, datePicker) {
 
             var startDate = datePicker.startDate || {},
-                    endDate = datePicker.endDate || {},
-                    showClearButton = datePicker.showClearButton ? true : false,
-                    emptyText = '<i data-feather="calendar" class="icon-16"></i>',
-                    startButtonText = startDate.value ? moment(startDate.value, settings._inputDateFormat).format("Do MMMM YYYY") : emptyText,
-                    endButtonText = endDate.value ? moment(endDate.value, settings._inputDateFormat).format("Do MMMM YYYY") : emptyText;
+                endDate = datePicker.endDate || {},
+                showClearButton = datePicker.showClearButton ? true : false,
+                emptyText = '<i data-feather="calendar" class="icon-16"></i>',
+                startButtonText = startDate.value ? moment(startDate.value, settings._inputDateFormat).format("Do MMMM YYYY") : emptyText,
+                endButtonText = endDate.value ? moment(endDate.value, settings._inputDateFormat).format("Do MMMM YYYY") : emptyText;
 
             //set filter params
             settings.filterParams[startDate.name] = startDate.value;
@@ -1412,17 +1412,17 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
 
             //prepare DOM
             var selectDom = '<div class="mr15 DTTT_container mb10">'
-                    + '<div class="input-daterange input-group">'
-                    + '<button class="btn btn-default form-control" name="' + startDate.name + '" data-date="' + startDate.value + '">' + startButtonText + '</button>'
-                    + '<span class="input-group-addon">-</span>'
-                    + '<button class="btn btn-default form-control" name="' + endDate.name + '" data-date="' + endDate.value + '">' + endButtonText + ''
-                    + '</div>'
-                    + '</div>';
+                + '<div class="input-daterange input-group">'
+                + '<button class="btn btn-default form-control" name="' + startDate.name + '" data-date="' + startDate.value + '">' + startButtonText + '</button>'
+                + '<span class="input-group-addon">-</span>'
+                + '<button class="btn btn-default form-control" name="' + endDate.name + '" data-date="' + endDate.value + '">' + endButtonText + ''
+                + '</div>'
+                + '</div>';
 
             appendFilterDom(selectDom);
 
             var $datePicker = $instanceWrapper.find(".input-daterange"),
-                    inputs = $datePicker.find('button').toArray();
+                inputs = $datePicker.find('button').toArray();
 
             //init datepicker
             $datePicker.datepicker({
@@ -1507,16 +1507,16 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
             }
 
             var selectDomSelector = '<select class="' + dropdown.class + '" name="' + dropdown.name + '">'
-                    + optons
-                    + '</select>';
+                + optons
+                + '</select>';
 
             if (dropdown.showHtml) {
                 selectDomSelector = '<input class="' + dropdown.class + '" name="' + dropdown.name + '" />';
             }
 
             var selectDom = '<div class="mr15 DTTT_container">'
-                    + selectDomSelector
-                    + '</div>';
+                + selectDomSelector
+                + '</div>';
 
             appendFilterDom(selectDom);
 
@@ -1537,8 +1537,8 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
 
             $dropdown.change(function () {
                 var $selector = $(this),
-                        filterName = $selector.attr("name"),
-                        value = $selector.val();
+                    filterName = $selector.attr("name"),
+                    value = $selector.val();
 
                 //set the new value to settings
                 settings.filterParams[filterName] = value;
@@ -1580,7 +1580,7 @@ var buildFilterDom = function (settings, $instanceWrapper, $instance) {
                             //if we found the dropdown list, we'll show the options in dropdown
                             if (response && response.length) {
                                 var newOptions = "",
-                                        firstValue = "";
+                                    firstValue = "";
 
                                 $.each(response, function (index, value) {
 
@@ -1664,7 +1664,7 @@ var $appFilterXhrRequest = 'new';
             stateDuration: 60 * 60 * 24 * 60, //remember for 60 days
             columnShowHideOption: true, //show a option to show/hide the columns,
             tableRefreshButton: false, //show a option to refresh the table
-            filterParams: {datatable: true}, //will post this vales on source url
+            filterParams: { datatable: true }, //will post this vales on source url
             onDeleteSuccess: function () {
             },
             onUndoSuccess: function () {
@@ -1777,7 +1777,7 @@ var $appFilterXhrRequest = 'new';
 
         var _prepareFooter = function (settings, page, lable) {
             var tr = "",
-                    trSection = '';
+                trSection = '';
 
             if (page === "all") {
                 trSection = 'data-section="all_pages"';
@@ -1788,7 +1788,7 @@ var $appFilterXhrRequest = 'new';
             $.each(settings.columns, function (index, column) {
 
                 var thAttr = "class = 'tf-blank' ",
-                        thLable = " ";
+                    thLable = " ";
 
 
                 if (settings.summation[0] && settings.summation[0].column - 1 === index) {
@@ -1876,8 +1876,8 @@ var $appFilterXhrRequest = 'new';
 
 
                     var order_by_index = (postData.order && postData.order[0]) ? postData.order[0].column : "",
-                            order_dir = (postData.order && postData.order[0]) ? postData.order[0].dir : "",
-                            search = postData.search ? postData.search['value'] : "";
+                        order_dir = (postData.order && postData.order[0]) ? postData.order[0].dir : "",
+                        search = postData.search ? postData.search['value'] : "";
 
                     if (order_dir) {
                         order_dir = order_dir.toUpperCase();
@@ -1948,9 +1948,9 @@ var $appFilterXhrRequest = 'new';
                 if (settings.summation) {
 
                     var pageInfo = instance.api().page.info(),
-                            summationContent = "",
-                            pageTotalContent = "",
-                            allPageTotalContent = "";
+                        summationContent = "",
+                        pageTotalContent = "",
+                        allPageTotalContent = "";
 
                     if (pageInfo.recordsTotal) {
                         $(instance).find("tfoot").show();
@@ -2081,10 +2081,10 @@ var $appFilterXhrRequest = 'new';
                 }
                 try {
                     return JSON.parse(
-                            (settings.iStateDuration === -1 ? sessionStorage : localStorage).getItem(
+                        (settings.iStateDuration === -1 ? sessionStorage : localStorage).getItem(
                             'DataTables_' + settings.sInstance + '_' + location.pathname
-                            )
-                            );
+                        )
+                    );
                 } catch (e) {
                 }
             };
@@ -2120,7 +2120,7 @@ var $appFilterXhrRequest = 'new';
 
                             //here should define the actual position of the item using the abc character
                             var chars = 'abcdefghijklmnopqrstuvwxyz',
-                                    rowCounted = 0;
+                                rowCounted = 0;
 
                             var rowDom = '<row r="' + thisRowNumber + '">';
 
@@ -2212,7 +2212,7 @@ var $appFilterXhrRequest = 'new';
         };
 
         var oTable = $instance.dataTable(datatableOptions),
-                $instanceWrapper = $instance.closest(".dataTables_wrapper");
+            $instanceWrapper = $instance.closest(".dataTables_wrapper");
 
         var tableId = $instance.get(0) ? $instance.get(0).id : "id_not_found";
 
@@ -2253,7 +2253,7 @@ var $appFilterXhrRequest = 'new';
                         if (column.visible !== false) {
 
                             var tableColumn = table.column(index),
-                                    columnHiddenClass = "";
+                                columnHiddenClass = "";
 
                             if (!tableColumn.visible()) {
                                 columnHiddenClass = "active";
@@ -2303,7 +2303,7 @@ var $appFilterXhrRequest = 'new';
             $instanceWrapper.find(".toolbar-left-top").append(refreshButton);
 
             $instanceWrapper.find(".at-table-refresh-button").on('click', function () {
-                $instance.appTable({reload: true, filterParams: settings.filterParams});
+                $instance.appTable({ reload: true, filterParams: settings.filterParams });
             });
         }
 
@@ -2333,28 +2333,28 @@ var $appFilterXhrRequest = 'new';
 
             $searchBox.unbind().bind('input', (delayAction(function (e) {
                 settings.filterParams.search_by = $(this).val();
-                $instance.appTable({reload: true, filterParams: settings.filterParams});
+                $instance.appTable({ reload: true, filterParams: settings.filterParams });
                 return;
             }, 1000)));
 
             //search datatable when clicks on the labels.
             $('body').on('click', "#" + $instance.get(0).id + ' .badge.clickable', function () {
                 settings.filterParams.search_by = $(this).text();
-                $instance.appTable({reload: true, filterParams: settings.filterParams});
+                $instance.appTable({ reload: true, filterParams: settings.filterParams });
                 return false;
             });
 
             //search datatable when clicks on filter sub task icon
             $('body').on('click', "#" + $instance.get(0).id + ' .filter-sub-task-button', function () {
                 settings.filterParams.search_by = $(this).attr('main-task-id');
-                $instance.appTable({reload: true, filterParams: settings.filterParams});
+                $instance.appTable({ reload: true, filterParams: settings.filterParams });
                 return false;
             });
 
             //remove sub tasks filter
             $('body').on('click', "#" + $instance.get(0).id + ' .remove-filter-button', function () {
                 settings.filterParams.search_by = "";
-                $instance.appTable({reload: true, filterParams: settings.filterParams});
+                $instance.appTable({ reload: true, filterParams: settings.filterParams });
                 return false;
             });
 
@@ -2382,11 +2382,11 @@ var $appFilterXhrRequest = 'new';
                     url: eventData.url,
                     type: 'POST',
                     dataType: 'json',
-                    data: {id: eventData.id, undo: true},
+                    data: { id: eventData.id, undo: true },
                     success: function (result) {
                         appLoader.hide();
                         if (result.success) {
-                            $instance.appTable({newData: result.data, rowDeleted: true});
+                            $instance.appTable({ newData: result.data, rowDeleted: true });
                             //fire success callback
                             settings.onUndoSuccess(result);
                         }
@@ -2398,16 +2398,16 @@ var $appFilterXhrRequest = 'new';
 
         var rowDeleteHandler = function (result, $target) {
             var tr = $target.closest('tr'),
-                    table = $instance.DataTable(),
-                    undo = $target.attr('data-undo'),
-                    url = $target.attr('data-action-url'),
-                    id = $target.attr('data-id');
+                table = $instance.DataTable(),
+                undo = $target.attr('data-undo'),
+                url = $target.attr('data-action-url'),
+                id = $target.attr('data-id');
 
             oTable.fnDeleteRow(table.row(tr).index(), function () {
                 table.page(table.page()).draw('page');
             }, false);
 
-            var alertId = appAlert.warning(result.message, {duration: 20000});
+            var alertId = appAlert.warning(result.message, { duration: 20000 });
 
             //fire success callback
             settings.onDeleteSuccess(result);
@@ -2445,8 +2445,8 @@ var $appFilterXhrRequest = 'new';
                 dataType: 'json',
                 success: function (response) {
                     if (response.success) {
-                        $(".dataTable:visible").appTable({newData: response.data, dataId: response.id});
-                        appAlert.success(response.message, {duration: 10000});
+                        $(".dataTable:visible").appTable({ newData: response.data, dataId: response.id });
+                        appAlert.success(response.message, { duration: 10000 });
                     } else {
                         appAlert.error(response.message);
                     }
@@ -2461,7 +2461,7 @@ var $appFilterXhrRequest = 'new';
 
         $('body').find($instance).on('click', 'a[data-action=delete]', appTableSimpleDeleteHandler);
         $('body').find($instance).on('click', 'a[data-action=delete-confirmation]', appTableDeleteConfirmationHandler);
-        $('body').find($instance).on('click', '[data-action=update]', updateHandler);
+        $('body').find($instance).on('click', '[data-action=update]', updateHandler);
 
         $.fn.dataTableExt.oApi.getSettings = function (oSettings) {
             return oSettings;
@@ -2528,14 +2528,14 @@ deleteHandler = function (e, callback) {
     }
 
     var url = $target.attr('data-action-url'),
-            id = $target.attr('data-id'),
-            reloadOnSuccess = $target.attr('data-reload-on-success');
+        id = $target.attr('data-id'),
+        reloadOnSuccess = $target.attr('data-reload-on-success');
 
     $.ajax({
         url: url,
         type: 'POST',
         dataType: 'json',
-        data: {id: id},
+        data: { id: id },
         success: function (result) {
             if (result.success) {
 
@@ -2558,7 +2558,7 @@ deleteHandler = function (e, callback) {
 
 deleteConfirmationHandler = function (e, callback) {
     var $deleteButton = $("#confirmDeleteButton"),
-            $target = $(e.currentTarget);
+        $target = $(e.currentTarget);
     //copy attributes
 
     $target.each(function () {
@@ -2574,7 +2574,7 @@ deleteConfirmationHandler = function (e, callback) {
 
     //bind click event
     $deleteButton.unbind("click");
-    $deleteButton.on("click", {target: $target}, function (e) {
+    $deleteButton.on("click", { target: $target }, function (e) {
         deleteHandler(e, callback);
     });
 
@@ -2646,13 +2646,13 @@ deleteConfirmationHandler = function (e, callback) {
                 }
 
                 return '<div id="' + this._settings.alertId + '" class="app-alert alert alert-' + className + ' alert-dismissible " role="alert">'
-                        + '<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>'
-                        + '<div class="app-alert-message">' + message + '</div>'
-                        + '<div class="progress">'
-                        + '<div class="progress-bar bg-' + className + ' hide" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
-                        + '</div>'
-                        + '</div>'
-                        + '</div>';
+                    + '<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>'
+                    + '<div class="app-alert-message">' + message + '</div>'
+                    + '<div class="progress">'
+                    + '<div class="progress-bar bg-' + className + ' hide" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
+                    + '</div>'
+                    + '</div>'
+                    + '</div>';
             }
 
             function _prepear_settings(options) {
@@ -2850,7 +2850,7 @@ function replaceAll(find, replace, str) {
                                 <span class='compress'><i data-feather='minimize-2' class='icon-16'></i></span>\
                                 <div class='app-modal-body'>\
                                     <div class='app-modal-content'>" + controlIcon +
-                        "<div class='hide app-modal-close'><span>&times;</span></div>\
+                    "<div class='hide app-modal-close'><span>&times;</span></div>\
                                         <div class='app-modal-content-area d-inline-block'>\
                                         </div>\
                         </div>" + sidebar + "</div>\
@@ -2862,12 +2862,12 @@ function replaceAll(find, replace, str) {
                 setTimeout(function () {
                     var windowHeight = $(window).height() - 60;
                     if ($(".app-modal-content-area").prop("scrollHeight") > windowHeight) {
-                        $(".app-modal-content-area").css({"max-height": windowHeight + "px", "overflow-y": "scroll", "width": "100%"});
+                        $(".app-modal-content-area").css({ "max-height": windowHeight + "px", "overflow-y": "scroll", "width": "100%" });
                     }
 
 
                     if ($.fn.mCustomScrollbar) {
-                        $('.app-moadl-sidebar-scrollbar').mCustomScrollbar({setHeight: windowHeight, theme: "minimal-dark", autoExpandScrollbar: true});
+                        $('.app-moadl-sidebar-scrollbar').mCustomScrollbar({ setHeight: windowHeight, theme: "minimal-dark", autoExpandScrollbar: true });
                     }
                 }, 200);
 
@@ -2883,7 +2883,7 @@ function replaceAll(find, replace, str) {
                     destroy();
                 });
                 $(document).bind("keyup", escKeyEvent);
-                appLoader.show({container: '.app-modal', css: "top:35%; right:48%;"});
+                appLoader.show({ container: '.app-modal', css: "top:35%; right:48%;" });
 
                 appModalXhr = $.ajax({
                     url: settings.url || "",
@@ -2935,14 +2935,14 @@ function replaceAll(find, replace, str) {
 
             var $instance = $(this);
             var dom = '<div class="ml15">'
-                    + '<button data-act="prev" class="btn btn-default date-range-selector"><i data-feather="chevron-left" class="icon-16"></i></button>'
-                    + '<button data-act="datepicker" class="btn btn-default" style="margin: -1px"></button>'
-                    + '<button data-act="next"  class="btn btn-default date-range-selector"><i data-feather="chevron-right" class="icon-16"></i></button>'
-                    + '</div>';
+                + '<button data-act="prev" class="btn btn-default date-range-selector"><i data-feather="chevron-left" class="icon-16"></i></button>'
+                + '<button data-act="datepicker" class="btn btn-default" style="margin: -1px"></button>'
+                + '<button data-act="next"  class="btn btn-default date-range-selector"><i data-feather="chevron-right" class="icon-16"></i></button>'
+                + '</div>';
             $instance.append(dom);
 
             var $datepicker = $instance.find("[data-act='datepicker']"),
-                    $dateRangeSelector = $instance.find(".date-range-selector");
+                $dateRangeSelector = $instance.find(".date-range-selector");
 
             if (settings.dateRangeType === "yearly") {
                 var inityearSelectorText = function ($elector) {
@@ -2960,7 +2960,7 @@ function replaceAll(find, replace, str) {
                     language: "custom",
                 }).on('changeDate', function (e) {
                     var date = moment(e.date).format(settings._inputDateFormat),
-                            year = moment(date).format("YYYY");
+                        year = moment(date).format("YYYY");
                     settings.filterParams.start_date = year + "-01-01";
                     settings.filterParams.end_date = year + "-12-31";
                     settings.filterParams.year = year;
@@ -2978,8 +2978,8 @@ function replaceAll(find, replace, str) {
 
                 $dateRangeSelector.click(function () {
                     var type = $(this).attr("data-act"),
-                            startDate = moment(settings.filterParams.start_date),
-                            endDate = moment(settings.filterParams.end_date);
+                        startDate = moment(settings.filterParams.start_date),
+                        endDate = moment(settings.filterParams.end_date);
                     if (type === "next") {
                         startDate = startDate.add(1, 'years').format(settings._inputDateFormat);
                         endDate = endDate.add(1, 'years').format(settings._inputDateFormat);
@@ -3016,7 +3016,7 @@ function replaceAll(find, replace, str) {
                 }).on('changeDate', function (e) {
                     var date = moment(e.date).format(settings._inputDateFormat);
                     var daysInMonth = moment(date).daysInMonth(),
-                            yearMonth = moment(date).format("YYYY-MM");
+                        yearMonth = moment(date).format("YYYY-MM");
                     settings.filterParams.start_date = yearMonth + "-01";
                     settings.filterParams.end_date = yearMonth + "-" + daysInMonth;
                     initMonthSelectorText($datepicker);
@@ -3032,20 +3032,20 @@ function replaceAll(find, replace, str) {
 
                 $dateRangeSelector.click(function () {
                     var type = $(this).attr("data-act"),
-                            startDate = moment(settings.filterParams.start_date),
-                            endDate = moment(settings.filterParams.end_date);
+                        startDate = moment(settings.filterParams.start_date),
+                        endDate = moment(settings.filterParams.end_date);
                     if (type === "next") {
                         var nextMonth = startDate.add(1, 'months'),
-                                daysInMonth = nextMonth.daysInMonth(),
-                                yearMonth = nextMonth.format("YYYY-MM");
+                            daysInMonth = nextMonth.daysInMonth(),
+                            yearMonth = nextMonth.format("YYYY-MM");
 
                         startDate = yearMonth + "-01";
                         endDate = yearMonth + "-" + daysInMonth;
 
                     } else if (type === "prev") {
                         var lastMonth = startDate.subtract(1, 'months'),
-                                daysInMonth = lastMonth.daysInMonth(),
-                                yearMonth = lastMonth.format("YYYY-MM");
+                            daysInMonth = lastMonth.daysInMonth(),
+                            yearMonth = lastMonth.format("YYYY-MM");
 
                         startDate = yearMonth + "-01";
                         endDate = yearMonth + "-" + daysInMonth;
@@ -3080,12 +3080,12 @@ var loadFilterView = function (settings) {
             statusCode: {
                 404: function () {
                     appLoader.hide();
-                    appAlert.error("404: Page not found.", {container: '.modal-body', animate: false});
+                    appAlert.error("404: Page not found.", { container: '.modal-body', animate: false });
                 }
             },
             error: function () {
                 appLoader.hide();
-                appAlert.error("500: Internal Server Error.", {container: '.modal-body', animate: false});
+                appAlert.error("500: Internal Server Error.", { container: '.modal-body', animate: false });
             }
         });
     }
@@ -3109,21 +3109,21 @@ var loadFilterView = function (settings) {
             singleDatepicker: [], // [{name: '', value:'', options:[]}] 
             rangeDatepicker: [], // [{startDate:{name:"", value:""},endDate:{name:"", value:""}}] 
             isMobile: window.outerWidth < 800 ? true : false,
-            filterParams: {customFilter: true}, //will post this vales on source url
-            search: {show: false},
+            filterParams: { customFilter: true }, //will post this vales on source url
+            search: { show: false },
             customLanguage: {
                 searchPlaceholder: AppLanugage.search,
                 today: AppLanugage.today,
                 yesterday: AppLanugage.yesterday,
                 tomorrow: AppLanugage.tomorrow
             },
-            beforeRelaodCallback: function () {},
-            afterRelaodCallback: function () {},
-            onInitComplete: function () {},
+            beforeRelaodCallback: function () { },
+            afterRelaodCallback: function () { },
+            onInitComplete: function () { },
         };
 
         var $instance = $(this),
-                $instanceWrapper = $instance; //$instanceWrapper is same as instance in this case
+            $instanceWrapper = $instance; //$instanceWrapper is same as instance in this case
 
         $instanceWrapper.append("<div class='custom-toolbar'></div>");
 
@@ -3210,13 +3210,13 @@ toCurrency = function (number, currencySymbol) {
     }
 
     if (AppHelper.settings.currencyPosition === "right") {
-        return  result + "" + currencySymbol;
+        return result + "" + currencySymbol;
     } else {
         if (result.indexOf("-") == "0") {
             result = result.replace('-', '');
             return "-" + currencySymbol + result;
         } else {
-            return  currencySymbol + "" + result;
+            return currencySymbol + "" + result;
         }
     }
 };
@@ -3224,19 +3224,19 @@ toCurrency = function (number, currencySymbol) {
 
 calculateDatatableTotal = function (instance, columnNumber, valueModifier, currentPage) {
     var api = instance.api(),
-            columnOption = {};
+        columnOption = {};
     if (currentPage) {
-        columnOption = {page: 'current'};
+        columnOption = { page: 'current' };
     }
 
     return api.column(columnNumber, columnOption).data()
-            .reduce(function (previousValue, currentValue, test, test2) {
-                if (valueModifier) {
-                    return previousValue + valueModifier(currentValue);
-                } else {
-                    return previousValue + currentValue;
-                }
-            }, 0);
+        .reduce(function (previousValue, currentValue, test, test2) {
+            if (valueModifier) {
+                return previousValue + valueModifier(currentValue);
+            } else {
+                return previousValue + currentValue;
+            }
+        }, 0);
 };
 
 // rmove the formatting to get integer data
@@ -3288,9 +3288,9 @@ unformatDecimalSeparator = function (currency) {
 // convert seconds to hours:minutes:seconds format
 secondsToTimeFormat = function (sec) {
     var sec_num = parseInt(sec, 10),
-            hours = Math.floor(sec_num / 3600),
-            minutes = Math.floor((sec_num - (hours * 3600)) / 60),
-            seconds = sec_num - (hours * 3600) - (minutes * 60);
+        hours = Math.floor(sec_num / 3600),
+        minutes = Math.floor((sec_num - (hours * 3600)) / 60),
+        seconds = sec_num - (hours * 3600) - (minutes * 60);
     if (hours < 10) {
         hours = "0" + hours;
     }
@@ -3386,10 +3386,10 @@ showHideAppTableColumn = function (tableInstance, columnIndex, visible) {
             multiSelect = "<div class='dropdown-menu'><ul class='list-group' data-act='multiselect'>" + multiSelect + "</ul></div>";
 
             var dom = '<div class="mr15 DTTT_container custom-toolbar">'
-                    + '<span class="dropdown inline-block filter-multi-select">'
-                    + '<button class="btn btn-default dropdown-toggle caret " type="button" data-bs-toggle="dropdown" aria-expanded="true">' + settings.text + ' </button>'
-                    + multiSelect + '</span>'
-                    + '</div>';
+                + '<span class="dropdown inline-block filter-multi-select">'
+                + '<button class="btn btn-default dropdown-toggle caret " type="button" data-bs-toggle="dropdown" aria-expanded="true">' + settings.text + ' </button>'
+                + multiSelect + '</span>'
+                + '</div>';
 
             $instance.append(dom);
             settings.onInit(values);
@@ -3449,9 +3449,9 @@ showHideAppTableColumn = function (tableInstance, columnIndex, visible) {
         } else if (settings.actionType === "date") {
             var dateFormat = getJsDateFormat();
             var dateArray = settings.value.split("-"),
-                    year = dateArray[0],
-                    month = dateArray[1],
-                    day = dateArray[2];
+                year = dateArray[0],
+                month = dateArray[1],
+                day = dateArray[2];
             var dateValue = dateFormat.replace("yyyy", year).replace("mm", month).replace("dd", day);
 
             containerDom = "<div style='height: 240px;' id='" + tempId + "'  data-date='" + dateValue + "' data-date-format='" + dateFormat + "' class='popover-tempId'></div>"; //set height first for right popover position
@@ -3503,11 +3503,11 @@ showHideAppTableColumn = function (tableInstance, columnIndex, visible) {
             var right = $(window).width() - ($(this).offset().left + $(this).outerWidth());
             if (right < 0) {
                 //overflowed
-                $(this).css({"left": "unset", "right": "10px"});
+                $(this).css({ "left": "unset", "right": "10px" });
 
                 //position arrow
                 var right = $(window).width() - ($instance.offset().left + (($instance.outerWidth() / 2) * 1));
-                $(this).find(".app-popover-arrow").css({"left": "unset", "right": right});
+                $(this).find(".app-popover-arrow").css({ "left": "unset", "right": right });
             }
         });
 
@@ -3524,7 +3524,7 @@ showHideAppTableColumn = function (tableInstance, columnIndex, visible) {
         function initAjaxAction($instance, value, settings, changedText) {
             var popoverContentHeight = $inputField.closest(".app-popover-body").height();
             var popoverContentWidth = $inputField.closest(".app-popover-body").width();
-            $inputField.closest(".app-popover-body").find(".loader-container").removeClass("hide").css({"height": popoverContentHeight, "width": popoverContentWidth});
+            $inputField.closest(".app-popover-body").find(".loader-container").removeClass("hide").css({ "height": popoverContentHeight, "width": popoverContentWidth });
             $inputField.closest(".app-popover-body").find(".custom-popover-button-area").addClass("hide");
             $inputField.addClass("hide");
 
@@ -3532,7 +3532,7 @@ showHideAppTableColumn = function (tableInstance, columnIndex, visible) {
                 url: settings.actionUrl,
                 type: 'POST',
                 dataType: settings.dataType,
-                data: {value: value},
+                data: { value: value },
                 success: function (result) {
                     $(".app-popover").remove(); //hide popover
                     setTimeout(function () {
@@ -3552,7 +3552,7 @@ showHideAppTableColumn = function (tableInstance, columnIndex, visible) {
                         $instance.attr("data-value", value); //update value for instant future use
                         $(".app-popover").remove();
                     } else {
-                        appAlert.error(result.message, {duration: 10000});
+                        appAlert.error(result.message, { duration: 10000 });
                     }
                 }
             });

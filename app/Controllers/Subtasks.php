@@ -641,6 +641,7 @@ class Subtasks extends Security_Controller {
             "start_date" => $this->request->getPost("start_date"),
             "end_date" => $this->request->getPost("end_date"),
             "car_type_id" => $this->request->getPost("car_type_id"),
+            "car_type_f" => $this->request->getPost("car_type_f"),
 
         
             "act_out_date" => $this->request->getPost("act_out_date")?$this->request->getPost("act_out_date"):'',

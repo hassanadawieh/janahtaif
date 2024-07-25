@@ -1231,18 +1231,22 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $tasks_table = $this->db->prefixTable('tasks');
 
 
-        $where = "";
+        $where = " ";
         $selected_year = $this->_get_clean_value($options, "selected_year");
         $ci = new \App\Controllers\Security_Controller(false);
         $this_year = $ci->session->get('selected_year');
         if($this_year!=1 && $selected_year){
-            $where .= " AND YEAR($tasks_table.created_date)=$this_year";
+            $where .= "  YEAR($tasks_table.created_date)=$this_year";
         }
-
+      
         $no_invoice = $this->_get_clean_value($options, "no_invoice");
         if ($no_invoice) {
             $where .= " AND $tasks_table.invoice_number='' OR $tasks_table.invoice_number IS NULL";
         }
+        // $deleted = $this->_get_clean_value($options, "deleted");
+        // if ($deleted) {
+        //     $where .= " AND $tasks_table.deleted=1";
+        // }
 
         $no_christening_number = $this->_get_clean_value($options, "no_christening_number");
         if ($no_christening_number) {
@@ -1255,7 +1259,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         } 
         $tasks_deleted = $this->_get_clean_value($options, "tasks_deleted");
         if ($tasks_deleted) {
-            $where .= " AND ($tasks_table.deleted=1)";
+            $where .= " AND $tasks_table.deleted=1";
          }
 
         
@@ -1264,7 +1268,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
 
         $sql = "SELECT COUNT($tasks_table.id) AS total
         FROM $tasks_table 
-        WHERE $tasks_table.deleted=0 $where ";
+        WHERE  $where ";
         return $this->db->query($sql)->getRow()->total;
     }
 

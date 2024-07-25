@@ -1206,7 +1206,7 @@ if (!function_exists('tasks_count_widget')) {
        // Define the conditions based on the $option value
        switch ($option) {
         case 'tasks_deleted':
-            $conditions = array("deleted" => 1, "selected_year" => $ci->session->get('selected_year'));
+            $conditions = array("tasks_deleted" => 1, "selected_year" => $ci->session->get('selected_year'));
             break;
         case 'no_invoice':
             $conditions = array("no_invoice" => "312", "selected_year" => $ci->session->get('selected_year'));
