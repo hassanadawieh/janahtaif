@@ -14,7 +14,7 @@ class Drivers extends Security_Controller {
     }
 
     function index() {
-        $view_data['can_add_city'] = $this->can_add_city();
+        $view_data['can_add_city'] = $this->can_add_driver();
         return $this->template->rander("drivers/index", $view_data);
     }
 
@@ -67,12 +67,12 @@ class Drivers extends Security_Controller {
 
             
             $check_status = js_anchor("<span class='$checkbox_class  float-start' ></span>", array('title' => "", "class" => "js-task", "data-id" => $data->id,  "data-act" => "update-task-status-checkbox")) ."<span class=' float-end'>".$data->id."</span>";
-       //if($this->can_delete_city()){
+       if($this->can_delete_driver()){
         $row_data = modal_anchor(get_uri("drivers/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id)). js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("drivers/delete"), "data-action" => "delete-confirmation"));
-           /*}else{
-                $row_data[] = $this->can_edit_city()?modal_anchor(get_uri("drivers/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id)):"<i data-feather='edit' class='icon-16'></i>";
+           }else{
+                $row_data[] = $this->can_edit_driver()?modal_anchor(get_uri("drivers/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id)):"<i data-feather='edit' class='icon-16'></i>";
 
-            }*/
+            }
             $status=$data->status==1? app_lang("open"):app_lang('closed');
 
         return array(
@@ -117,6 +117,10 @@ class Drivers extends Security_Controller {
         /*if (!$this->can_delete_city() && !$this->can_edit_city()) {
             app_redirect("forbidden");
         }*/
+        if (!$this->can_delete_driver()) {
+            app_redirect("forbidden");
+        };
+
         $this->validate_submitted_data(
             array(
                 "id" => "numeric|required"

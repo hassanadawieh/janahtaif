@@ -245,6 +245,25 @@
                             ?>
                             <label for="drivers_permission"><?php echo app_lang("drivers_permissions"); ?></label>
                         </div>
+                        <!-- hassan -->
+                        <div class="col-md-6">
+                            <?php
+                            echo form_checkbox("can_delete_driver", "1", $can_delete_driver ? true : false, "id='can_delete_driver' class='form-check-input'");
+                            ?>
+                            <label for="can_delete_driver"><?php echo app_lang("can_delete_driver"); ?></label>
+                        </div>
+                        <div class="col-md-6">
+                            <?php
+                            echo form_checkbox("can_edit_driver", "1", $can_edit_driver ? true : false, "id='can_edit_driver' class='form-check-input'");
+                            ?>
+                            <label for="can_edit_driver"><?php echo app_lang("can_edit_driver"); ?></label>
+                        </div>
+                        <div class="col-md-6">
+                            <?php
+                            echo form_checkbox("can_add_driver", "1", $can_edit_driver ? true : false, "id='can_add_driver' class='form-check-input'");
+                            ?>
+                            <label for="can_add_driver"><?php echo app_lang("can_add_driver"); ?></label>
+                        </div>
 
                     <div class="col-md-6" >
                             <?php

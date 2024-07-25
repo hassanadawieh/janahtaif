@@ -450,7 +450,10 @@ $lang["drivers"] = "السائقين";
 
 $lang["cartype_settings"] = "إعدادات انواع السيارات";
 $lang["add_cartype"] = "إضافة نوع سياره";
-$lang["drivers_permissions"] = "صلاحية الوصول الى السائقين";
+$lang["drivers_permissions"] = "اظهر السائقين";
+$lang["can_add_driver"] = "يمكن اضافة سائق";
+$lang["can_edit_driver"] = "يمكن تعديل السائق";
+$lang["can_delete_driver"] = "يمكن حذف السائق";
 $lang["cartype_permissions"] = "صلاحية الوصول الى انواع السيارات";
 $lang["carstype"] = "انواع السيارات";
 

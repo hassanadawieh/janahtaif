@@ -1403,6 +1403,39 @@ class Security_Controller extends App_Controller {
             }
         } 
     }
+    //hassan
+    protected function can_delete_driver() {
+        if ($this->login_user->user_type == "staff") {
+            if ($this->can_manage_all_projects()) {
+                return true;
+            } else if (get_array_value($this->login_user->permissions, "can_delete_driver") == "1") {
+                //check is user a project member
+                return true;
+            }
+        } 
+    }
+    //hassan
+    protected function can_edit_driver() {
+        if ($this->login_user->user_type == "staff") {
+            if ($this->can_manage_all_projects()) {
+                return true;
+            } else if (get_array_value($this->login_user->permissions, "can_edit_driver") == "1") {
+                //check is user a project member
+                return true;
+            }
+        } 
+    }
+
+    protected function can_add_driver() {
+        if ($this->login_user->user_type == "staff") {
+            if ($this->can_manage_all_projects()) {
+                return true;
+            } else if (get_array_value($this->login_user->permissions, "can_add_driver") == "1") {
+                //check is user a project member
+                return true;
+            }
+        } 
+    }
 
     protected function my_can_edit_tasks() {
         //if ($this->login_user->user_type == "staff") {

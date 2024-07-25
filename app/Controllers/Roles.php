@@ -110,7 +110,10 @@ class Roles extends Security_Controller {
             $view_data['can_add_city'] = get_array_value($permissions, "can_add_city");
             $view_data['can_edit_city'] = get_array_value($permissions, "can_edit_city");
             $view_data['can_delete_city'] = get_array_value($permissions, "can_delete_city");
-
+            //hassan
+            $view_data['can_delete_driver'] = get_array_value($permissions, "can_delete_driver");
+            $view_data['can_edit_driver'] = get_array_value($permissions, "can_edit_driver");
+            $view_data['can_add_driver'] = get_array_value($permissions, "can_add_driver");
             
 
             $view_data['supply_mang'] = get_array_value($permissions, "supply_mang");
@@ -222,23 +225,23 @@ class Roles extends Security_Controller {
         $supplier_permission = $this->request->getPost('supplier_permission');
         $drivers_permission = $this->request->getPost('drivers_permission');
         $car_type_permission = $this->request->getPost('car_type_permission');
-
-
+        
+        
         $lead = $this->request->getPost('lead_permission');
-
+        
         $ticket = $this->request->getPost('ticket_permission');
-
+        
         $ticket_specific = "";
         if ($ticket === "specific") {
             $ticket_specific = $this->request->getPost('ticket_permission_specific');
         }
-
+        
         $client_specific = "";
         if ($client === "specific") {
             $client_specific = $this->request->getPost('client_permission_specific');
         }
-
-
+        
+        
         $do_not_show_projects = $this->request->getPost('do_not_show_projects');
         $can_manage_all_projects = $this->request->getPost('can_manage_all_projects');
         $can_create_projects = $this->request->getPost('can_create_projects');
@@ -246,29 +249,32 @@ class Roles extends Security_Controller {
         $can_edit_only_own_subtasks = $this->request->getPost('can_edit_only_own_subtasks');
         $can_delete_only_own_created_projects = $this->request->getPost('can_delete_only_own_created_projects');
         $can_delete_projects = $this->request->getPost('can_delete_projects');
-
+        
         $can_add_remove_project_members = $this->request->getPost('can_add_remove_project_members');
-
+        
         $can_create_tasks = $this->request->getPost('can_create_tasks');
         $can_edit_subtasks_after_closed = $this->request->getPost('can_edit_subtasks_after_closed');
         $can_edit_subtasks_after_review = $this->request->getPost('can_edit_subtasks_after_review');
-
+        
         $can_edit_tasks = $this->request->getPost('can_edit_tasks');
         $can_show_tasks = $this->request->getPost('can_show_tasks');
-
+        
         $can_create_subtasks = $this->request->getPost('can_create_subtasks');
         $can_edit_subtasks = $this->request->getPost('can_edit_subtasks');
         $can_show_subtasks = $this->request->getPost('can_show_subtasks');
         $can_delete_subtasks = $this->request->getPost('can_delete_subtasks');
-
+        
         $can_add_suppliers = $this->request->getPost('can_add_suppliers');
         $can_edit_suppliers = $this->request->getPost('can_edit_suppliers');
         $can_delete_suppliers = $this->request->getPost('can_delete_suppliers');
-
+        
         $can_add_city = $this->request->getPost('can_add_city');
         $can_edit_city = $this->request->getPost('can_edit_city');
         $can_delete_city = $this->request->getPost('can_delete_city');
-
+        //hassan
+        $can_delete_driver = $this->request->getPost("can_delete_driver");
+        $can_edit_driver = $this->request->getPost("can_edit_driver");
+        $can_add_driver = $this->request->getPost("can_add_driver");
         
         $supply_mang = $this->request->getPost('supply_mang');
         $reserv_mang = $this->request->getPost('reserv_mang');
@@ -395,6 +401,12 @@ class Roles extends Security_Controller {
             "can_add_city" => $can_add_city,
             "can_edit_city" => $can_edit_city,
             "can_delete_city" => $can_delete_city,
+            
+            //hassan
+            "can_edit_driver" => $can_edit_driver,
+            "can_add_driver" => $can_add_driver,
+            "can_delete_driver" => $can_delete_driver,
+
 
                                     
             "supply_mang" => $supply_mang,
