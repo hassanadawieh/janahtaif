@@ -1410,7 +1410,8 @@ $myoptions = array(
             $view_data['servicetype_dropdown'] = array(
                 array("id" => "with_driver", "text" => "سيارة بسائق","isSelected" => true),
                 array("id" => "no_driver", "text" => "سيارة بدون سائق"),
-                array("id" => "deliver", "text" => "توصيلة"));
+                array("id" => "deliver", "text" => "توصيلة"),
+                array("id" => "no_car", "text" => "سائق بدون سيارة"));
 
 
 
@@ -2357,6 +2358,9 @@ $myoptions = array(
                 break;
             case "deliver":
                 return "توصيلة";
+                break;
+            case "deliver":
+                return "سيارة بدون سائق";
                 break;
             
             default:

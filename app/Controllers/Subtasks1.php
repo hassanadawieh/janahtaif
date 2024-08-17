@@ -1295,7 +1295,9 @@ $myoptions = array(
             $view_data['servicetype_dropdown'] = array(
                 array("id" => "with_driver", "text" => "سيارة بسائق","isSelected" => true),
                 array("id" => "no_driver", "text" => "سيارة بدون سائق"),
-                array("id" => "deliver", "text" => "توصيلة"));
+                array("id" => "deliver", "text" => "توصيلة"),
+                array("id" => "no_car", "text" => "سائق بدون سيارة")
+            );
 
 
 
@@ -1547,7 +1549,7 @@ $myoptions = array(
         }else{
             $car_status_id=$car_status_list->id;
         }
-    }
+     }
         $data = array(
 
             "supplier_id" => $supplier_id,
@@ -2243,6 +2245,10 @@ $myoptions = array(
             case "deliver":
                 return "توصيلة";
                 break;
+            case "no_car":
+                return "سائق بدون سيارة";
+                break;
+                
             
             default:
                 return '';

@@ -1053,26 +1053,26 @@ class Subtasks extends Security_Controller {
        
     }
 
-    function task_modal_form() {
+    function task_modal_form()
+    {
 
+        $id = $this->request->getPost('id');
+        $model_info = $this->Sub_tasks_model->get_one($id);
 
-            $id = $this->request->getPost('id');
-            $model_info = $this->Sub_tasks_model->get_one($id);
-    
-            $createBy = $this->Users_model->get_one($model_info->created_by);
-    
-            $login_user_id = $this->Users_model->login_user_id();
-            if (!$login_user_id) {
-                show_404();
-            }
-    
-            $user_info = $this->Users_model->get_one($login_user_id);
-            if ((!($createBy->first_name == $user_info->first_name) && !($createBy->last_name == $user_info->last_name))&&(!$this->login_user->is_admin)) {
-                // $permession_data["permession"] = "Just who create this task and admin can edit";
-                // return $this->template->view('subtasks/modal_form', $permession_data);
-                 return;
-            };
+        $createBy = $this->Users_model->get_one($model_info->created_by);
 
+        $login_user_id = $this->Users_model->login_user_id();
+        if (!$login_user_id) {
+            show_404();
+        }
+
+        $user_info = $this->Users_model->get_one($login_user_id);
+        if ((!($createBy->first_name == $user_info->first_name) && !($createBy->last_name == $user_info->last_name)) && (!$this->login_user->is_admin)) {
+            // $permession_data["permession"] = "Just who create this task and admin can edit";
+            // return $this->template->view('subtasks/modal_form', $permession_data);
+            return;
+        }
+        ;
         if (!$this->is_reserv_mang()) {
             app_redirect("forbidden");
         }
@@ -1082,13 +1082,15 @@ class Subtasks extends Security_Controller {
         $last_id = $this->request->getPost('last_id');
         $task_id = $this->request->getPost('task_id');
         $deleted_client = $this->request->getPost('deleted_client');
-        
+
         // $model_info = $this->Sub_tasks_model->get_one($id);
         $myoptions = array(
             "id" => $id
-            ,"mang" => "reserv"
-            ,"selected_year" => $this->session->get('selected_year')
-             );
+            ,
+            "mang" => "reserv"
+            ,
+            "selected_year" => $this->session->get('selected_year')
+        );
         $model_info2 = $this->Sub_tasks_model->get_details($myoptions)->getRow();
 
         $task_id = $this->request->getPost('task_id') ? $this->request->getPost('task_id') : $model_info->pnt_task_id;
@@ -1105,14 +1107,14 @@ class Subtasks extends Security_Controller {
         $view_data = $this->_initialize_all_related_data_of_project();
 
         //$login_user->role_id
-        if ($id ) {
-            if($model_info2->dynamic_status_id==4 && !$this->can_edit_subtasks_after_closed()){
-                    app_redirect("forbidden");
-                }
+        if ($id) {
+            if ($model_info2->dynamic_status_id == 4 && !$this->can_edit_subtasks_after_closed()) {
+                app_redirect("forbidden");
+            }
             if (!$this->can_edit_subtasks($id)) {
                 app_redirect("forbidden");
-                
-                
+
+
             }
 
         } else {
@@ -1123,32 +1125,32 @@ class Subtasks extends Security_Controller {
 
         $view_data['model_info'] = $model_info;
 
-        $view_data['supplier_name']= $this->Suppliers_model->get_one($model_info->supplier_id);//$data->supplier_name ?$data->supplier_name:' - ';
-        $view_data['created_by_nm']= $this->Users_model->get_one($model_info->created_by);
-        $view_data['updated_by_nm']= $this->Users_model->get_one($model_info->updated_by);
+        $view_data['supplier_name'] = $this->Suppliers_model->get_one($model_info->supplier_id);//$data->supplier_name ?$data->supplier_name:' - ';
+        $view_data['created_by_nm'] = $this->Users_model->get_one($model_info->created_by);
+        $view_data['updated_by_nm'] = $this->Users_model->get_one($model_info->updated_by);
         $view_data['rec_inv_status'] = $this->get_rec_inv_status($model_info->rec_inv_status);
         //$view_data["suppliers_dropdown"] = $this->_get_suppliers_dropdown();
-        
-        if(!$id){
+
+        if (!$id) {
             $view_data["cars_type_dropdown"] = $this->_get_cars_type_dropdown();
             $view_data["drivers_dropdown"] = $this->_get_drivers_dropdown();
-        }else{
+        } else {
             $view_data["cars_type_dropdown"] = $this->_get_cars_type_dropdown2($model_info->car_type_id);
             $view_data["drivers_dropdown"] = $this->_get_drivers_dropdown2($model_info->driver_id);
         }
         $view_data["tasks_dropdown"] = $this->_get_tasks_dropdown();
         $view_data["cities_dropdown"] = $this->_get_cities_dropdown();
 
-        
-         //projects dropdown is necessary on add multiple tasks
+
+        //projects dropdown is necessary on add multiple tasks
         $view_data["add_type"] = $add_type;
-       
-            $view_data["mang"] = 'reservmang';
-        
+
+        $view_data["mang"] = 'reservmang';
+
         //$view_data["mang"] = $mang;
         $view_data['task_id'] = $task_id;
-        
-        
+
+
 
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("sub_tasks", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
@@ -1484,7 +1486,9 @@ $myoptions = array(
             $view_data['servicetype_dropdown'] = array(
                 array("id" => "with_driver", "text" => "سيارة بسائق","isSelected" => true),
                 array("id" => "no_driver", "text" => "سيارة بدون سائق"),
-                array("id" => "deliver", "text" => "توصيلة"));
+                array("id" => "deliver", "text" => "توصيلة"),
+                array("id" => "no_car", "text" => "سائق بدون سيارة")
+            );
 
 
 
@@ -1668,6 +1672,14 @@ $myoptions = array(
         $note_2 = $this->request->getPost('note_2');
         $amount = $this->request->getPost('amount');
 
+
+        $start_date = $this->request->getPost('start_date');
+        $end_date = $this->request->getPost('end_date');
+        $start_time = $this->request->getPost('start_time')?convert_time_to_24hours_format($this->request->getPost('start_time')):'00:00:01';
+        $end_time = $this->request->getPost('end_time')?convert_time_to_24hours_format($this->request->getPost('end_time')):'00:00:01';
+        $sub_task_note = $this->request->getPost('sub_task_note');
+        $booking_period = $this->request->getPost('booking_period');
+
         $enterd_status=1;
 
 
@@ -1691,6 +1703,17 @@ $myoptions = array(
         }else{
             $enterd_status=1;
         }*/
+        if($this->request->getPost('start_time')){
+            $data["start_time"]= $start_time;
+        }else{
+            $data["start_time"]= "00:00:01";
+        }
+
+        if($this->request->getPost('end_time')){
+            $data["end_time"]= $end_time;
+        }else{
+            $data["end_time"]= "00:00:01";
+        }
         $data = array(
             "guest_nm" => $guest_nm,
             "guest_phone" => $guest_phone,
@@ -1709,6 +1732,13 @@ $myoptions = array(
             "tmp_return_date" => $tmp_return_date,
             "sales_act_return_date" => $sales_act_return_date,
             "note" => $note,
+            "start_date" => $start_date,
+            "end_date" => $end_date,
+            "start_time" => $start_time,
+            "end_time" => $end_time,
+            "sub_task_note" => $sub_task_note,
+            "booking_period" => $booking_period,
+            
             
             
         );
@@ -1717,6 +1747,8 @@ $myoptions = array(
         }else{
             $data["exp_out_time"]= "00:00:01";
         }
+ 
+
     }
 
     if($mang=="supplymang" && $this->is_supply_mang()){
@@ -1750,6 +1782,7 @@ $myoptions = array(
             "car_number" => $car_number,
             "car_status" => $car_status,
             "rec_inv_status" => $rec_inv_status,
+            
             
         );
 
@@ -2431,6 +2464,9 @@ $myoptions = array(
                 break;
             case "deliver":
                 return "توصيلة";
+                break;
+            case "no_car":
+                return "سائق بدون سيارة";
                 break;
             
             default:

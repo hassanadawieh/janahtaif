@@ -280,3 +280,27 @@ if($model_info->id){
                     </div>
                 </div>
             </div>
+
+            <script>
+                $(document).ready(function () {
+                   function checkFields() {
+                       var actOutDate = $('#act_out_date').val();
+                       var actOutTime = $('#act_out_time').val();
+
+                       if (actOutDate && actOutTime) {
+                           $('#dres_number').attr('required', 'required');
+                       } else {
+                           $('#dres_number').removeAttr('required');
+                       }
+                   }
+
+                   // Check fields on page load
+                   checkFields();
+
+                   // Check fields when either act_out_date or act_out_time changes
+                   $('#act_out_date, #act_out_time').on('change', function () {
+                       checkFields();
+                   });
+                });
+
+             </script>

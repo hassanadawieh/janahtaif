@@ -124,6 +124,8 @@
                 $('#car_type').attr('data-rule-required', false);
                 $('#driver_id').prop('disabled', false);
 
+            }else if($(this).val()=="no_car"){
+                $('#car_type').prop('disabled', true);
             }
         });
     });

@@ -67,6 +67,8 @@
                      <?php
                         $status[1] =  app_lang("open");
                         $status[2] =  app_lang("closed");
+                        // hassan_driver
+                        $status[3] =  app_lang("off");
                         
 
                         echo form_dropdown("status", $status, $model_info->status ?array($model_info->status):1, "class='select2' id='status' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");

@@ -264,7 +264,7 @@ if (! function_exists('form_dropdown')) {
      * @param mixed $selected
      * @param mixed $extra
      */
-    function form_dropdown($data = '', $options = [], $selected = [], $extra = '',$attributes = []): string
+    function form_dropdown($data = '', $options = [], $selected = [], $extra = '' , $statuses = []): string
     {
         $defaults = [];
         if (is_array($data)) {
@@ -310,7 +310,9 @@ if (! function_exists('form_dropdown')) {
         foreach ($options as $key => $val) {
             // Keys should always be strings for strict comparison
             $key = (string) $key;
-
+            $status = isset($statuses[$key]) ? $statuses[$key] : null;
+            $isDisabled = ($status == 3) ? ' disabled="disabled"' : '';
+            $backgroundColor = ($status === 3) ? 'background-color: #e0e0e0;' : '';
             if (is_array($val)) {
                 if (empty($val)) {
                     continue;
@@ -323,15 +325,16 @@ if (! function_exists('form_dropdown')) {
                     $optgroupKey = (string) $optgroupKey;
 
                     $sel = in_array($optgroupKey, $selected, true) ? ' selected="selected"' : '';
-                    $form .= '<option value="' . htmlspecialchars($optgroupKey) . '"' . $sel . '>' . $optgroupVal . "</option>\n";
+                    $form .= '<option value="' . htmlspecialchars($optgroupKey) . '"' . $sel . $isDisabled
+                    . ' style="' . $backgroundColor . '">' . $optgroupVal . "</option>\n";
                 }
 
                 $form .= "</optgroup>\n";
             } else {
                 $form .= '<option value="' . htmlspecialchars($key) . '"'
-                    . (in_array($key, $selected, true) ? ' selected="selected"' : '') . '>'
-                    . $val . "</option>\n";
-
+                . (in_array($key, $selected, true) ? ' selected="selected"' : '') . $isDisabled
+                . ' style="' . $backgroundColor . '">'
+                . $val . "</option>\n";
             }
         }
 

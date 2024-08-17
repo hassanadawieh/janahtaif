@@ -48,6 +48,7 @@ $lang["currency"] = "العملة";
 $lang["new"] = "جديد";
 $lang["open"] = "مفتوح";
 $lang["closed"] = "مغلق";
+$lang["off"] = "معطل";
 $lang["date"] = "التاريخ";
 $lang["yes"] = "نعم";
 $lang["no"] = "لا";
@@ -393,6 +394,13 @@ $lang["car_number"] = "رقم لوحة السيارة";
 $lang["out_date"] = "تاريخ الخروج";
 $lang["act_out_date"] = "تاريخ الخروج الفعلي";
 $lang["amount"] = "المبلغ";
+$lang["start_date"] = "تاريخ البداية";
+$lang["end_date"] = "تاريخ النهاية";
+$lang["start_time"] = "وقت البداية";
+$lang["end_time"] = "وقت النهاية";
+$lang["sub_task_note"] = "ملاحظات المهمة";
+$lang["booking_period"] = "الأيام في الفاتورة";
+
 
 $lang["exp_out_time"] = "وقت الخروج المتوقع";
 $lang["out_exp_date&time"] = "تاريخ&وقت الخروج المتوقع";
@@ -421,12 +429,12 @@ $lang["tasks_without_out_time"] = " لم يتم تحديد وقت الخروج";
 $lang["tasks_without_supplier_invoice"] = "لم يتم استلام فاتورة المورد";
 
 $lang["day_count"] = "الأيام الفعلية";
-$lang["inv_day_count"] = "الأيام في الفاتورة";
+$lang["inv_day_count"] = "مدة الحجز";
 $lang["car_status"] = "حالة السيارة";
 $lang["rec_inv_status"] = "حالة استلام فاتورة المورد";
 $lang["rec_inv_status2"] = "حالة  الفاتورة";
 $lang["car_expens"] = "مصروفات السيارة";
-$lang["car_expens_stmnt"] = "بيان مصروف السيارة";
+$lang["car_expens_stmnt"] = "حساب السائق";
 $lang["dres_number"] = "رقم الدريس";
 
 $lang["closed_user_id"] = "رقم مستخدم الاقفال";

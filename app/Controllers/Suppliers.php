@@ -41,14 +41,17 @@ if(!$this->supplier_permission()){
 
     /* load client add/edit modal */
 
-    function modal_form() {
-       
+    function modal_form()
+    {
+
 
         $supplier_id = $this->request->getPost('id');
         //$this->can_access_this_client($supplier_id);
-        $this->validate_submitted_data(array(
-            "id" => "numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric"
+            )
+        );
 
         if ($supplier_id) {
             if (!$this->can_edit_suppliers()) {
@@ -59,13 +62,13 @@ if(!$this->supplier_permission()){
                 app_redirect("forbidden");
             }
         }
-
+        $view_data['model_info'] = $this->Suppliers_model->get_one($supplier_id);
         $view_data['label_column'] = "col-md-3";
         $view_data['field_column'] = "col-md-9";
 
         $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
         //$view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
-        
+
         $view_data['model_info'] = $this->Suppliers_model->get_one($supplier_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
@@ -113,21 +116,28 @@ if(!$this->supplier_permission()){
 
     /* insert or update a client */
 
-    function save() {
+    function save()
+    {
         $supplier_id = $this->request->getPost('id');
         if (!$this->can_edit_suppliers()) {
             app_redirect("forbidden");
         }
 
-     
 
-        $this->validate_submitted_data(array(
-            "id" => "numeric",
-            "name" => "required"
-        ));
+
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "name" => "required"
+            )
+        );
 
         $company_name = $this->request->getPost('name');
 
+        $target_path = get_setting("timeline_file_path");
+        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "note");
+        $new_files = unserialize($files_data);
+        
         $data = array(
             "name" => $company_name,
             //"type" => $this->request->getPost('account_type'),
@@ -141,10 +151,17 @@ if(!$this->supplier_permission()){
             //"vat_number" => $this->request->getPost('vat_number')
         );
 
-        
+        if ($supplier_id) {
+            $note_info = $this->Suppliers_model->get_one($supplier_id);
+            $timeline_file_path = get_setting("timeline_file_path");
 
-       
-        
+            $new_files = update_saved_files($timeline_file_path, $note_info->files, $new_files);
+        }
+
+        $data["files"] = serialize($new_files);
+
+
+
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
             $data["created_by"] = $this->request->getPost('created_by') ? $this->request->getPost('created_by') : $this->login_user->id;
@@ -155,7 +172,7 @@ if(!$this->supplier_permission()){
 
         $data = clean_data($data);
 
-       
+
         //$Suppliers_model = model('App\Models\Suppliers_model');
 
         $save_id = $this->Suppliers_model->ci_save($data, $supplier_id);
@@ -163,8 +180,8 @@ if(!$this->supplier_permission()){
         if ($save_id) {
             save_custom_fields("clients", $save_id, $this->login_user->is_admin, $this->login_user->user_type);
 
-            
-           
+
+
 
             echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'view' => $this->request->getPost('view'), 'message' => app_lang('record_saved')));
         } else {
@@ -254,7 +271,17 @@ if(!$this->supplier_permission()){
 
        
 
-      
+        $files_link = "";
+        if ($data->files) {
+            $files = unserialize($data->files);
+            if (count($files)) {
+                foreach ($files as $key => $value) {
+                    $file_name = get_array_value($value, "file_name");
+                    $link = get_file_icon(strtolower(pathinfo($file_name, PATHINFO_EXTENSION)));
+                    $files_link .= js_anchor("<i data-feather='$link'></i>", array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "class" => "float-start font-22 mr10", "title" => remove_file_prefix($file_name), "data-url" => get_uri("suppliers/file_preview/" . $data->id . "/" . $key)));
+                }
+            }
+        }
         
 
         $row_data = array($data->id,
@@ -262,7 +289,8 @@ if(!$this->supplier_permission()){
             anchor(get_uri("suppliers/view/" . $data->id), $data->name),
             $data->address,
             $data->phone,
-            $data->email
+            $data->email,
+            $files_link
             
             
         );
@@ -280,6 +308,31 @@ if(!$this->supplier_permission()){
             }
 
         return $row_data;
+    }
+
+    function file_preview($id = "", $key = "") {
+        if ($id) {
+            validate_numeric_value($id);
+            $suppliers_info = $this->Suppliers_model->get_one($id);
+            $files = unserialize($suppliers_info->files);
+            $file = get_array_value($files, $key);
+
+            $file_name = get_array_value($file, "file_name");
+            $file_id = get_array_value($file, "file_id");
+            $service_type = get_array_value($file, "service_type");
+
+            $view_data["file_url"] = get_source_url_of_file($file, get_setting("timeline_file_path"));
+            $view_data["is_image_file"] = is_image_file($file_name);
+            $view_data["is_iframe_preview_available"] = is_iframe_preview_available($file_name);
+            $view_data["is_google_preview_available"] = is_google_preview_available($file_name);
+            $view_data["is_viewable_video_file"] = is_viewable_video_file($file_name);
+            $view_data["is_google_drive_file"] = ($file_id && $service_type == "google") ? true : false;
+            $view_data["is_iframe_preview_available"] = is_iframe_preview_available($file_name);
+
+            return $this->template->view("suppliers/file_preview", $view_data);
+        } else {
+            show_404();
+        }
     }
 
     /* load client details view */
@@ -671,6 +724,9 @@ if(!$this->supplier_permission()){
             case "deliver":
                 return "توصيلة";
                 break;
+            case "no_car":
+                return "سائق بدون سيارة";
+                break;
             
             default:
                 return '';
@@ -1060,6 +1116,35 @@ if(!$this->supplier_permission()){
         $session->set('user_id', $user_info->id);
 
         app_redirect('dashboard/view');
+    }
+
+    function files($supplier_id="", $view_type = "") {
+        $this->can_view_files();
+        $this->can_access_this_supplier($supplier_id);
+
+        if ($this->login_user->user_type == "supplier") {
+            $supplier_id = $this->login_user->supplier_id;
+        }
+
+        $view_data['supplier_id'] = clean_data($supplier_id);
+        $view_data['page_view'] = false;
+
+        if ($view_type == "page_view") {
+            $view_data['page_view'] = true;
+            return $this->template->rander("suppliers/files/index", $view_data);
+        } else {
+            return $this->template->view("suppliers/files/index", $view_data);
+        }
+    }
+    /* upload a post file */
+
+    function upload_file() {
+        upload_file_to_temp();
+    }
+    /* check valid file for client */
+
+    function validate_file() {
+        return validate_post_file($this->request->getPost("file_name"));
     }
 
 }

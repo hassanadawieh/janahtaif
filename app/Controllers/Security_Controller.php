@@ -864,9 +864,10 @@ class Security_Controller extends App_Controller {
 
         return $suppliers_dropdown;
     }
-
+    // hassan_driver adawiyeh
      protected function _get_drivers_dropdown() {
-        $driver_options = array("deleted" => "0");
+        $driver_options = array("deleted" => "0" , "status" => "1", "offDriversStatus" => "3");
+        // $driver_options = array("deleted" => "0" , "status" => "1" , "status" => "3");
         if ($this->login_user->user_type == "staff") {
             if (!$this->can_manage_all_projects()) {
                 $project_options["user_id"] = $this->login_user->id; //normal user's should be able to see only the projects where they are added as a team mmeber.
@@ -876,38 +877,47 @@ class Security_Controller extends App_Controller {
         $drivers = $this->Drivers_model->get_details($driver_options)->getResult();
         $drivers_dropdown = array("" => "-".app_lang("driver_name")."-");
 
-        // if ($drivers) {
-        //     foreach ($drivers as $driver) {
-        //         $drivers_dropdown[$driver->id] = $driver->driver_nm;
-        //     }
-        // }
-        ////////////////////
-        // if ($drivers) {
-        //     foreach ($drivers as $driver) {
-        //         $drivers_dropdown[$driver->id] = $driver->driver_nm . " (" . $driver->status . ")";
-        //     }
-        // }
-
         if ($drivers) {
             foreach ($drivers as $driver) {
-                // Determine the background color and disabled status based on driver status
-                $background_color = ($driver->status != 1) ? 'background-color: #f2f2f2;' : '';
-                $disabled = ($driver->status != 1) ? 'disabled' : '';
-        
-                // Create an option for the dropdown with necessary attributes
-                $drivers_dropdown[$driver->id] = [
-                    'text' => $driver->driver_nm,
-                    'style' => $background_color,
-                    'disabled' => $disabled
-                ];
+                $drivers_dropdown[$driver->id] = $driver->driver_nm;
             }
         }
 
-        return $drivers_dropdown;
+        if($drivers) {
+            foreach ($drivers as $driver) {
+                $drivers_statuses[$driver->id] = $driver->status;
+            }
+        }
+        ////////////////////
+        // if ($drivers) {
+        //     foreach ($drivers as $driver) {
+        //         $drivers_dropdown[$driver->id] = [
+        //              'driver_nm' => $driver->driver_nm,
+        //              'status' => $driver->status   
+        //         ];
+        //     }
+        // }
+
+        // if ($drivers) {
+        //     foreach ($drivers as $driver) {
+        //         // Determine the background color and disabled status based on driver status
+        //         $background_color = ($driver->status != 1) ? 'background-color: #f2f2f2;' : '';
+        //         $disabled = ($driver->status != 1) ? 'disabled' : '';
+        
+        //         // Create an option for the dropdown with necessary attributes
+        //         $drivers_dropdown[$driver->id] = [
+        //             'text' => $driver->driver_nm,
+        //             'style' => $background_color,
+        //             'disabled' => $disabled
+        //         ];
+        //     }
+        // }
+
+        return $drivers_data = [$drivers_dropdown , $drivers_statuses];
     }
 
     protected function _get_drivers_dropdown2($driver_id) {
-        $driver_options = array("deleted" => "0");
+        $driver_options = array("deleted" => "0","status" => "1" , "offDriversStatus" => "3");
         if ($this->login_user->user_type == "staff") {
             if (!$this->can_manage_all_projects()) {
                 $project_options["user_id"] = $this->login_user->id; //normal user's should be able to see only the projects where they are added as a team mmeber.
@@ -931,8 +941,13 @@ class Security_Controller extends App_Controller {
                 $drivers_dropdown[$driver_id] = "DeletedOrDisabled";
             }
         }
+        if($drivers) {
+            foreach ($drivers as $driver) {
+                $drivers_statuses[$driver->id] = $driver->status;
+            }
+        }
 
-        return $drivers_dropdown;
+        return $drivers_data=[$drivers_dropdown,$drivers_statuses];
     }
 
     protected function _get_cars_type_dropdown() {

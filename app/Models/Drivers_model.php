@@ -20,8 +20,9 @@ class Drivers_model extends Crud_model {
             $where .= " AND $drivers_table.id=$id";
         }
         $status = $this->_get_clean_value($options, "status");
-        if ($status) {
-            $where .= " AND $drivers_table.status=$status";
+        $offDriversStatus = $this->_get_clean_value($options, "offDriversStatus");
+        if ($status && $offDriversStatus) {
+            $where .= " AND $drivers_table.status IN($status,$offDriversStatus)";
         }
 
          $limit_offset = "";

@@ -45,6 +45,7 @@ $lang["undeleted"] = "Not Deleted";
 $lang["currency"] = "Currency";
 $lang["new"] = "New";
 $lang["open"] = "Open";
+$lang["off"] = "Off";
 $lang["closed"] = "Closed";
 $lang["date"] = "Date";
 $lang["yes"] = "Yes";
@@ -157,7 +158,7 @@ $lang["car_status"] = "Car Status";
 $lang["rec_inv_status"] = "Invoice Receipt Status";
 $lang["rec_inv_status2"] = "Invoice Status";
 $lang["car_expens"] = "Car Expense";
-$lang["car_expens_stmnt"] = "Car Expense Statement";
+$lang["car_expens_stmnt"] = "Driver Expense";
 $lang["dres_number"] = "Drees No";
 
 $lang["closed_user_id"] = "رقم مستخدم الاقفال";

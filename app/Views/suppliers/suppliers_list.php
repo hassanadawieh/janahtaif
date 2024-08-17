@@ -43,6 +43,7 @@
             {title: "<?php echo app_lang("address") ?>", order_by: "address"},
             {title: "<?php echo app_lang("phone") ?>", order_by: "phone"},
             {title: "<?php echo app_lang("email") ?>"},
+            {title: "<?php echo "Files" ?>", order_by: "client_groups"},
            
            
             {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100", visible: showOptions}

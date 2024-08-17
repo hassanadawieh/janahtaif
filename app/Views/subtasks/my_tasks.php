@@ -271,6 +271,7 @@ var showOption = true,
         $service_type_dropdown[] = array("id" => "with_driver", "text" => "سيارة بسائق");
         $service_type_dropdown[] = array("id" => "no_driver", "text" => "بدون سائق");
         $service_type_dropdown[] = array("id" => "deliver", "text" => "توصيلة");
+        $service_type_dropdown[] = array("id" => "no_car", "text" => "سائق بدون سيارة");
 
         $statuses2 = array(array("id" => "", "text" => "- ". app_lang("status"). " -"));
     $statuses2[] = array("id" => 1, "text" => app_lang('open'));

@@ -129,9 +129,12 @@ $newDate2 = $dateTime->format(get_setting("date_format"));
                         elseif ($model_info->service_type=='no_driver' ) {
                             $color='#52a100';
                             $service_type_txt="سيارة بدون سائق";
-                        }else{
+                        }elseif($model_info->service_type=='deliver'){
                             $color='#ff1f2d';
                             $service_type_txt="توصيلة";
+                        }else{
+                            $color='#ff1fa200';
+                            $service_type_txt="سائق بدون سيارة";
                         }
 
                         ?>

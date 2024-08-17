@@ -312,7 +312,11 @@
     $(document).ready(function () {
 
        //$("#s2id_cls_id > .select2-choice").attr("style","background-color: #ed6666 !important;");
-       
+       var taskDate = $('#created_date').val();
+
+        if (taskDate) {
+            $('#created_date').attr('disabled', 'disabled');
+        }
 
         <?php  if($contacts_dropdown && $add_type != "multiple"){ ?>
         function_name(<?php echo $model_info->client_id; ?>,<?php echo $model_info->client_contact_id; ?>);

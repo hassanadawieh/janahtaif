@@ -218,7 +218,7 @@
       <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-3", "field_column" => " col-md-9")); ?> 
    </div>
 </div>
-<div class="modal-footer">
+<di   v class="modal-footer">
    <div id="link-of-new-view" class="hide">
       <?php
          echo modal_anchor(get_uri("subtasks/task_view"), "", array("data-modal-lg" => "1"));
@@ -340,6 +340,8 @@
       
        setDatePicker("#tmp_return_date");
        setDatePicker("#sales_act_return_date");
+       setDatePicker("#start_date");
+       setDatePicker("#end_date");
    
       
    
@@ -348,6 +350,39 @@
    
    });
    
+   
+   $('#exp_out_time').timepicker({
+                minuteStep: 5,
+                
+                template:'dropdown',
+                showInputs: true,
+                defaultTime: "",
+                //modalBackdrop: true,
+                showSeconds: false,
+                showMeridian: true
+            });
+   
+   $('#end_time').timepicker({
+                minuteStep: 5,
+                
+                template:'dropdown',
+                showInputs: true,
+                defaultTime: "",
+                //modalBackdrop: true,
+                showSeconds: false,
+                showMeridian: true
+            });
+   
+   $('#start_time').timepicker({
+                minuteStep: 5,
+                
+                template:'dropdown',
+                showInputs: true,
+                defaultTime: "",
+                //modalBackdrop: true,
+                showSeconds: false,
+                showMeridian: true
+            });
    
    $('#exp_out_time').timepicker({
                 minuteStep: 5,

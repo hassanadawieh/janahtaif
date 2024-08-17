@@ -64,7 +64,7 @@ class Clients extends Security_Controller {
     function get_client_contact_dropdown($client_id) {
 
 
-        $contacts = $this->Clients_contact_model->get_details(array("client_id" => $client_id, "deleted" => 0))->getResult();
+        $contacts = $this->Clients_contact_model->get_details(array("client_id" => $client_id, "+d" => 0))->getResult();
             $contacts_dropdown = array(array("id" => "", "text" => "-"));
             foreach ($contacts as $contact) {
                 $contacts_dropdown[] = array("id" => $contact->id, "text" => $contact->first_name.' '.$contact->last_name);
@@ -109,6 +109,9 @@ class Clients extends Security_Controller {
         }
 
         $client_id = $this->request->getPost('id');
+        // $view_data['model_info'] = $this->Clients_model->get_one($client_id);
+        // $view_data['label_suggestions'] = $this->make_labels_dropdown("note", $view_data['model_info']->labels, false);
+
         $this->can_access_this_client($client_id);
         $this->validate_submitted_data(array(
             "id" => "numeric"
@@ -132,7 +135,6 @@ class Clients extends Security_Controller {
 
         return $this->template->view('clients/modal_form', $view_data);
     }
-
     function my_modal_form() {
         $this->access_only_allowed_members();
         if (!$this->can_edit_clients()) {
@@ -183,6 +185,10 @@ class Clients extends Security_Controller {
 
         $company_name = $this->request->getPost('company_name');
 
+        $target_path = get_setting("timeline_file_path");
+        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "client");
+        $new_files = unserialize($files_data);
+
         $data = array(
             "company_name" => $company_name,
             //"type" => $this->request->getPost('account_type'),
@@ -195,12 +201,20 @@ class Clients extends Security_Controller {
             "website" => $this->request->getPost('website'),
             "vat_number" => $this->request->getPost('vat_number')
         );
+
+        if ($client_id) {
+            $client_info = $this->Clients_model->get_one($client_id);
+            $timeline_file_path = get_setting("timeline_file_path");
+
+            $new_files = update_saved_files($timeline_file_path, $client_info->files, $new_files);
+        }
+        $data["files"] = serialize($new_files);
+
         if($this->request->getPost('status')){
           $data["status"]=2;
         }else{
             $data["status"]=1;
         }
-
 
 
         if ($this->login_user->user_type === "staff") {
@@ -344,7 +358,17 @@ class Clients extends Security_Controller {
         if ($group_list) {
             $group_list = "<ul class='pl15'>" . $group_list . "</ul>";
         }
-
+        $files_link = "";
+        if ($data->files) {
+            $files = unserialize($data->files);
+            if (count($files)) {
+                foreach ($files as $key => $value) {
+                    $file_name = get_array_value($value, "file_name");
+                    $link = get_file_icon(strtolower(pathinfo($file_name, PATHINFO_EXTENSION)));
+                    $files_link .= js_anchor("<i data-feather='$link'></i>", array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "class" => "float-start font-22 mr10", "title" => remove_file_prefix($file_name), "data-url" => get_uri("clients/file_preview/" . $data->id . "/" . $key)));
+                }
+            }
+        }
 
         $due = 0;
         if ($data->invoice_value) {
@@ -356,6 +380,8 @@ class Clients extends Security_Controller {
             anchor(get_uri("clients/view/" . $data->id), $data->company_name),
             $data->primary_contact ? $primary_contact : "",
             $group_list,
+            $files_link,
+
         );
         }else{
             $row_data = array($data->id,
@@ -363,6 +389,8 @@ class Clients extends Security_Controller {
             "<span style='color:red'>".$data->company_name.' - ('.  app_lang("disabled").")</span>" ,
             $data->primary_contact ? $primary_contact : "",
             $group_list,
+            $files_link,
+
         );
 
         }
@@ -376,6 +404,30 @@ class Clients extends Security_Controller {
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
+    }
+    function file_preview($id = "", $key = "") {
+        if ($id) {
+            validate_numeric_value($id);
+            $client_info = $this->Clients_model->get_one($id);
+            $files = unserialize($client_info->files);
+            $file = get_array_value($files, $key);
+
+            $file_name = get_array_value($file, "file_name");
+            $file_id = get_array_value($file, "file_id");
+            $service_type = get_array_value($file, "service_type");
+
+            $view_data["file_url"] = get_source_url_of_file($file, get_setting("timeline_file_path"));
+            $view_data["is_image_file"] = is_image_file($file_name);
+            $view_data["is_iframe_preview_available"] = is_iframe_preview_available($file_name);
+            $view_data["is_google_preview_available"] = is_google_preview_available($file_name);
+            $view_data["is_viewable_video_file"] = is_viewable_video_file($file_name);
+            $view_data["is_google_drive_file"] = ($file_id && $service_type == "google") ? true : false;
+            $view_data["is_iframe_preview_available"] = is_iframe_preview_available($file_name);
+
+            return $this->template->view("clients/file_preview", $view_data);
+        } else {
+            show_404();
+        }
     }
 
     /* load client details view */

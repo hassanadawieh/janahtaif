@@ -321,6 +321,7 @@ if ($preview_task_id) {
         $service_type_dropdown[] = array("id" => "with_driver", "text" => "سيارة بسائق");
         $service_type_dropdown[] = array("id" => "no_driver", "text" => "بدون سائق");
         $service_type_dropdown[] = array("id" => "deliver", "text" => "توصيلة");
+        $service_type_dropdown[] = array("id" => "no_car", "text" => "سائق بدون سيارة");
 
         
         $rec_inv_status_dropdown = array(array("id" => "", "text" => '- '. app_lang("rec_inv_status2"). ' -'));

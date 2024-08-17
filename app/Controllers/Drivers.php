@@ -73,7 +73,16 @@ class Drivers extends Security_Controller {
                 $row_data[] = $this->can_edit_driver()?modal_anchor(get_uri("drivers/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id)):"<i data-feather='edit' class='icon-16'></i>";
 
             }
-            $status=$data->status==1? app_lang("open"):app_lang('closed');
+            // $status=$data->status==1? app_lang("open"):app_lang('closed');
+
+            //hassan_driver
+            if($data->status == 1){
+                $status = app_lang("open");
+            }else if($data->status == 2){
+                $status = app_lang("closed");
+            }else{
+                $status = app_lang("off");
+            }
 
         return array(
            $check_status,

@@ -852,9 +852,9 @@ class Security_Controller extends App_Controller {
 
         return $suppliers_dropdown;
     }
-
+     //hassan_driver
      protected function _get_drivers_dropdown() {
-        $driver_options = array("deleted" => "0","status" => "1");
+        $driver_options = array("deleted" => "0" , "status" => "1" , "offDriversStatus" => "3");
         if ($this->login_user->user_type == "staff") {
             if (!$this->can_manage_all_projects()) {
                 $project_options["user_id"] = $this->login_user->id; //normal user's should be able to see only the projects where they are added as a team mmeber.
@@ -863,7 +863,7 @@ class Security_Controller extends App_Controller {
 
         $drivers = $this->Drivers_model->get_details($driver_options)->getResult();
         $drivers_dropdown = array("" => "-".app_lang("driver_name")."-");
-
+      //balbis
         if ($drivers) {
             foreach ($drivers as $driver) {
                 $drivers_dropdown[$driver->id] = $driver->driver_nm;
@@ -874,7 +874,7 @@ class Security_Controller extends App_Controller {
     }
 
     protected function _get_drivers_dropdown2($driver_id) {
-        $driver_options = array("deleted" => "0");
+        $driver_options = array("deleted" => "0" , "status" => "1" , "offDriversStatus" => "3");
         if ($this->login_user->user_type == "staff") {
             if (!$this->can_manage_all_projects()) {
                 $project_options["user_id"] = $this->login_user->id; //normal user's should be able to see only the projects where they are added as a team mmeber.

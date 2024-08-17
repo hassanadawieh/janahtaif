@@ -55,18 +55,18 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
 
                                   
 
-                    <div class="col-md-6 mb5 mt5">
-                        <strong><?php echo app_lang('car_expens') . ": "; ?></strong>
-                        <label><?php echo $model_info->car_expens?$model_info->car_expens:' ___ '; ?></label>
+                    <!-- <div class="col-md-6 mb5 mt5">
+                        <strong><?php //echo app_lang('car_expens') . ": "; ?></strong>
+                        <label><?php //echo $model_info->car_expens?$model_info->car_expens:' ___ '; ?></label>
                         <?php //echo get_update_task_info_anchor_data($model_info, "priority", $can_edit_tasks); ?>
-                    </div>
+                    </div> -->
 
-                    <div class="col-md-6 mb5 mt5" >
-                        <strong><?php echo app_lang('car_expens_stmnt') . ": "; ?></strong>
-                        <label><?php echo $model_info->car_expens_stmnt?$model_info->car_expens_stmnt:' ___ '; ?></label>
+                    <!-- <div class="col-md-6 mb5 mt5" >
+                        <strong><?php// echo app_lang('car_expens_stmnt') . ": "; ?></strong>
+                        <label><?php// echo $model_info->car_expens_stmnt?$model_info->car_expens_stmnt:' ___ '; ?></label>
                         
                         <?php //echo get_update_task_info_anchor_data($model_info, "created_date", $can_edit_tasks); ?>
-                    </div>
+                    </div> -->
                     
 
 
@@ -125,7 +125,6 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
      ?>
 
 
-<?php if($mang != 'supplymang'){ ?>
     <div class="col-lg-6 mb15">
         <div class="clearfix">
             <div class="container-fluid px-1">
@@ -225,7 +224,6 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
             </div>
         </div>
     </div>
-    <?php } ?>
     
 
     <div class="col-lg-6 order-lg-last">
