@@ -1519,7 +1519,13 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql)->getRow()->total;
     }
 
-    
+    function check_invoice_number($invoice_number )
+    {
+        if ($invoice_number){
+            $query = "SELECT * FROM tasks WHERE invoice_number = '$invoice_number' limit 1";
+        }
+        return $this->db->query($query)->getResult();
+    }
 
     function delete_task_and_sub_items($task_id) {
         $tasks_table = $this->db->prefixTable('tasks');

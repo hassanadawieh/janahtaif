@@ -342,6 +342,8 @@
        setDatePicker("#sales_act_return_date");
        setDatePicker("#start_date");
        setDatePicker("#end_date");
+       setDatePicker("#ten_out_date");
+       
    
       
    

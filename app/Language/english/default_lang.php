@@ -63,6 +63,8 @@ $lang["can_update_maintask_status"] = "Can Update Main Tasks Status";
 $lang["can_show_subtasks_report"] = "Can Show SubTasks Report";
 $lang["can_update_subtask_status"] = "Can Update SubTasks Status";
 $lang["can_update_maintask_after_closed"] = "Update Maintask even if maintask closed";
+$lang["ten_out_date"] = "Tentative end date";
+
 
 
 $lang["dont_have_permissions"] = "You have No permission To access this data";

@@ -2,8 +2,8 @@
 <?php
 $dateTime = new DateTime('now', new DateTimeZone("Asia/Riyadh"));
 $dateTime1 = new DateTime($model_info->exp_out_time ? $model_info->exp_out_time:'now', new DateTimeZone("Asia/Riyadh"));
-$dateTime2 = new DateTime($model_info->start_time ? $model_info->start_time:'now', new DateTimeZone("Asia/Riyadh"));
-$dateTime3 = new DateTime($model_info->end_time ? $model_info->end_time:'now', new DateTimeZone("Asia/Riyadh"));
+// $dateTime2 = new DateTime($model_info->start_time ? $model_info->start_time:'now', new DateTimeZone("Asia/Riyadh"));
+// $dateTime3 = new DateTime($model_info->end_time ? $model_info->end_time:'now', new DateTimeZone("Asia/Riyadh"));
 
 ?>
 
@@ -80,27 +80,7 @@ $dateTime3 = new DateTime($model_info->end_time ? $model_info->end_time:'now', n
                 
                 
 
-                <div class=" col-md-6 mb5 mt5 floating-label">
-                    <?php
-                    $dis=$model_info->service_type=="deliver" ? "disabled" : "enabled";
-                    
-                    echo form_input(array(
-                        "id" => "start_time",
-                        "name" => "start_time",
-                        "value" => $model_info->start_time && $model_info->start_time!='00:00:01'?$dateTime2->format('h:i A'):'',
-                        "class" => "form-control",
-                        "placeholder" => app_lang('start_time'),
-                        "autocomplete" => "off",
-                        $dis => true,
-                        "data-rule-notNull" => "#start_time",
-                        //"data-rule-required" => $model_info->service_type=="deliver"? false : true,
-                        //"data-msg-required" => app_lang("field_required"),
-                        // "data-rule-greaterThanOrEqual" => "#out_date",
-                            // "data-msg-greaterThanOrEqual" => app_lang("return_must_be_equal_or_greater_than_out_date")
-                    ));
-                    ?>
-                    <label for="start_time" ><?php echo app_lang('start_time'); ?></label>
-                </div>
+
                 <div class=" col-md-6 mb5 mt5 floating-label" >
                     <?php
                     
@@ -123,49 +103,31 @@ $dateTime3 = new DateTime($model_info->end_time ? $model_info->end_time:'now', n
                     <label for="end_date"><?php echo app_lang('end_date'); ?></label>
                     
                 </div>
-                <div class=" col-md-6 mb5 mt5 floating-label">
+                <div class=" col-md-6 mb5 mt5 floating-label" >
                     <?php
-                    $dis=$model_info->service_type=="deliver" ? "disabled" : "enabled";
                     
                     echo form_input(array(
-                        "id" => "end_time",
-                        "name" => "end_time",
-                        "value" => $model_info->end_time && $model_info->end_time!='00:00:01'?$dateTime3->format('h:i A'):'',
+                        "id" => "ten_out_date",
+                        "name" => "ten_out_date",
+                        "value" => is_date_exists($model_info->end_date) ? $model_info->end_date : '',
                         "class" => "form-control",
-                        "placeholder" => app_lang('end_time'),
+                        "placeholder" => app_lang('ten_out_date'),
                         "autocomplete" => "off",
-                        $dis => true,
-                        "data-rule-notNull" => "#end_time",
+                        "data-rule-required" => true,
+                        "data-msg-required" => app_lang("field_required"),
+                        "data-rule-notNull" => "#ten_out_date",
                         //"data-rule-required" => $model_info->service_type=="deliver"? false : true,
-                        //"data-msg-required" => app_lang("field_required"),
+                        // "data-msg-required" => app_lang("field_required"),
                         // "data-rule-greaterThanOrEqual" => "#out_date",
-                            // "data-msg-greaterThanOrEqual" => app_lang("return_must_be_equal_or_greater_than_out_date")
+                        //    "data-msg-greaterThanOrEqual" => app_lang("return_must_be_equal_or_greater_than_out_date")
                     ));
                     ?>
-                    <label for="end_time" ><?php echo app_lang('end_time'); ?></label>
-                </div>
-
-                        
-                    
+                    <label for="ten_out_date"><?php echo app_lang('ten_out_date'); ?></label>
                     
                 </div>
-            </div>
-
-           
-
-
-
-            <div class="form-group">
-            <div class="row">
-               
-               
-                
-                
-
-
-                   
-
-                        <div class=" col-md-6 mb5 mt5 floating-label" >
+        
+            
+                <div class=" col-md-6 mb5 mt5 floating-label" >
                             <?php 
                             $dis=$model_info->service_type=="deliver" ? "disabled" : "enabled";
                         echo form_input(array(
@@ -186,8 +148,29 @@ $dateTime3 = new DateTime($model_info->end_time ? $model_info->end_time:'now', n
                         ?>
                         <label for="booking_period"  ><?php echo app_lang('booking_period'); ?></label>
                         </div>
+                        
+                    
+                    
+                </div>
             </div>
-        </div>
+
+           
+
+
+
+            <!-- <div class="form-group">
+            <div class="row">
+               
+               
+                
+                
+
+
+                   
+
+                        
+            </div>
+        </div> -->
 
 
         <div class="form-group">
@@ -254,10 +237,10 @@ $dateTime3 = new DateTime($model_info->end_time ? $model_info->end_time:'now', n
                         "class" => "form-control",
                         "placeholder" => app_lang('exp_out_time'),
                         "autocomplete" => "off",
-                        "data-rule-notNull" => "#out_date",
+                        "data-rule-notNull" => "#exp_out_time",
                         "data-msg-notNull" => "يجب تحديد  وقت الخروج التوقع",
-                        //"data-rule-required" => true,
-                        //"data-msg-required" => app_lang("field_required"),
+                        "data-rule-required" => true,
+                        "data-msg-required" => app_lang("field_required"),
                         
                     ));
                     ?>
@@ -272,10 +255,11 @@ $dateTime3 = new DateTime($model_info->end_time ? $model_info->end_time:'now', n
                         "name" => "sales_act_return_date",
                         "value" => is_date_exists($model_info->sales_act_return_date) ? $model_info->sales_act_return_date : '',
                         "class" => "form-control",
-                        "placeholder" => app_lang('act_return_date'),
+                        "placeholder" => app_lang('sales_act_return_date'),
                         "autocomplete" => "off",
+                        "data-rule-notNull" => "#exp_out_time",
                         //"data-rule-required" => $model_info->service_type=="deliver"? false : true,
-                        // "data-msg-required" => app_lang("field_required"),
+                        "data-msg-required" => app_lang("field_required"),
                         "data-rule-greaterThanOrEqual" => "#out_date",
                            "data-msg-greaterThanOrEqual" => app_lang("return_must_be_equal_or_greater_than_out_date")
                     ));
@@ -310,8 +294,8 @@ $dateTime3 = new DateTime($model_info->end_time ? $model_info->end_time:'now', n
                         "placeholder" => app_lang('tmp_return_date'),
                         "autocomplete" => "off",
                         $dis => true,
-                        //"data-rule-required" => $model_info->service_type=="deliver"? false : true,
-                        //"data-msg-required" => app_lang("field_required"),
+                        "data-rule-required" => $model_info->service_type=="deliver"? false : true,
+                        "data-msg-required" => app_lang("field_required"),
                         "data-rule-greaterThanOrEqual" => "#out_date",
                             "data-msg-greaterThanOrEqual" => app_lang("return_must_be_equal_or_greater_than_out_date")
                     ));
@@ -332,14 +316,14 @@ $dateTime3 = new DateTime($model_info->end_time ? $model_info->end_time:'now', n
                             "value" => $model_info->service_type!="deliver" ? $model_info->inv_day_count ? $model_info->inv_day_count : '' :'',
                             "type" => "number",
                             "class" => "form-control",
-                            //"data-rule-notNull" => "#act_return_date",
-                            //"data-msg-notNull" => "يجب كتبة عدد الايام",
+                            "data-rule-notNull" => "#inv_day_count",
+                            "data-msg-notNull" => "يجب كتبة عدد الايام",
                             
                             "placeholder" => app_lang('inv_day_count'),
                             $dis => true,
 
-                            //"data-rule-required" => $model_info->service_type=="deliver"? false:true,
-                            //"data-msg-required" => app_lang("field_required"),
+                            "data-rule-required" => $model_info->service_type=="deliver"? false:true,
+                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                         <label for="inv_day_count"  ><?php echo app_lang('inv_day_count'); ?></label>

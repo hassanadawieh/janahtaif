@@ -3,7 +3,7 @@
     <div class="modal-body clearfix">
         <div class="container-fluid">
             <input type="hidden" name="id" value="<?php echo $add_type == "multiple" ? "" : $model_info->id; ?>" />
-            
+            <input type="hidden" id="created_date_hidden" name="created_date_hidden">
             <input type="hidden" name="add_type" value="<?php echo $add_type; ?>" />
             
             <input type="hidden" name="title" value="" />
@@ -308,15 +308,19 @@
                     }
                 });
     }
-     
-    $(document).ready(function () {
 
-       //$("#s2id_cls_id > .select2-choice").attr("style","background-color: #ed6666 !important;");
-       var taskDate = $('#created_date').val();
+    $(document).ready(function () {
+        var taskDate = $('#created_date').val();
 
         if (taskDate) {
             $('#created_date').attr('disabled', 'disabled');
-        }
+            $('#created_date_hidden').val(taskDate);
+        }
+    });
+
+    $(document).ready(function () {
+
+       //$("#s2id_cls_id > .select2-choice").attr("style","background-color: #ed6666 !important;");
 
         <?php  if($contacts_dropdown && $add_type != "multiple"){ ?>
         function_name(<?php echo $model_info->client_id; ?>,<?php echo $model_info->client_contact_id; ?>);

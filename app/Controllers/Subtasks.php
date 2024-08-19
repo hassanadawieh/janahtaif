@@ -1675,10 +1675,11 @@ $myoptions = array(
 
         $start_date = $this->request->getPost('start_date');
         $end_date = $this->request->getPost('end_date');
-        $start_time = $this->request->getPost('start_time')?convert_time_to_24hours_format($this->request->getPost('start_time')):'00:00:01';
-        $end_time = $this->request->getPost('end_time')?convert_time_to_24hours_format($this->request->getPost('end_time')):'00:00:01';
+        // $start_time = $this->request->getPost('start_time')?convert_time_to_24hours_format($this->request->getPost('start_time')):'00:00:01';
+        // $end_time = $this->request->getPost('end_time')?convert_time_to_24hours_format($this->request->getPost('end_time')):'00:00:01';
         $sub_task_note = $this->request->getPost('sub_task_note');
         $booking_period = $this->request->getPost('booking_period');
+        $ten_out_date = $this->request->getPost('ten_out_date');
 
         $enterd_status=1;
 
@@ -1703,17 +1704,17 @@ $myoptions = array(
         }else{
             $enterd_status=1;
         }*/
-        if($this->request->getPost('start_time')){
-            $data["start_time"]= $start_time;
-        }else{
-            $data["start_time"]= "00:00:01";
-        }
+        // if($this->request->getPost('start_time')){
+        //     $data["start_time"]= $start_time;
+        // }else{
+        //     $data["start_time"]= "00:00:01";
+        // }
 
-        if($this->request->getPost('end_time')){
-            $data["end_time"]= $end_time;
-        }else{
-            $data["end_time"]= "00:00:01";
-        }
+        // if($this->request->getPost('end_time')){
+        //     $data["end_time"]= $end_time;
+        // }else{
+        //     $data["end_time"]= "00:00:01";
+        // }
         $data = array(
             "guest_nm" => $guest_nm,
             "guest_phone" => $guest_phone,
@@ -1734,11 +1735,11 @@ $myoptions = array(
             "note" => $note,
             "start_date" => $start_date,
             "end_date" => $end_date,
-            "start_time" => $start_time,
-            "end_time" => $end_time,
+            // "start_time" => $start_time,
+            // "end_time" => $end_time,
             "sub_task_note" => $sub_task_note,
             "booking_period" => $booking_period,
-            
+            "ten_out_date" => $ten_out_date,            
             
             
         );

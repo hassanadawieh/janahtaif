@@ -396,10 +396,9 @@ $lang["act_out_date"] = "تاريخ الخروج الفعلي";
 $lang["amount"] = "المبلغ";
 $lang["start_date"] = "تاريخ البداية";
 $lang["end_date"] = "تاريخ النهاية";
-$lang["start_time"] = "وقت البداية";
-$lang["end_time"] = "وقت النهاية";
 $lang["sub_task_note"] = "ملاحظات المهمة";
 $lang["booking_period"] = "الأيام في الفاتورة";
+$lang["ten_out_date"] = "تاريخ النهاية المؤقت";
 
 
 $lang["exp_out_time"] = "وقت الخروج المتوقع";
