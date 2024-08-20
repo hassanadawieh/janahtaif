@@ -199,6 +199,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before{
         <div class="col-md-3">
             <?php echo tasks_count_widget("tasks_deleted","المهام المحزوفة"); ?>
         </div>
+        <div class="col-md-3">
+            <?php echo tasks_count_widget("tasks_unpaid_driver","المهام التي لم يتم حساب السائقين بها"); ?>
+        </div>
     </div>
 </div>
     <ul class="nav nav-tabs bg-white title" role="tablist">
@@ -338,6 +341,8 @@ if ($preview_task_id) {
         $f_dropdownd[] = array("id" => "no_christening_number", "text" => "لا تحت وي على رقم تعميد", "isSelected" => $main_filter=="no_christening_number"?true:false);
         $f_dropdownd[] = array("id" => "no_project", "text" => "مهام غير مربوطه ب مشروع", "isSelected" => $main_filter=="no_project"?true:false);
         $f_dropdownd[] = array("id" => "tasks_deleted", "text" => "المهام المحزوفة", "isSelected" => $main_filter=="tasks_deleted"?true:false);
+        $f_dropdownd[] = array("id" => "tasks_unpaid_driver", "text" => "المهام التي لم يتم حساب السائقين بها", "isSelected" => $main_filter=="tasks_unpaid_driver"?true:false);
+
         ?>
         var coll=[],filter_col=[],datePicker=[];
         var main_task_col=[],main_task_filter_col=[];

@@ -37,6 +37,8 @@
                 {title: '<?php echo app_lang("email"); ?>'},
                 {title: '<?php echo app_lang("phone"); ?>'},
                 {title: '<?php echo app_lang("status"); ?>'},
+                {title: '<?php echo app_lang("city"); ?>'},
+                {title: '<?php echo app_lang("category"); ?>'},
                
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ]

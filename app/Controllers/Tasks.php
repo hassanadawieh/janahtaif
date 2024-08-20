@@ -610,7 +610,7 @@ class Tasks extends Security_Controller {
             app_redirect("forbidden");
         }
         $myoptions = array(
-            "update_status" => 1
+            "update_status" => 0
         );
         $list_data = $this->Tasks_model->get_details($myoptions)->getResult();
         foreach ($list_data as $data) {
@@ -1222,7 +1222,7 @@ class Tasks extends Security_Controller {
         $ref_number = $this->request->getPost('ref_number');
         
         if (!$id) {
-            $check_invoice_number = $this->Tasks_model->check_invoice_number($invoice_number);
+            $check_invoice_number = $this->Tasks_model->check_invoice_number($invoice_number,$id);
             if ($check_invoice_number) {
                 return json_encode(array("success" => false, 'message' => "Invoice number already exists."));
             }

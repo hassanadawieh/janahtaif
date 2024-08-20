@@ -1214,6 +1214,9 @@ if (!function_exists('tasks_count_widget')) {
         case 'no_christening_number':
             $conditions = array("no_christening_number" => "312", "selected_year" => $ci->session->get('selected_year'));
             break;
+        case 'tasks_unpaid_driver':
+            $conditions = array("tasks_unpaid_driver" => "", "selected_year" => $ci->session->get('selected_year'));
+            break;
         default:
             $conditions = array("selected_year" => $ci->session->get('selected_year'));
             break;

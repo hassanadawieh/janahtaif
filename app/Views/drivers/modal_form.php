@@ -76,6 +76,49 @@
                 </div>
             </div>
         </div>
+        <div class="form-group">
+            <div class="row">
+
+                <label for="city" class=" col-md-3"><?php echo app_lang('city'); ?></label>
+                <div class=" col-md-9">
+                     <?php
+                      $city = array();
+                      $city[""] = "--اختر مدينة--";
+                      foreach ($cities as $city_data) {
+                        $city[$city_data->city_name] = $city_data->city_name;
+                      }
+                      
+                        // $ok["الرياض"] 1
+                        // $status[2] =  app_lang("closed");
+                        // hassan_driver
+                        // $status[3] =  app_lang("off");
+                        
+
+                        echo form_dropdown("city", $city, $model_info->city ?array($model_info->city):"", "class='select2' id='status' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
+                        ?>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+
+                <label for="category" class=" col-md-3"><?php echo app_lang('category'); ?></label>
+                <div class=" col-md-9">
+                     <?php
+                     $category[""] = "--اختر فئة السائق--";
+                        $category["A"] = "A";
+                        $category["B"] ="B";
+                        // hassan_driver
+                        $category["C"] = "C";
+                        $category["D"] = "D";
+                        $category["Block"] = "Block";
+                        
+
+                        echo form_dropdown("category", $category, $model_info->category ?array($model_info->category):"", "class='select2' id='status' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
+                        ?>
+                </div>
+            </div>
+        </div>
 
         
     </div>

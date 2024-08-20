@@ -82,6 +82,7 @@ $statuses = array();
         $f_dropdown[] = array("id" => "no_christening_number", "text" => "لا تحت وي على رقم تعميد", "isSelected" => $filter=="no_christening_number"?true:false);
         $f_dropdown[] = array("id" => "no_project", "text" => "مهام غير مربوطه ب مشروع", "isSelected" => $filter=="no_project"?true:false);
         $f_dropdown[] = array("id" => "tasks_deleted", "text" => "المهام المحزوفة", "isSelected" => $filter=="tasks_deleted"?true:false);
+        $f_dropdown[] = array("id" => "tasks_unpaid_driver", "text" => "المهام التي لم يتم حساب السائقين بها", "isSelected" => $filter=="tasks_unpaid_driver"?true:false);
         ?>
       
         $("#task-table").appTable({

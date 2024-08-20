@@ -38,6 +38,7 @@ class Drivers extends Security_Controller {
         }*/
 
         $view_data['model_info'] = $this->Drivers_model->get_one($id);
+        $view_data['cities'] = $this->Cities_model->get_details(array( "deleted" => 0))->getResult();
         return $this->template->view('drivers/modal_form', $view_data);
     }
 
@@ -58,43 +59,42 @@ class Drivers extends Security_Controller {
         return $this->_make_row($data);
     }
 
-    private function _make_row($data) {
+private function _make_row($data) {
 
-         $unread_comments_class = "unread-comments-of-tasks";
-        $checkbox_class = "";
-            $icon = "<i data-feather='message-circle' class='icon-16  unread-comments-of-tasks-icon'></i>";
-           
+    $unread_comments_class = "unread-comments-of-tasks";
+    $checkbox_class = "";
+    $icon = "<i data-feather='message-circle' class='icon-16 unread-comments-of-tasks-icon'></i>";
 
-            
-            $check_status = js_anchor("<span class='$checkbox_class  float-start' ></span>", array('title' => "", "class" => "js-task", "data-id" => $data->id,  "data-act" => "update-task-status-checkbox")) ."<span class=' float-end'>".$data->id."</span>";
-       if($this->can_delete_driver()){
-        $row_data = modal_anchor(get_uri("drivers/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id)). js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("drivers/delete"), "data-action" => "delete-confirmation"));
-           }else{
-                $row_data[] = $this->can_edit_driver()?modal_anchor(get_uri("drivers/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id)):"<i data-feather='edit' class='icon-16'></i>";
+    $check_status = js_anchor("<span class='$checkbox_class  float-start' ></span>", array('title' => "", "class" => "js-task", "data-id" => $data->id, "data-act" => "update-task-status-checkbox")) ."<span class=' float-end'>".$data->id."</span>";
 
-            }
-            // $status=$data->status==1? app_lang("open"):app_lang('closed');
-
-            //hassan_driver
-            if($data->status == 1){
-                $status = app_lang("open");
-            }else if($data->status == 2){
-                $status = app_lang("closed");
-            }else{
-                $status = app_lang("off");
-            }
-
-        return array(
-           $check_status,
-            $data->driver_nm,
-            $data->email,
-            $data->phone,
-            $status,
-           
-            $row_data
-            
-        );
+    if ($this->can_delete_driver()) {
+        $row_data = modal_anchor(get_uri("drivers/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id))
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("drivers/delete"), "data-action" => "delete-confirmation"));
+    } else {
+        $row_data[] = $this->can_edit_driver() ? modal_anchor(get_uri("drivers/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id)) : "<i data-feather='edit' class='icon-16'></i>";
     }
+
+    // Handle status
+    if ($data->status == 1) {
+        $status = app_lang("open");
+    } else if ($data->status == 2) {
+        $status = app_lang("closed");
+    } else {
+        $status = app_lang("off");
+    }
+
+    // Return the data including city and category
+    return array(
+        $check_status,
+        $data->driver_nm,
+        $data->email,
+        $data->phone,
+        $status,
+        $data->city,       // Add city field
+        $data->category,   // Add category field
+        $row_data
+    );
+}
 
 
     function save() {
@@ -104,6 +104,8 @@ class Drivers extends Security_Controller {
             "email" => $this->request->getPost('email'),
             "phone" => $this->request->getPost('phone'),
             "status" => $this->request->getPost('status'),
+            "city"   => $this->request->getPost('city'),
+            "category" => $this->request->getPost('category')
             
             
         );

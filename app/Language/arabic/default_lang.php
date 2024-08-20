@@ -420,6 +420,7 @@ $lang["tasks_without_chri"] = "مهام لا تحتوي على رقم تعميد
 $lang["tasks_deleted"] = " المهام المحزوفة";
 $lang["subtasks_to_go"] = "مهام فرعية للخروج";
 $lang["tasks_without_project"] = "مهام غير مرتبطة ب مشروع";
+$lang["tasks_unpaid_driver"] = "المهام التي لم يتم حساب السائقين بها";
 
 $lang["tasks_without_supplier"] = "لم يتم تحديد المورد ";
 $lang["tasks_without_return_date"] = "لم يتم تحديد تاريخ العودة";

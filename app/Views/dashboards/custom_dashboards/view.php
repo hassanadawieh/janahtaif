@@ -74,6 +74,10 @@
                         <?php echo tasks_count_widget("tasks_deleted",app_lang('tasks_deleted')); ?>
                             
                     </div>
+                    <!-- <div class="col-md-3">
+                        <?php //echo tasks_count_widget("tasks_unpaid_driver",app_lang('tasks_unpaid_driver')); ?>
+                            
+                    </div> -->
                 
                      <div class="widget-container col-md-3">
                             <?php echo my_subtasks_list_24hour(); ?>

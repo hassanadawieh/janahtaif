@@ -311,6 +311,8 @@ class Sub_tasks_model extends Crud_model {
            $where .= " AND ($task_table.project_id=0 OR $task_table.project_id IS NULL)";
         } if ($main_filter=="tasks_deleted") {
             $where .= " AND ($sub_tasks_table.deleted=1)";
+         } if ($main_filter=="tasks_unpaid_driver") {
+            $where .= " AND ($sub_tasks_table.car_expens_stmnt IS NULL OR $sub_tasks_table.car_expens_stmnt = '')";
          }
         }
 

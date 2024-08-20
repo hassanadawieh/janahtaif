@@ -142,6 +142,8 @@ class Tasks_model extends Crud_model {
            $where .= " AND ($tasks_table.project_id=0 OR $tasks_table.project_id IS NULL)";
         } if ($filter=="tasks_deleted") {
             $where .= " AND ($sub_tasks_table.deleted=1)";
+         }if ($filter=="tasks_unpaid_driver") {
+            $where .= " AND ($sub_tasks_table.car_expens_stmnt IS NULL OR $sub_tasks_table.car_expens_stmnt = '')";
          }
         }
 
@@ -1229,7 +1231,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
 
     function count_total_info($options = array()) {
         $tasks_table = $this->db->prefixTable('tasks');
-
+        $sub_tasks_table =  $this->db->prefixTable('sub_tasks');
 
         $where = " ";
         $selected_year = $this->_get_clean_value($options, "selected_year");
@@ -1261,7 +1263,11 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         if ($tasks_deleted) {
             $where .= " AND $tasks_table.deleted=1";
          }
-
+        $tasks_unpaid_driver = $this->_get_clean_value($options, "tasks_unpaid_driver");
+        if ($tasks_unpaid_driver) {
+            $sub_tasks_query = "SELECT pnt_task_id FROM $sub_tasks_table where ($sub_tasks_table.car_expens_stmnt IS NULL OR $sub_tasks_table.car_expens_stmnt = '') AND $sub_tasks_table.deleted = 0 And $sub_tasks_table.service_type = 'with_driver'";
+            $where .= " AND id IN ($sub_tasks_query)";         
+        }
         
 
         
@@ -1519,10 +1525,19 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql)->getRow()->total;
     }
 
-    function check_invoice_number($invoice_number )
+    function check_invoice_number($invoice_number, $task_id)
     {
-        if ($invoice_number){
-            $query = "SELECT * FROM tasks WHERE invoice_number = '$invoice_number' limit 1";
+        $query = "";
+        if ($invoice_number) {
+
+            if ($task_id) {
+
+                $query = "SELECT * FROM tasks WHERE invoice_number = '$invoice_number' and id !=$task_id limit 1";
+
+            } else {
+                $query = "SELECT * FROM tasks WHERE invoice_number = '$invoice_number' limit 1";
+
+            }
         }
         return $this->db->query($query)->getResult();
     }
