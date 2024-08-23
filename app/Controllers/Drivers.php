@@ -15,6 +15,8 @@ class Drivers extends Security_Controller {
 
     function index() {
         $view_data['can_add_city'] = $this->can_add_driver();
+        $view_data['cities'] = $this->Cities_model->get_details(array("deleted" => 0))->getResult(); // Load cities
+        $view_data['categories'] = ["A","B","C","D","Block"]; // Load categories if needed
         return $this->template->rander("drivers/index", $view_data);
     }
 
@@ -45,13 +47,27 @@ class Drivers extends Security_Controller {
     
 
     function list_data() {
-        $list_data = $this->Drivers_model->get_details()->getResult();
+        $city = $this->request->getPost('city');
+        $category = $this->request->getPost('category');
+    
+        $options = array();
+        
+        if ($city) {
+            $options['city'] = $city;
+        }
+        
+        if ($category) {
+            $options['category'] = $category;
+        }
+    
+        $list_data = $this->Drivers_model->get_details($options)->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_make_row($data);
         }
         echo json_encode(array("data" => $result));
     }
+
 
     private function _row_data($id) {
         $options = array("id" => $id);

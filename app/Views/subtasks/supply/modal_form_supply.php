@@ -112,6 +112,7 @@ $newDate2 = $dateTime->format(get_setting("date_format"));
                             <strong><?php echo app_lang('driver_nm') . ": "; ?></strong>
                             <label><?php echo $driver_name?$driver_name:'__'; ?></label>
                         </div>
+                        
 
 
 
@@ -125,7 +126,9 @@ $newDate2 = $dateTime->format(get_setting("date_format"));
                             <label><?php echo $model_info->dres_number?$model_info->dres_number:' ___ '; ?></label>
                         </div>
 
-                        <?php if($model_info->service_type=='with_driver'){ $service_type_txt='سيارة بسائق';$color='#ffa500'; } 
+                        <?php
+                        
+                        if($model_info->service_type=='with_driver'){ $service_type_txt='سيارة بسائق';$color='#ffa500'; } 
                         elseif ($model_info->service_type=='no_driver' ) {
                             $color='#52a100';
                             $service_type_txt="سيارة بدون سائق";
@@ -133,7 +136,7 @@ $newDate2 = $dateTime->format(get_setting("date_format"));
                             $color='#ff1f2d';
                             $service_type_txt="توصيلة";
                         }else{
-                            $color='#ff1fa200';
+                            $color='#ff1f2d';
                             $service_type_txt="سائق بدون سيارة";
                         }
 
@@ -160,6 +163,10 @@ $newDate2 = $dateTime->format(get_setting("date_format"));
                             <strong><?php echo app_lang('sales_act_return_date') . ": "; ?></strong>
                             <label><?php echo is_date_exists($model_info->sales_act_return_date) ? $model_info->sales_act_return_date : '' ?></label>
                         </div>
+                        <div class="col-md-4 mb5 mt5 text-wrap">
+                            <strong><?php echo app_lang('return_time') . ": "; ?></strong>
+                            <label ><?php echo $model_info->return_time; ?></label>
+                        </div>
                        
 
                         
@@ -167,6 +174,10 @@ $newDate2 = $dateTime->format(get_setting("date_format"));
                         <div class="col-md-4 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('inv_day_count') . ": "; ?></strong>
                             <label><?php echo $model_info->inv_day_count?$model_info->inv_day_count:'___'; ?></label>
+                        </div>
+                        <div class="col-md-4 mb5 mt5 text-wrap">
+                            <strong><?php echo "اولوية" . ": "; ?></strong>
+                            <label ><?php echo $priorty_nm; ?></label>
                         </div>
 
                         <div class="col-md-12 mb5 mt5 text-wrap">

@@ -25,6 +25,20 @@ class Drivers_model extends Crud_model {
             $where .= " AND $drivers_table.status IN($status,$offDriversStatus)";
         }
 
+        //hassan editing
+        // Filter by city if provided
+    $city = $this->_get_clean_value($options, "city");
+    if ($city) {
+        $where .= " AND $drivers_table.city=" . $this->db->escape($city);
+    }
+
+    // Filter by category if provided
+    $category = $this->_get_clean_value($options, "category");
+    if ($category) {
+        $where .= " AND $drivers_table.category=" . $this->db->escape($category);
+    }
+
+
          $limit_offset = "";
         $limit = $this->_get_clean_value($options, "limit");
         if ($limit) {

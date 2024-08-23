@@ -309,14 +309,14 @@
                 });
     }
 
-    $(document).ready(function () {
-        var taskDate = $('#created_date').val();
+//     $(document).ready(function () {
+//         var taskDate = $('#created_date').val();
 
-        if (taskDate) {
-            $('#created_date').attr('disabled', 'disabled');
-            $('#created_date_hidden').val(taskDate);
-        }
-    });
+//         if (taskDate) {
+//             $('#created_date').attr('disabled', 'disabled');
+//             $('#created_date_hidden').val(taskDate);
+//         }
+//     });
 
     $(document).ready(function () {
 

@@ -1284,6 +1284,17 @@ $myoptions = array(
         $view_data['city_name']= $this->Cities_model->get_one($model_info->city_id)->city_name;
         $view_data['car_type']= $this->Cars_type_model->get_one($model_info->car_type_id)->car_type;
 
+        $view_data["return_time"] =$model_info->return_time;
+        if($model_info->priority_id == 1){
+            $view_data["priorty_nm"] = "اولوية عادية";
+        }elseif($model_info->priority_id == 2){
+            $view_data["priorty_nm"] = "اولوية متوسطة";
+        }elseif($model_info->priority_id == 3){
+            $view_data["priorty_nm"] = "اولوية عالية";
+        }else{
+            $view_data["priorty_nm"] = "-";
+        }
+
 
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("sub_tasks", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
@@ -1679,7 +1690,8 @@ $myoptions = array(
         // $end_time = $this->request->getPost('end_time')?convert_time_to_24hours_format($this->request->getPost('end_time')):'00:00:01';
         $sub_task_note = $this->request->getPost('sub_task_note');
         $booking_period = $this->request->getPost('booking_period');
-        $ten_out_date = $this->request->getPost('ten_out_date');
+        // $ten_out_date = $this->request->getPost('ten_out_date');
+        $return_time = $this->request->getPost('return_time');
 
         $enterd_status=1;
 
@@ -1739,7 +1751,7 @@ $myoptions = array(
             // "end_time" => $end_time,
             "sub_task_note" => $sub_task_note,
             "booking_period" => $booking_period,
-            "ten_out_date" => $ten_out_date,            
+            "return_time" => $return_time,            
             
             
         );

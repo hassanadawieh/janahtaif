@@ -1221,12 +1221,13 @@ class Tasks extends Security_Controller {
         $invoice_number = $this->request->getPost('invoice_number');
         $ref_number = $this->request->getPost('ref_number');
         
-        if (!$id) {
-            $check_invoice_number = $this->Tasks_model->check_invoice_number($invoice_number,$id);
-            if ($check_invoice_number) {
-                return json_encode(array("success" => false, 'message' => "Invoice number already exists."));
-            }
+        if($invoice_number){
+        $check_invoice_number = $this->Tasks_model->check_invoice_number($invoice_number,$id);
+        if ($check_invoice_number) {
+            return json_encode(array("success" => false, 'message' => "Invoice number already exists."));
         }
+    }
+
         $data = array(
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description'),
@@ -1249,7 +1250,7 @@ class Tasks extends Security_Controller {
             "no_of_cycles" => $no_of_cycles ? $no_of_cycles : 0,
         );
 
-         $created_date=$this->request->getPost('created_date_hidden');
+        $created_date = $this->request->getPost('created_date');
 
         if (!$id) {
             $data["created_by"]= $this->login_user->id;

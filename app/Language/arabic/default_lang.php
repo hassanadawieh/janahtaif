@@ -398,16 +398,16 @@ $lang["start_date"] = "تاريخ البداية";
 $lang["end_date"] = "تاريخ النهاية";
 $lang["sub_task_note"] = "ملاحظات المهمة";
 $lang["booking_period"] = "الأيام في الفاتورة";
-$lang["ten_out_date"] = "تاريخ النهاية المؤقت";
+$lang["ten_out_date"] = "تارخي النهاية المؤقت ";
 
 
-$lang["exp_out_time"] = "وقت الخروج المتوقع";
+$lang["exp_out_time"] = "وقت الخروج";
 $lang["out_exp_date&time"] = "تاريخ&وقت الخروج المتوقع";
 $lang["act_out_time"] = "وقت الخروج الفعلي";
-
-$lang["tmp_return_date"] = "تاريخ العودة المؤقت";
-$lang["act_return_date"] = "تاريخ العودة الفعلي";
-$lang["sales_act_return_date"] = "تاريخ العودة الفعلي";
+$lang["return_time"] = "وقت العودة";
+$lang["tmp_return_date"] = "تاريخ العودة";
+$lang["act_return_date"] = "تاريخ العودة";
+$lang["sales_act_return_date"] = "تاريخ العودة ";
 $lang["tmp_return_date_2"] = "العودة المؤقت";
 $lang["act_return_date_2"] = "العودة الفعلي";
 $lang["act_out_date&time"] = "تاريخ &وقت الخروج الفعلي";

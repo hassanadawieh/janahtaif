@@ -150,8 +150,24 @@ if (! function_exists('form_input')) {
             'value' => $value,
         ];
 
+
         return '<input ' . parse_form_attributes($data, $defaults) . stringify_attributes($extra) . " />\n";
     }
+//     function form_input($data = '', string $value = '', $extra = '', string $type = 'text'): string
+// {
+//     $defaults = [
+//         'type'  => $type,
+//         'name'  => is_array($data) ? '' : $data,
+//         'value' => $value,
+//     ];
+
+//     // Add pattern for number inputs to restrict to English digits only
+//     if ($type === 'number' || (is_array($data) && isset($data['type']) && $data['type'] === 'number')) {
+//         $extra .= ' pattern="[0-9]*" title="Only English numerals are allowed"';
+//     }
+
+//     return '<input ' . parse_form_attributes($data, $defaults) . stringify_attributes($extra) . " />\n";
+// }
 }
 
 if (! function_exists('form_password')) {
