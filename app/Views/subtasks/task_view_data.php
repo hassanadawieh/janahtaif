@@ -191,6 +191,11 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
                             <label><?php echo is_date_exists($model_info->out_date)?$model_info->out_date.' ':' __ '; ?>
 
                         </div>
+
+                        <div class="col-md-12 mb5 mt5 text-wrap">
+                            <strong><?php echo app_lang('exp_out_time') . ": "; ?></strong>
+                            <label><?php echo $model_info->exp_out_time && $model_info->exp_out_time!='00:00:01'?$dateTime1->format('h:i A'):' __'; ?></label>
+                        </div>
                         
                         <div class="col-md-12 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('sales_act_return_date') . ": "; ?></strong>
@@ -202,20 +207,16 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
 
                         </div>
 
-                        <div class="col-md-12 mb5 mt5 text-wrap">
-                            <strong><?php echo app_lang('exp_out_time') . ": "; ?></strong>
-                            <label><?php echo $model_info->exp_out_time && $model_info->exp_out_time!='00:00:01'?$dateTime1->format('h:i A'):' __'; ?></label>
-                        </div>
                         
 
                         <div class="col-md-12 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('note') . ": "; ?></strong>
                             <label><?php echo $model_info->note; ?></label>
                         </div>
-                        <div class="col-md-12 mb5 mt5 text-wrap">
-                            <strong><?php echo app_lang('priority') . ": "; ?></strong>
-                            <label><?php echo $priority ?></label>
-                        </div>
+                        <!-- <div class="col-md-12 mb5 mt5 text-wrap">
+                            <strong><?php //echo app_lang('priority') . ": "; ?></strong>
+                            <label><?php //echo $priority ?></label>
+                        </div> -->
 
                    
 
