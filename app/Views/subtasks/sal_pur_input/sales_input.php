@@ -29,8 +29,9 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                         <div class=" col-md-4 mb5 mt5 floating-label" >
                             <?php
                             //$dis = $model_info->service_type == "deliver" ? false : true;
-                           $dis3 = $model_info->service_type == "no_car"?"disabled":"enabled";
-                        echo form_dropdown("car_type_id", $cars_type_dropdown, array($model_info->car_type_id), "class='select2 validate-hidden ' id='car_type_id'  $dis3  value='".$model_info->car_type_id."' ",$model_info->car_type_id );
+                           $dis3 = $model_info->service_type == "no_car"?"disabled":"enabled required";
+                           
+                        echo form_dropdown("car_type_id", $cars_type_dropdown, array($model_info->car_type_id), "class='select2 validate-hidden ' id='car_type_id'  required  $dis3  value='".$model_info->car_type_id."' ",$model_info->car_type_id );
                         ?>
                         <label for="car_type" ><?php echo app_lang('car_type'); ?></label>
                         </div>
@@ -41,7 +42,7 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                                   
                         <div class=" col-md-4 mb5 mt5 floating-label" >
                         <?php
-                            $dis2=$model_info->service_type=="no_driver" ? "disabled" : "enabled";
+                            $dis2=$model_info->service_type=="no_driver" ? "disabled" : "enabled required";
                             $options = $drivers_dropdown[0];
                             $statuese = $drivers_dropdown[1];
                             echo form_dropdown("driver_id", $options, array($model_info->driver_id), "class='select2 validate-hidden' id='driver_id' ".$dis2 , $statuese);
@@ -115,10 +116,10 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                         "placeholder" => app_lang('ten_out_date'),
                         "autocomplete" => "off",
                         $dis => true,
-                        "data-rule-required" => $model_info->service_type=="deliver"? false : true,
+                        // "data-rule-required" => $model_info->service_type=="deliver"? false : true,
                         "data-msg-required" => app_lang("field_required"),
-                        "data-rule-greaterThanOrEqual" => "#start_date",
-                            "data-msg-greaterThanOrEqual" => "يجب ان يكون اكبر او مساويا لتاريخ النهاية"
+                        // "data-rule-greaterThanOrEqual" => "#start_date",
+                            "data-msg-greaterThanOrEqual" => "يجب ان يكون اكبر او مساويا لتاريخ البداية"
                     ));
                     ?>
                     <label for="ten_out_date"><?php echo app_lang('ten_out_date'); ?></label>
@@ -135,10 +136,9 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                             "value" => $model_info->service_type!="deliver" ? $model_info->booking_period ? $model_info->booking_period : '' :'',
                             "type" => "number",
                             "class" => "form-control",
-                            // "data-rule-notNull" => "#endDate",
-                            // "data-msg-notNull" => "يجب كتبة عدد الايام",
-                            
-                            
+                            "data-rule-notNull" => "#sales_act_return_date",
+                            "data-rule-notNull" => "#return_time",
+                            "data-msg-notNull" => "يجب كتبة عدد الايام",
                             "placeholder" => app_lang('booking_period'),
                             $dis => true,
 
@@ -293,14 +293,14 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                         "placeholder" => app_lang("return_time"),
                         "autocomplete" => "off",
                         "data-rule-notNull" => "#sales_act_return_date",
-                        "data-msg-notNull" => "يجب تحديد  وقت الخروج التوقع",
+                        "data-msg-notNull" => "يجب تحديد  وقت الخروج المتوقع",
                         // "data-rule-required" => true,
                         "data-msg-required" => app_lang("field_required"),
                         
                     ));
                     ?>
                     
-                    <label for="ten_out_date" ><?php echo app_lang("return_time"); ?></label>
+                    <label for="return_time" ><?php echo app_lang("return_time"); ?></label>
                 </div>
                 
 
@@ -380,7 +380,30 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
     input.value = input.value.replace(/[^0-9]/g, '');
   }
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const serviceTypeField = document.getElementById('service_type');
+        const carTypeField = document.getElementById('car_type_id');
 
+        function toggleCarTypeRequired() {
+            const serviceType = serviceTypeField.value;
+
+            if (serviceType === 'no_car') {
+                carTypeField.disabled = true;
+                carTypeField.removeAttribute('required');
+            } else {
+                carTypeField.disabled = false;
+                carTypeField.setAttribute('required', 'required');
+            }
+        }
+
+        // Initially check the state on page load
+        toggleCarTypeRequired();
+
+        // Listen to changes in the service type field
+        serviceTypeField.addEventListener('change', toggleCarTypeRequired);
+    });
+</script>
 
 
                

@@ -1541,6 +1541,19 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         }
         return $this->db->query($query)->getResult();
     }
+    function check_completed_subtasks($task_id)
+    {
+        $tasks_table = $this->db->prefixTable('sub_tasks');
+
+        $query = "";
+        if ($task_id) {
+            // $query = "SELECT * FROM $tasks_table WHERE pnt_task_id = $task_id and status_id != 4 limit 1";
+            $query = "SELECT * FROM $tasks_table WHERE pnt_task_id = $task_id AND rec_inv_status != 'rec_inv' limit 1";
+
+        }
+
+        return $this->db->query($query)->getResult();
+    }
 
     function delete_task_and_sub_items($task_id) {
         $tasks_table = $this->db->prefixTable('tasks');

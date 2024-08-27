@@ -424,7 +424,7 @@
    
        startDate = new Date(selected.date.valueOf());
        //alert(startDate);
-       $('#tmp_return_date').datepicker('setStartDate', startDate);
+      //  $('#tmp_return_date').datepicker('setStartDate', startDate);
        $('#sales_act_return_date').datepicker('setStartDate', startDate);
    });
    

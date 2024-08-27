@@ -188,13 +188,12 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
                         </div>
                         
                         <div class="col-md-12 mb5 mt5 text-wrap">
-                            <strong><?php echo app_lang('tmp_return_date') . ": "; ?></strong>
-                            <label><?php echo $act_tmp_return_date; ?></label>
+                            <strong><?php echo app_lang('sales_act_return_date') . ": "; ?></strong>
+                            <label><?php echo $model_info->sales_act_return_date; ?></label>
                         </div>
-
                         <div class="col-md-12 mb5 mt5 text-wrap">
-                            <strong><?php echo app_lang('act_return_date') . ": "; ?></strong>
-                            <label><?php echo is_date_exists($model_info->sales_act_return_date)?$model_info->sales_act_return_date.' ':' __ '; ?>
+                            <strong><?php echo app_lang('return_time') . ": "; ?></strong>
+                            <label><?php echo $model_info->return_time && $model_info->return_time!='00:00:01'?$dateTime1->format('h:i A'):' __'; ?>
 
                         </div>
 
@@ -207,6 +206,10 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
                         <div class="col-md-12 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('note') . ": "; ?></strong>
                             <label><?php echo $model_info->note; ?></label>
+                        </div>
+                        <div class="col-md-12 mb5 mt5 text-wrap">
+                            <strong><?php echo app_lang('priority') . ": "; ?></strong>
+                            <label><?php echo $priority ?></label>
                         </div>
 
                    

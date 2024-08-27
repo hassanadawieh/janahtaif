@@ -59,7 +59,7 @@
                 if (window.existingUrl) {
                     var browserState = {Url: window.existingUrl};
                     history.pushState(browserState, "", browserState.Url);
-                    window.existingUrl = "";
+                    window.existing Url = "";
                 }
             });
         });

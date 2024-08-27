@@ -1227,6 +1227,13 @@ class Tasks extends Security_Controller {
             return json_encode(array("success" => false, 'message' => "Invoice number already exists."));
         }
     }
+    if ($id) {
+
+        $check_completed_subtasks = $this->Tasks_model->check_completed_subtasks($id);
+        if ($check_completed_subtasks) {
+            return json_encode(array("success" => false, 'message' => "The subtasks not completed. "));
+        }
+    }
 
         $data = array(
             "title" => $this->request->getPost('title'),

@@ -315,6 +315,7 @@ class Sub_tasks_model extends Crud_model {
         } if ($main_filter=="tasks_deleted") {
             $where .= " AND ($sub_tasks_table.deleted=1)";
          }if ($main_filter=="tasks_unpaid_driver") {
+            // $where .= " AND ($sub_tasks_table.car_expens_stmnt IS NULL OR $sub_tasks_table.car_expens_stmnt = '') AND $sub_tasks_table.deleted = 0 And ($sub_tasks_table.service_type = 'with_driver' OR $sub_tasks_table.service_type = 'no_car')";
             $where .= " AND ($sub_tasks_table.car_expens_stmnt IS NULL OR $sub_tasks_table.car_expens_stmnt = '') AND $sub_tasks_table.deleted = 0 And $sub_tasks_table.service_type = 'with_driver'";
          }
         }
@@ -954,7 +955,7 @@ class Sub_tasks_model extends Crud_model {
         } if ($main_filter=="tasks_deleted") {
             $where .= " AND ($sub_tasks_table.deleted=1)";
          }if ($main_filter=="tasks_unpaid_driver") {
-            $where .= " AND ($sub_tasks_table.car_expens_stmnt IS NULL OR $sub_tasks_table.car_expens_stmnt = '') AND $sub_tasks_table.deleted = 0 And $sub_tasks_table.service_type = 'with_driver'";
+            $where .= " AND ($sub_tasks_table.car_expens_stmnt IS NULL OR $sub_tasks_table.car_expens_stmnt = '') AND $sub_tasks_table.deleted = 0 And $sub_tasks_table.service_type IN ('with_driver' , 'no_car')";
          }
         }
 

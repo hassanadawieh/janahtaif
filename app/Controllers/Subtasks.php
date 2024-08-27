@@ -1171,7 +1171,6 @@ class Subtasks extends Security_Controller {
 
         $view_data['priorities_dropdown'] = $priorities_dropdown;
 
-
         return $this->template->view('subtasks/modal_form', $view_data);
     }
 
@@ -1457,7 +1456,7 @@ $myoptions = array(
         $view_data['is_supplier'] = $is_supplier;
         $view_data['service_type_txt'] = $this->get_service_type($model_info->service_type);
         $view_data['rec_inv_status'] = $this->get_rec_inv_status($model_info->rec_inv_status);
-            $view_data['mang'] = 'supplymang';
+        $view_data['mang'] = 'supplymang';
        
        
 
@@ -1475,7 +1474,16 @@ $myoptions = array(
 
         $view_data["view_type"] = $view_type;
         $view_data["mang_type"] = $mang_type;
-
+        
+        if($model_info->priority_id == "0"){
+            $view_data["priority"] = "-";
+        }elseif($model_info->priority_id == "1"){
+            $view_data["priority"] = "اولوية عادية";
+        }elseif($model_info->priority_id == "2"){
+            $view_data["priority"] = "اولوية متوسطة";
+        }else{
+            $view_data["priority"] = "اولوية عالية";
+        }
     
 
         if ($view_type == "details") {
