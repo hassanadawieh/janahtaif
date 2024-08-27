@@ -1,6 +1,7 @@
 
 <?php
 $dateTime1 = new DateTime($model_info->exp_out_time ? $model_info->exp_out_time:'00:00:00', new DateTimeZone("Asia/Riyadh"));
+$dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'00:00:00', new DateTimeZone("Asia/Riyadh"));
 $act_return_date_dateTime = new DateTime($model_info->act_return_date? $model_info->act_return_date:'00/00/000', new DateTimeZone("Asia/Riyadh"));
 $act_out_time_dateTime = new DateTime($model_info->act_out_time? $model_info->act_out_time:'00:00', new DateTimeZone("Asia/Riyadh"));
 $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_info->act_return_time:'00:00', new DateTimeZone("Asia/Riyadh"));
@@ -146,6 +147,10 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
                     </div>
                 <?php } ?>
                         <div class="col-md-6 mb5 mt5  text-wrap">
+                            <strong><?php echo app_lang('guest_nm') . ": "; ?></strong>
+                            <label><?php echo $model_info->guest_nm; ?></label>
+                        </div>
+                        <div class="col-md-6 mb5 mt5  text-wrap">
                             <strong><?php echo app_lang('driver_nm') . ": "; ?></strong>
                             <label><?php echo $model_info->driver_name; ?></label>
                         </div>
@@ -193,7 +198,7 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
                         </div>
                         <div class="col-md-12 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('return_time') . ": "; ?></strong>
-                            <label><?php echo $model_info->return_time && $model_info->return_time!='00:00:01'?$dateTime1->format('h:i A'):' __'; ?>
+                            <label><?php echo $model_info->return_time && $model_info->return_time!='00:00:01'?$dateTime2->format('h:i A'):' __'; ?>
 
                         </div>
 

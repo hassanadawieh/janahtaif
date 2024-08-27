@@ -52,8 +52,8 @@
                         "value" => $model_info->phone,
                         "class" => "form-control",
                         "placeholder" => app_lang('phone'),
-                        //"data-rule-required" => true,
-                        //"data-msg-required" => app_lang("field_required")
+                        "data-rule-required" => true,
+                        "data-msg-required" => app_lang("field_required")
                     ));
                     ?>
                 </div>
@@ -92,9 +92,9 @@
                         // $status[2] =  app_lang("closed");
                         // hassan_driver
                         // $status[3] =  app_lang("off");
-                        
+                        $dis = "required";
 
-                        echo form_dropdown("city", $city, $model_info->city ?array($model_info->city):"", "class='select2' id='status' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
+                        echo form_dropdown("city", $city, $model_info->city ? array($model_info->city) : "", "class='select2' id='status' required data-msg-required='".$dis . app_lang('field_required') . "'");
                         ?>
                 </div>
             </div>
@@ -114,7 +114,12 @@
                         $category["Block"] = "Block";
                         
 
-                        echo form_dropdown("category", $category, $model_info->category ?array($model_info->category):"", "class='select2' id='status' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
+                        echo form_dropdown(
+                            "category",
+                            $category,
+                            $model_info->category ? $model_info->category : "",
+                            "class='select2 form-control' id='category'"
+                        );
                         ?>
                 </div>
             </div>
@@ -146,5 +151,6 @@
         setTimeout(function () {
             $("#driver_nm").focus();
         }, 200);
+        
     });
 </script>    

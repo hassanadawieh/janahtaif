@@ -349,7 +349,10 @@
    
        $('#exp_out_time').parents('.timepicker').timepicker().on('changeTime.timepicker', function(e) {
    $('#exp_out_time').val(e.time.value);
+   });
    
+       $('#return_time').parents('.timepicker').timepicker().on('changeTime.timepicker', function(e) {
+   $('#return_time').val(e.time.value);
    });
    
    

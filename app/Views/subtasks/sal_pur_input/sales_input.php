@@ -116,9 +116,9 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                         "placeholder" => app_lang('ten_out_date'),
                         "autocomplete" => "off",
                         $dis => true,
-                        // "data-rule-required" => $model_info->service_type=="deliver"? false : true,
+                        "data-rule-required" => $model_info->service_type=="deliver"? false : true,
                         "data-msg-required" => app_lang("field_required"),
-                        // "data-rule-greaterThanOrEqual" => "#start_date",
+                        "data-rule-greaterThanOrEqual" => "#start_date",
                             "data-msg-greaterThanOrEqual" => "يجب ان يكون اكبر او مساويا لتاريخ البداية"
                     ));
                     ?>

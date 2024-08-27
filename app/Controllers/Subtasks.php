@@ -1768,6 +1768,11 @@ $myoptions = array(
         }else{
             $data["exp_out_time"]= "00:00:01";
         }
+        if($this->request->getPost('return_time')){
+            $data["return_time"]= $return_time;
+        }else{
+            $data["return_time"]= "00:00:01";
+        }
  
 
     }
