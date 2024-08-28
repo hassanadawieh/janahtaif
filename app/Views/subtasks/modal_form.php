@@ -411,13 +411,16 @@
    
        <?php $dateTime20 = new DateTime('now', new DateTimeZone("Asia/Riyadh"));
       $dateTime3 = new DateTime($model_info->out_date, new DateTimeZone("Asia/Riyadh"));
+      $dateTime22 = new DateTime($model_info->start_date, new DateTimeZone("Asia/Riyadh"));
       $ddt=is_date_exists($model_info->out_date) ? $dateTime3->format(get_setting("date_format")) : $dateTime20->format(get_setting("date_format"));
+      $dddt=is_date_exists($model_info->start_date) ? $dateTime22->format(get_setting("date_format")) : $dateTime20->format(get_setting("date_format"));
       
       ?>
        var we='<?php echo $ddt; ?>';
+       var be='<?php echo $dddt; ?>';
       
    
-       $('#tmp_return_date').datepicker('setStartDate', ''+we+'');
+       $('#tmp_return_date').datepicker('setStartDate', ''+be+'');
        $('#sales_act_return_date').datepicker('setStartDate', ''+we+'');
    
    
@@ -429,6 +432,13 @@
        //alert(startDate);
       //  $('#tmp_return_date').datepicker('setStartDate', startDate);
        $('#sales_act_return_date').datepicker('setStartDate', startDate);
+   });
+   $("#start_date").datepicker().on('changeDate', function(selected){
+   
+       startDate = new Date(selected.date.valueOf());
+       //alert(startDate);
+       $('#tmp_return_date').datepicker('setStartDate', startDate);
+      //  $('#sales_act_return_date').datepicker('setStartDate', startDate);
    });
    
    

@@ -111,11 +111,10 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                     echo form_input(array(
                         "id" => "tmp_return_date",
                         "name" => "tmp_return_date",
-                        "value" => $model_info->service_type!="deliver"? (is_date_exists($model_info->tmp_return_date) ? $model_info->tmp_return_date : '') :'',
+                        "value" => is_date_exists($model_info->tmp_return_date) ? $model_info->tmp_return_date : '',
                         "class" => "form-control",
                         "placeholder" => app_lang('ten_out_date'),
                         "autocomplete" => "off",
-                        $dis => true,
                         "data-rule-required" => $model_info->service_type=="deliver"? false : true,
                         "data-msg-required" => app_lang("field_required"),
                         "data-rule-greaterThanOrEqual" => "#start_date",
