@@ -314,7 +314,7 @@ if ($preview_task_id) {
 
 
 <script type="text/javascript">
-    var cfil={deleted_client: '',sub_tasks_id_f:'',pnt_task_id_f:'',guest_nm_f:'',guest_phone_f:'',pnt_task_id:'',company_name_f:'',clients_contact_f:'',christ_num_f:'',inv_num_f:'',city_name_f:'',driver_nm_f:'',car_type_f:'',out_date_f:'',out_date_f_t:'',tmp_return_date_f:'',tmp_return_date_f_t:'',sales_act_return_date_f:'',sales_act_return_date_f_t:'',inv_day_count_f:'',note_f:'',created_by_f:'',main_task_status_f:''
+    var cfil={deleted_client: '',sub_tasks_id_f:'',pnt_task_id_f:'',guest_nm_f:'',guest_phone_f:'',pnt_task_id:'',company_name_f:'',clients_contact_f:'',christ_num_f:'',inv_num_f:'',city_name_f:'',driver_nm_f:'',car_type_f:'',out_date_f:'',out_date_f_t:'',tmp_return_date_f:'',tmp_return_date_f_t:'',sales_act_return_date_f:'',sales_act_return_date_f_t:'',inv_day_count_f:'',sub_task_note_f:'',created_by_f:'',main_task_status_f:''
         ,supplier_f:'',car_status_f:'',car_number_f:'',act_return_date_f:'',act_return_date_f_t:'',act_out_date_f:'',act_out_date_f_t:'',description_f:'',day_count_f:'',dres_number_f:'',amount_f:'',note2_f:'',project_nm_f:'',monthly_f:'',specific_user_id:''};
     $(document).ready(function () {
 

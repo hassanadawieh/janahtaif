@@ -177,26 +177,44 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
                         }
 
                         ?>
+                        
+                            
                         <div class="col-md-6 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('service_type') . ": "; ?></strong>
                             <label style="color: <?php echo $color; ?>"><?php echo $service_type_txt; ?></label>
                         </div>
-                        <div class="col-md-12 mb5 mt5 text-wrap">
+                       
+                        <div class="col-md-6 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('inv_day_count') . ": "; ?></strong>
                             <label><?php echo $model_info->inv_day_count?$model_info->inv_day_count:' __ '; ?></label>
                         </div>
-
-                        <div class="col-md-12 mb5 mt5 text-wrap">
+                        <?php if($mang != "supplymang"){?>
+                        <div class="col-md-6 mb5 mt5 text-wrap">
+                            <strong><?php echo !$is_supplier? app_lang('start_date') . ": ":""; ?></strong>
+                            <label><?php echo  !$is_supplier?$model_info->start_date:""; ?></label>
+                        </div>
+                        <?php }; ?>
+                        <div class="col-md-6 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('out_date') . ": "; ?></strong>
                             <label><?php echo is_date_exists($model_info->out_date)?$model_info->out_date.' ':' __ '; ?>
 
                         </div>
-
-                        <div class="col-md-12 mb5 mt5 text-wrap">
+                        <?php if($mang != "supplymang"){?>
+                        <div class="col-md-6 mb5 mt5 text-wrap">
+                            <strong><?php echo !$is_supplier?app_lang('end_date') . ": ":""; ?></strong>
+                            <label><?php echo !$is_supplier?$model_info->end_date:""; ?></label>
+                        </div>
+                        <?php }; ?>
+                        <div class="col-md-6 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('exp_out_time') . ": "; ?></strong>
                             <label><?php echo $model_info->exp_out_time && $model_info->exp_out_time!='00:00:01'?$dateTime1->format('h:i A'):' __'; ?></label>
                         </div>
-                        
+                        <?php if($mang != "supplymang"){?>
+                        <div class="col-md-6 mb5 mt5 text-wrap">
+                            <strong><?php echo !$is_supplier?app_lang('booking_period') . ": ":""; ?></strong>
+                            <label><?php echo !$is_supplier?$model_info->booking_period:""; ?></label>
+                        </div>
+                        <?php }; ?>
                         <div class="col-md-12 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('sales_act_return_date') . ": "; ?></strong>
                             <label><?php echo $model_info->sales_act_return_date; ?></label>

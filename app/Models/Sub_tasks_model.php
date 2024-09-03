@@ -131,6 +131,13 @@ class Sub_tasks_model extends Crud_model {
             $where .= " AND ($sub_tasks_table.out_date BETWEEN '$out_date_f' AND '$out_date_f_t') ";
         }
 
+        // programing#1
+        $start_date_f = $this->_get_clean_value($options, "start_date_f");
+        $start_date_f_t = $this->_get_clean_value($options, "start_date_f_t");
+        if ($start_date_f && $start_date_f) {
+            $where .= " AND ($sub_tasks_table.out_date BETWEEN '$start_date_f' AND '$start_date_f_t') ";
+        }
+
         /*$tmp_return_date_f = $this->_get_clean_value($options, "tmp_return_date_f");
         if ($tmp_return_date_f) {
             $where .= " AND $sub_tasks_table.tmp_return_date LIKE '%$tmp_return_date_f%' ESCAPE '!'";
@@ -140,6 +147,17 @@ class Sub_tasks_model extends Crud_model {
         $tmp_return_date_f_t = $this->_get_clean_value($options, "tmp_return_date_f_t");
         if ($tmp_return_date_f && $tmp_return_date_f_t) {
             $where .= " AND ($sub_tasks_table.tmp_return_date BETWEEN '$tmp_return_date_f' AND '$tmp_return_date_f_t') ";
+        }
+        //programing#1
+        $start_date_f = $this->_get_clean_value($options, "start_date_f");
+        $start_date_f_t = $this->_get_clean_value($options, "start_date_f_t");
+        if ($start_date_f && $start_date_f_t) {
+            $where .= " AND ($sub_tasks_table.start_date BETWEEN '$start_date_f' AND '$start_date_f_t') ";
+        }
+        $end_date_f = $this->_get_clean_value($options, "end_date_f");
+        $end_date_f_t = $this->_get_clean_value($options, "end_date_f_t");
+        if ($end_date_f && $end_date_f_t) {
+            $where .= " AND ($sub_tasks_table.end_date BETWEEN '$end_date_f' AND '$end_date_f_t') ";
         }
 
 
@@ -152,10 +170,18 @@ class Sub_tasks_model extends Crud_model {
         if ($inv_day_count_f) {
             $where .= " AND $sub_tasks_table.inv_day_count=$inv_day_count_f";
         }
+        $booking_period_f = $this->_get_clean_value($options, "booking_period_f");
+        if ($booking_period_f) {
+            $where .= " AND $sub_tasks_table.booking_period=$booking_period_f";
+        }
 
         $note_f = $this->_get_clean_value($options, "note_f");
         if ($note_f) {
             $where .= " AND $sub_tasks_table.note LIKE '%$note_f%' ESCAPE '!'";
+        }
+        $sub_task_note_f = $this->_get_clean_value($options, "sub_task_note_f");
+        if ($sub_task_note_f) {
+            $where .= " AND $sub_tasks_table.sub_task_note LIKE '%$sub_task_note_f%' ESCAPE '!'";
         }
 
         $created_by_f = $this->_get_clean_value($options, "created_by_f");
@@ -778,7 +804,19 @@ class Sub_tasks_model extends Crud_model {
         if ($tmp_return_date_f && $tmp_return_date_f_t) {
             $where .= " AND ($sub_tasks_table.tmp_return_date BETWEEN '$tmp_return_date_f' AND '$tmp_return_date_f_t') ";
         }
-
+        
+        //programing#1
+        $start_date_f = $this->_get_clean_value($options, "start_date_f");
+        $start_date_f_t = $this->_get_clean_value($options, "start_date_f_t");
+        if ($start_date_f && $start_date_f_t) {
+            $where .= " AND ($sub_tasks_table.start_date BETWEEN '$start_date_f' AND '$start_date_f_t') ";
+        }
+        $end_date_f = $this->_get_clean_value($options, "end_date_f");
+        $end_date_f_t = $this->_get_clean_value($options, "end_date_f_t");
+        if ($end_date_f && $end_date_f_t) {
+            $where .= " AND ($sub_tasks_table.end_date BETWEEN '$end_date_f' AND '$end_date_f_t') ";
+        }
+        
 
         $sales_act_return_date_f = $this->_get_clean_value($options, "sales_act_return_date_f");
         if ($sales_act_return_date_f) {
@@ -789,10 +827,18 @@ class Sub_tasks_model extends Crud_model {
         if ($inv_day_count_f) {
             $where .= " AND $sub_tasks_table.inv_day_count=$inv_day_count_f";
         }
+        $booking_period_f = $this->_get_clean_value($options, "booking_period_f");
+        if ($booking_period_f) {
+            $where .= " AND $sub_tasks_table.booking_period=$booking_period_f";
+        }
 
         $note_f = $this->_get_clean_value($options, "note_f");
         if ($note_f) {
             $where .= " AND $sub_tasks_table.note LIKE '%$note_f%' ESCAPE '!'";
+        }
+        $sub_task_note_f = $this->_get_clean_value($options, "sub_task_note_f");
+        if ($sub_task_note_f) {
+            $where .= " AND $sub_tasks_table.sub_task_note LIKE '%$sub_task_note_f%' ESCAPE '!'";
         }
 
         $created_by_f = $this->_get_clean_value($options, "created_by_f");

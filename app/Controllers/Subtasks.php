@@ -304,7 +304,7 @@ class Subtasks extends Security_Controller {
             "status_ids" => $status,
             //"main_status_id" => $main_status_id,
             "main_task_status_f" => $this->request->getPost("main_task_status_f"),
-            "mang" => "supply",
+            "mang" => "reserv",
             "is_admin" => $this->login_user->is_admin?"yes":"no",
             "supplier_id" => $this->request->getPost("supplier_id"),
             "service_type" => $this->request->getPost("service_type"),
@@ -325,13 +325,21 @@ class Subtasks extends Security_Controller {
             "car_type_f" => $this->request->getPost("car_type_f"),
             "selected_year" => $this->session->get('selected_year'),
             "pnt_task_id" => $this->request->getPost("pnt_task_id"),
-            "out_date_f" => $this->request->getPost("out_date_f"),
-            "out_date_f_t" => $this->request->getPost("out_date_f_t"),
+            // "out_date_f" => $this->request->getPost("out_date_f"),
+            // "out_date_f_t" => $this->request->getPost("out_date_f_t"),
+            //programing#1
+            "start_date_f" => $this->request->getPost("start_date_f"),
+            "start_date_f_t" => $this->request->getPost("start_date_f_t"),
+
+            "end_date_f" => $this->request->getPost("end_date_f"),
+            "end_date_f_t" => $this->request->getPost("end_date_f_t"),
+            "booking_period_f" => $this->request->getPost("booking_period_f"),
+            "sub_task_note_f" => $this->request->getPost("sub_task_note_f"),
             "tmp_return_date_f" => $this->request->getPost("tmp_return_date_f"),
             "tmp_return_date_f_t" => $this->request->getPost("tmp_return_date_f_t"),
             "sales_act_return_date_f" => $this->request->getPost("sales_act_return_date_f"),
             "sales_act_return_date_f_t" => $this->request->getPost("sales_act_return_date_f_t"),
-            "inv_day_count_f" => $this->request->getPost("inv_day_count_f"),
+            // "inv_day_count_f" => $this->request->getPost("inv_day_count_f"),
             "note_f" => $this->request->getPost("note_f"),
             "project_nm_f" => $this->request->getPost("project_nm_f"),
             "created_by_f" => $this->request->getPost("created_by_f"),
@@ -343,14 +351,18 @@ class Subtasks extends Security_Controller {
             "city_id" => $this->request->getPost("city_id"),
             "cls_id" => $this->request->getPost("cls_id"),
             "priority_id" => $this->request->getPost("priority_id"),
-            "out_date" => $this->request->getPost("out_date"),
+            // "out_date" => $this->request->getPost("out_date"),
+            //programing#1
+            "start_date" => $this->request->getPost("start_date"),
+            "end_date" => $this->request->getPost("end_date"),
+            "booking_period" => $this->request->getPost("booking_period"),
             "tmp_return_date" => $this->request->getPost("tmp_return_date"),
             "sales_act_return_date" => $this->request->getPost("sales_act_return_date"),
             "unread_status_user_id" => $this->login_user->id,
             "quick_filter" => $quick_filter,
-            "custom_field_filter" => $this->prepare_custom_field_filter_values("sub_tasks", $this->login_user->is_admin, $this->login_user->user_type)
+            "custom_field_filter" => $this->prepare_custom_field_filter_values("sub_tasks", $this->login_user->is_admin, $this->login_user->user_type),
         );
-
+        
         $all_options = append_server_side_filtering_commmon_params($options);
         //$this->Tasks_model->get_details($all_options);
         $result = $this->Sub_tasks_model->get_details_new($all_options);
@@ -506,11 +518,15 @@ class Subtasks extends Security_Controller {
             
             $data->mycar_type?$data->mycar_type:'_',
             //$myout_date,
-            $data->exp_out_time && $data->exp_out_time!='00:00:01'?$myout_date.' '.date_format($exp_out_time_txt,"h:i A"):$myout_date.' _',
+            $data->start_date,
+           // $data->exp_out_time && $data->exp_out_time!='00:00:01'?$myout_date.' '.date_format($exp_out_time_txt,"h:i A"):$myout_date.' _',
+            //programing#1
+            // $data->start_date,
             $act_tmp_return_date,
             $data->sales_act_return_date && is_date_exists($data->sales_act_return_date)?$data->sales_act_return_date:'_',
-            $data->inv_day_count && $data->inv_day_count>0?$data->inv_day_count:'_',
-            $data->note,
+            // $data->inv_day_count && $data->inv_day_count>0?$data->inv_day_count:'_',
+            $data->booking_period && $data->booking_period>0?$data->booking_period:'_',
+            $data->sub_task_note,
             $created_by,
             $data->cls_color,
             $data->main_created_date,
@@ -541,7 +557,7 @@ class Subtasks extends Security_Controller {
             $data->exp_out_time && $data->exp_out_time!='00:00:01'?$myout_date.' '.date_format($exp_out_time_txt,"h:i A"):$myout_date.' _',
             $act_tmp_return_date,
             $data->sales_act_return_date && is_date_exists($data->sales_act_return_date)?$data->sales_act_return_date:'_',
-            $data->inv_day_count && $data->inv_day_count>0?$data->inv_day_count:'_',
+            $data->booking_period && $data->booking_period>0?$data->booking_period:'_',
             $data->note,
             $created_by,
             $data->cls_color,
@@ -1665,6 +1681,8 @@ $myoptions = array(
         $driver_nm = $this->request->getPost('driver_nm');
         $driver_id = $this->request->getPost('driver_id');
         $out_date = $this->request->getPost('out_date');
+        //programing#1
+        $start_date = $this->request->getPost('start_date');
         $tmp_return_date = $this->request->getPost('tmp_return_date');
         $sales_act_return_date = $this->request->getPost('sales_act_return_date');
         $exp_out_time = $this->request->getPost('exp_out_time')?convert_time_to_24hours_format($this->request->getPost('exp_out_time')):'00:00:01';
@@ -1750,6 +1768,8 @@ $myoptions = array(
             "car_type_id" => $car_type_id,
             "service_type" => $service_type,
             "out_date" => $out_date,
+            //programing#1
+            "start_date"=>$start_date,
             "tmp_return_date" => $tmp_return_date,
             "sales_act_return_date" => $sales_act_return_date,
             "note" => $note,

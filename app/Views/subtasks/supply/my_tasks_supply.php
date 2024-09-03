@@ -416,7 +416,7 @@ $('#subtask-table thead tr').clone(false).appendTo('#subtask-table thead');
                 // cfil.car_type_f=$("input[name=car_type_f]").val();
                 
 
-                //cfil.inv_day_count_f=$("input[name=inv_day_count_f]").val();
+                cfil.inv_day_count_f=$("input[name=inv_day_count_f]").val();
                 cfil.note_f=$("input[name=note_f]").val();
                 cfil.created_by_f=$("input[name=created_by_f]").val();
 

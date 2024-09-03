@@ -533,9 +533,13 @@ $cars_type_table = $this->db->prefixTable('cars_type');
             $where .= " AND $sub_tasks_table.sales_act_return_date LIKE '%$sales_act_return_date_f%' ESCAPE '!'";
         }
 
-        $inv_day_count_f = $this->_get_clean_value($options, "inv_day_count_f");
-        if ($inv_day_count_f) {
-            $where .= " AND $sub_tasks_table.inv_day_count=$inv_day_count_f";
+        // $inv_day_count_f = $this->_get_clean_value($options, "inv_day_count_f");
+        // if ($inv_day_count_f) {
+        //     $where .= " AND $sub_tasks_table.inv_day_count=$inv_day_count_f";
+        // }
+        $booking_period_f = $this->_get_clean_value($options, "booking_period_f");
+        if ($booking_period_f) {
+            $where .= " AND $sub_tasks_table.booking_period=$booking_period_f";
         }
 
         $pnt_task_id_f = $this->_get_clean_value($options, "pnt_task_id_f");

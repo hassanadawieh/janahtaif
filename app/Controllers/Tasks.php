@@ -1227,10 +1227,10 @@ class Tasks extends Security_Controller {
             return json_encode(array("success" => false, 'message' => "Invoice number already exists."));
         }
     }
-    if ($id) {
+    if ($id && $invoice_number) {
 
-        $check_completed_subtasks = $this->Tasks_model->check_completed_subtasks($id);
-        if ($check_completed_subtasks) {
+        $check_completed_subtasks = $this->list_data_status($id);
+        if (!$check_completed_subtasks) {
             return json_encode(array("success" => false, 'message' => "The subtasks not completed. "));
         }
     }
@@ -1523,8 +1523,10 @@ class Tasks extends Security_Controller {
         $tasks = $this->Tasks_model->get_one($parent_task_id);
         if($tasks->christening_number && $tasks->invoice_number){
         foreach ($sub_tasks as $sub_task) {
-            if ($sub_task->reserv_status != 4 || $sub_task->supplier_status != 4) {
-                if ($sub_task->reserv_status != 5 || $sub_task->supplier_status != 5) {
+            // if ($sub_task->reserv_status != 4 || $sub_task->supplier_status != 4) {
+            //     if ($sub_task->reserv_status != 5 || $sub_task->supplier_status != 5) {
+            if ($sub_task->reserv_status != 4) {
+                if ($sub_task->reserv_status != 5) {
                 //this sub task isn't done yet, show error and exit
                 echo json_encode(array("success" => false, 'message' => app_lang("parent_task_completing_error_message").'  '.count($sub_tasks)));
                 exit();
@@ -1553,8 +1555,10 @@ class Tasks extends Security_Controller {
             $sub_tasks = $this->Sub_tasks_model->check_subtask_status(array("pnt_task_id" => $parent_task_id, "deleted" => 0))->getResult();
             if(count($sub_tasks)>0){
         foreach ($sub_tasks as $sub_task) {
-            if ($sub_task->reserv_status != 4 || $sub_task->supplier_status != 4) {
-                if ($sub_task->reserv_status != 5 || $sub_task->supplier_status != 5) {
+            // if ($sub_task->reserv_status != 4 || $sub_task->supplier_status != 4) {
+            //     if ($sub_task->reserv_status != 5 || $sub_task->supplier_status != 5) {
+            if ($sub_task->reserv_status != 4) {
+                if ($sub_task->reserv_status != 5) {
                 //this sub task isn't done yet, show error and exit
                 
                 $res=false;
@@ -2992,6 +2996,50 @@ class Tasks extends Security_Controller {
                 return app_lang("import_date_error_message");
             }
         }
+    }
+    public function list_data_status($task_id)
+    {
+        // $task_id = "377";
+        $options = array(
+            "task_id" => $task_id,
+            "mang" => "reserv",
+            "is_admin" => $this->login_user->is_admin ? "yes" : "no",
+        );
+    
+        $all_options = append_server_side_filtering_commmon_params($options);
+        $result = $this->Sub_tasks_model->get_details_new($all_options);
+    
+        if (get_array_value($all_options, "server_side")) {
+            $list_data = get_array_value($result, "data");
+        } else {
+            $list_data = $result->getResult();
+            $result = array();
+        }
+    
+        // Check each item in the data
+        foreach ($list_data as $item) {
+            // Check conditions
+            if (
+                (empty($item->act_out_date) || $item->act_out_date == '0000-00-00') ||
+                (empty($item->sales_act_return_date) || $item->sales_act_return_date == '0000-00-00')||
+                (empty($item->act_out_time) || $item->act_out_time == '00:00:01') ||
+                (empty($item->car_type_id) || $item->car_type_id == '0') ||
+                (empty($item->inv_day_count) || $item->inv_day_count == '0')
+            ) {
+                // If any condition is met, return false and stop further processing
+                // echo json_encode($list_data);
+                // echo json_encode($list_data );
+                // echo json_encode(false);
+                return false;
+            }
+        }
+    
+        // If none of the items meet the conditions, return true
+        // echo json_encode($list_data);
+
+        // echo json_encode($list_data );
+        // echo json_encode(true);
+        return true;
     }
 
 }

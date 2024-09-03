@@ -286,7 +286,8 @@ var showOption = true,
          
 };
 var mytable;
-var cfil={deleted_client: '',sub_tasks_id_f:'',pnt_task_id_f:'',guest_nm_f:'',guest_phone_f:'',pnt_task_id:'',company_name_f:'',clients_contact_f:'',christ_num_f:'',inv_num_f:'',city_name_f:'',driver_nm_f:'',car_type_f:'',out_date_f:'',out_date_f_t:'',tmp_return_date_f:'',tmp_return_date_f_t:'',sales_act_return_date_f:'',sales_act_return_date_f_t:'',inv_day_count_f:'',note_f:'',created_by_f:'',main_task_status_f:''
+//,out_date_f:'',out_date_f_t:''
+var cfil={deleted_client: '',sub_tasks_id_f:'',pnt_task_id_f:'',guest_nm_f:'',guest_phone_f:'',pnt_task_id:'',company_name_f:'',clients_contact_f:'',christ_num_f:'',inv_num_f:'',city_name_f:'',driver_nm_f:'',car_type_f:'',tmp_return_date_f:'',tmp_return_date_f_t:'',end_date_f:'',end_date_f_t:'',inv_day_count_f:'',note_f:'', sub_task_note_f:'',created_by_f:'',main_task_status_f:''
         ,supplier_f:'',car_status_f:'',car_number_f:'',act_return_date_f:'',act_return_date_f_t:'',act_out_date_f:'',act_out_date_f_t:'',description_f:'',day_count_f:'',dres_number_f:'',amount_f:'',note2_f:'',project_nm_f:'',monthly_f:''};
     $(document).ready(function () {
 
@@ -370,14 +371,15 @@ var top = '';
                 } },
                 
                 {title: '<?php echo app_lang("car_type") ?>',"class":'car_type_f', order_by: "car_type_id"},
-                {title: '<?php echo app_lang("out_exp_date&time") ?>', "class": "out_date_f text-center ", order_by: "out_date",render: function(data, type, full, meta) {
-                    return "<div dir='ltr'>"+data+"</div>";
-                } },
+                // {title: '<?php //echo app_lang("out_exp_date&time") ?>', "class": "out_date_f text-center ", order_by: "out_date",render: function(data, type, full, meta) {
+                //     return "<div dir='ltr'>"+data+"</div>";
+                // } },
                 //{title: '<?php //echo app_lang("exp_out_time") ?>', "class": "text-center ", order_by: "exp_out_time"},
-                {title: '<?php echo app_lang("tmp_return_date_2") ?>', "class": "tmp_return_date_f text-center ", order_by: "tmp_return_date"},
-                {title: '<?php echo app_lang("act_return_date_2") ?>', "class": "sales_act_return_date_f text-center ", order_by: "sales_act_return_date"},
-                {title: '<?php echo app_lang("inv_day_count") ?>',"class":'inv_day_count_f', order_by: "inv_day_count"},
-                {title: '<?php echo app_lang("note") ?>', "class": "note_f text-center ", order_by: "note",render: function(data, type, full, meta) {
+                {title: '<?php echo app_lang("start_date") ?>', "class": "start_date_f text-center ", order_by: "start_date"},
+                {title: '<?php echo app_lang("ten_out_date") ?>', "class": "tmp_return_date_f text-center ", order_by: "tmp_return_date"},
+                {title: '<?php echo app_lang("end_date") ?>', "class": "end_date_f text-center ", order_by: "end_date"},
+                {title: '<?php echo app_lang("booking_period") ?>',"class":'booking_period_f', order_by: "booking_period"},
+                {title: '<?php echo app_lang("note") ?>', "class": "sub_task_note_f text-center ", order_by: "note",render: function(data, type, full, meta) {
                     return "<div style='white-space: nowrap;max-width: 130px;overflow: hidden;text-overflow: ellipsis;' data-bs-toggle='tooltip' data-bs-offset='0,4' data-bs-placement='top' data-bs-html='true' title='"+data+"'>"+data+"</div>";
                 } },
                 {title: '<?php echo app_lang("created_by") ?>',"class":'created_by_f', order_by: "created_by",render: function(data, type, full, meta) {
@@ -554,6 +556,7 @@ $("#subtask-table_wrapper > div:nth-child(1) > div.w-filter-right.float-end.cust
 
                 cfil.inv_day_count_f=$("input[name=inv_day_count_f]").val();
                 cfil.note_f=$("input[name=note_f]").val();
+                cfil.sub_task_note_f=$("input[name=sub_task_note_f]").val();
                 cfil.created_by_f=$("input[name=created_by_f]").val();
 
                 //$('#subtask-table').dataTable()._fnReDraw(false);
@@ -574,9 +577,11 @@ $("#subtask-table_wrapper > div:nth-child(1) > div.w-filter-right.float-end.cust
         });
 
         dateRangepicker('tmp_return_date_f','tmp_return_date_f','tmp_return_date_f_t');
+        dateRangepicker('end_date_f','end_date_f','end_date_f_t');
+        dateRangepicker('start_date_f','start_date_f','start_date_f_t');
 
-        dateRangepicker('out_date_f','out_date_f','out_date_f_t');
-        dateRangepicker('sales_act_return_date_f','sales_act_return_date_f','sales_act_return_date_f_t');
+        // dateRangepicker('out_date_f','out_date_f','out_date_f_t');
+        // dateRangepicker('sales_act_return_date_f','sales_act_return_date_f','sales_act_return_date_f_t');
 
         /*$('input[name=tmp_return_date_f]').datepicker({
             format: 'yyyy-mm-dd',

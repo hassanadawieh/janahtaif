@@ -61,9 +61,10 @@ if($model_info->id){
                             "name" => "car_number",
                             "value" =>  $model_info->car_number?$model_info->car_number:'',
                             "class" => "form-control",
-                            
+                            "type" => "number",
                             "placeholder" => app_lang('car_number'),
                             $disabled => true,
+                            "data-rule-notNull" => "#act_return_time",
                             //"data-rule-required" => true,
                             //"data-msg-required" => app_lang("field_required"),
                         ));
@@ -73,14 +74,13 @@ if($model_info->id){
 
 
                         <div class=" col-md-4 mb-3 form-floating" id="dropdown-apploader-section">
-
+                           
                             <?php
                         echo form_input(array(
                             "id" => "car_status",
                             "name" => "car_status",
                             "value" =>  $model_info->car_status?$model_info->car_status:'',
                             "class" => "form-control typeahead",
-                            
                             //"placeholder" => app_lang('car_status'),
                             $requerdOrNot=>"1",
                             
@@ -127,8 +127,7 @@ if($model_info->id){
                     "class" => "form-control",
                     "placeholder" => app_lang('act_out_time'),
                     "autocomplete" => "off",
-                    "data-rule-notNull" => "#act_out_date",
-                     "data-msg-notNull" => "يجب تحديد عوقت الخروج الفعلي",
+                    
                      $disabled => true,
                     //"data-rule-required" => true,
                     //"data-msg-required" => app_lang("field_required"),
@@ -147,6 +146,7 @@ if($model_info->id){
                         "class" => "form-control",
                         "placeholder" => app_lang('act_return_date'),
                         "autocomplete" => "off",
+                        "data-rule-notNull" => "#car_number",
                         //"data-rule-required" => $model_info->service_type=="deliver"? false : true,
                         // "data-msg-required" => app_lang("field_required"),
                         $disabled => true,
@@ -174,7 +174,7 @@ if($model_info->id){
                     "placeholder" => app_lang('act_return_time'),
                     "autocomplete" => "off",
                     $disabled => true,
-                    //"data-rule-notNull" => "#act_return_date",
+                    "data-rule-notNull" => "#act_return_date",
                     //"data-msg-notNull" => "يجب تحديد وقت العودة الفعلي"
                     //"data-rule-required" => true,
                     //"data-msg-required" => app_lang("field_required"),
@@ -209,8 +209,9 @@ if($model_info->id){
                             $dis => true,
                             $requerdOrNot2=>"1",
                             "data-msg-required" => app_lang("field_required"),
-                            //"data-rule-notNull" => "#act_return_date",
-                           //"data-msg-notNull" => "يجب تحديد عدد الايام"
+                            "data-rule-notNull" => "#act_return_date",
+   
+                        //    "data-msg-notNull" => "يجب تحديد عدد الايام"
                             //"data-rule-required" => $model_info->service_type=="deliver"? false:true,
                             //"data-msg-required" => app_lang("field_required"),
                         ));
@@ -251,6 +252,7 @@ if($model_info->id){
                             "value" => $model_info->amount,
                             "placeholder" => app_lang('amount'),
                             "class" => "form-control",
+                            
                             $disabled => true,
                             
                             
@@ -273,6 +275,7 @@ if($model_info->id){
                             "class" => "form-control",
                             "placeholder" => app_lang('note'),
                             "data-rich-text-editor" => true,
+                            "data-rule-notNull" => "#day_count",
                             $disabled => true,
                         ));
                         ?>
@@ -286,6 +289,14 @@ if($model_info->id){
                    function checkFields() {
                        var actOutDate = $('#act_out_date').val();
                        var actOutTime = $('#act_out_time').val();
+                       var recInvStatus = $('#rec_inv_status').val();
+
+                       if (recInvStatus === "rec_inv") {
+                       $('#car_status').attr('required', 'required');
+                       } else {
+                       $('#car_status').removeAttr('required');
+                       }
+
 
                        if (actOutDate && actOutTime) {
                            $('#dres_number').attr('required', 'required');
@@ -298,7 +309,7 @@ if($model_info->id){
                    checkFields();
 
                    // Check fields when either act_out_date or act_out_time changes
-                   $('#act_out_date, #act_out_time').on('change', function () {
+                   $('#act_out_date, #act_out_time, #rec_inv_status').on('change', function () {
                        checkFields();
                    });
                 });
