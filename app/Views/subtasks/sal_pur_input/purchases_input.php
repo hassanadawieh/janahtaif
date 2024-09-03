@@ -72,7 +72,7 @@ if($model_info->id){
                         <label for="car_number" ><?php echo app_lang('car_number'); ?></label>
                         </div>
 
-
+                       
                         <div class=" col-md-4 mb-3 form-floating" id="dropdown-apploader-section">
                            
                             <?php
@@ -88,6 +88,7 @@ if($model_info->id){
                         ?>
                         <label for="car_status"><?php echo app_lang('car_status'); ?></label>
                         </div>
+                        
 
                         
                     </div>
@@ -230,15 +231,22 @@ if($model_info->id){
                 <div class="row">
                     <div class=" col-md-6 mb5 mt2 floating-label">
                         <?php
+                        if($model_info->service_type == "with-driver"){
+                            $dis ="true";
+                        }elseif($model_info->service_type == "no_car"){
+                            $dis ="true";
+                        }else{
+                            $dis="false";
+                        };
+                          
                         echo form_input(array(
                             "id" => "dres_number",
                             "name" => "dres_number",
                             "value" => $model_info->dres_number,
                             "placeholder" => app_lang('dres_number'),
                             "class" => "form-control",
+                            "data-rule-required" => $dis,
                             $disabled => true,
-                            
-                            
                         ));
                         ?>
                         <label for="dres_number" ><?php echo app_lang('dres_number'); ?></label>
@@ -298,11 +306,11 @@ if($model_info->id){
                        }
 
 
-                       if (actOutDate && actOutTime) {
-                           $('#dres_number').attr('required', 'required');
-                       } else {
-                           $('#dres_number').removeAttr('required');
-                       }
+                    //    if (actOutDate && actOutTime ) {
+                    //        $('#dres_number').attr('required', 'required');
+                    //    } else {
+                    //        $('#dres_number').removeAttr('required');
+                    //    }
                    }
 
                    // Check fields on page load

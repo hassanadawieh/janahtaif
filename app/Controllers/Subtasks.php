@@ -1290,6 +1290,7 @@ $myoptions = array(
 
         
         //$view_data["mang"] = $mang;
+        $view_data["service_type"] = $model_info->service_type;
         $view_data['task_id'] = $task_id;
         $view_data['after_review'] = $after_review;
         $view_data['supplier_id'] = $model_info->supplier_id;
