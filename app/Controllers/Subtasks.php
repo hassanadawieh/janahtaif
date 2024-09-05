@@ -523,7 +523,7 @@ class Subtasks extends Security_Controller {
             //programing#1
             // $data->start_date,
             $act_tmp_return_date,
-            $data->sales_act_return_date && is_date_exists($data->sales_act_return_date)?$data->sales_act_return_date:'_',
+            $data->end_date && is_date_exists($data->end_date)?$data->end_date:'_',
             // $data->inv_day_count && $data->inv_day_count>0?$data->inv_day_count:'_',
             $data->booking_period && $data->booking_period>0?$data->booking_period:'_',
             $data->sub_task_note,
@@ -556,7 +556,7 @@ class Subtasks extends Security_Controller {
             //$myout_date,
             $data->exp_out_time && $data->exp_out_time!='00:00:01'?$myout_date.' '.date_format($exp_out_time_txt,"h:i A"):$myout_date.' _',
             $act_tmp_return_date,
-            $data->sales_act_return_date && is_date_exists($data->sales_act_return_date)?$data->sales_act_return_date:'_',
+            $data->end_date && is_date_exists($data->end_date)?$data->end_date:'_',
             $data->booking_period && $data->booking_period>0?$data->booking_period:'_',
             $data->note,
             $created_by,
