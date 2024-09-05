@@ -191,7 +191,7 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
                         <?php if($mang != "supplymang"){?>
                         <div class="col-md-6 mb5 mt5 text-wrap">
                             <strong><?php echo !$is_supplier? app_lang('start_date') . ": ":""; ?></strong>
-                            <label><?php echo  !$is_supplier?$model_info->start_date:""; ?></label>
+                            <label><?php echo  !$is_supplier?$model_info->start_date:"__"; ?></label>
                         </div>
                         <?php }; ?>
                         <div class="col-md-6 mb5 mt5 text-wrap">
@@ -202,7 +202,7 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
                         <?php if($mang != "supplymang"){?>
                         <div class="col-md-6 mb5 mt5 text-wrap">
                             <strong><?php echo !$is_supplier?app_lang('end_date') . ": ":""; ?></strong>
-                            <label><?php echo !$is_supplier?$model_info->end_date:""; ?></label>
+                            <label><?php echo $model_info->end_date != "0000-00-00"?$model_info->end_date:"__"; ?></label>
                         </div>
                         <?php }; ?>
                         <div class="col-md-6 mb5 mt5 text-wrap">
@@ -212,12 +212,12 @@ $act_return_time_dateTime = new DateTime($model_info->act_return_time? $model_in
                         <?php if($mang != "supplymang"){?>
                         <div class="col-md-6 mb5 mt5 text-wrap">
                             <strong><?php echo !$is_supplier?app_lang('booking_period') . ": ":""; ?></strong>
-                            <label><?php echo !$is_supplier?$model_info->booking_period:""; ?></label>
+                            <label><?php echo $model_info->booking_period?$model_info->booking_period:"__"; ?></label>
                         </div>
                         <?php }; ?>
                         <div class="col-md-12 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('sales_act_return_date') . ": "; ?></strong>
-                            <label><?php echo $model_info->sales_act_return_date; ?></label>
+                            <label><?php echo $model_info->sales_act_return_date !='0000-00-00'?$model_info->sales_act_return_date:"__"; ?></label>
                         </div>
                         <div class="col-md-12 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('return_time') . ": "; ?></strong>

@@ -1277,6 +1277,9 @@ $myoptions = array(
                 app_redirect("forbidden");
             }
         }
+        
+        $view_data['can_edit_rec_inv_status'] = $this->can_edit_rec_inv_status();
+        $view_data['can_edit_car_status'] = $this->can_edit_car_status();
 
         $view_data['model_info'] = $model_info;
         $view_data['main_task'] = $this->Tasks_model->get_details(array("id" => $task_id))->getRow();

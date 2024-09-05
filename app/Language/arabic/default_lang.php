@@ -329,6 +329,9 @@ $lang["can_add_city"] = "يمكن اضافة مدن الخدمة";
 $lang["can_edit_city"] = "يمكن تعديل مدن الخدمة";
 $lang["can_delete_city"] = "يمكن حذف مدن الخدمة";
 
+$lang["can_edit_rec_inv_status"]="يمكن التعديل على حالة الفاتورة";
+$lang["can_edit_car_status"]="يمكن التعديل على حالة السيارة";
+
 
 $lang["can_update_maintask_status"] = "يمكن تعديل حالة المهمة الرئيسية";
 $lang["can_show_subtasks_report"] = "يمكن  عرض تقرير المهام الفرعية";

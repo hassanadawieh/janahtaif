@@ -301,6 +301,19 @@
                             ?>
                             <label for="can_delete_city"><?php echo app_lang("can_delete_city"); ?></label>
                         </div>
+                         --------------------------------------------------------------------------
+                        <div>
+                            <?php
+                            echo form_checkbox("can_edit_rec_inv_status", "1", $can_edit_rec_inv_status ? true : false, "id='can_edit_rec_inv_status' class='form-check-input'");
+                            ?>
+                            <label for="can_edit_rec_inv_status"><?php echo app_lang("can_edit_rec_inv_status"); ?></label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_checkbox("can_edit_car_status", "1", $can_edit_car_status ? true : false, "id='can_edit_car_status' class='form-check-input'");
+                            ?>
+                            <label for="can_edit_car_status"><?php echo app_lang("can_edit_car_status"); ?></label>
+                        </div>
                         
                         
                     </div>

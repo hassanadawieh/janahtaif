@@ -47,9 +47,23 @@ if($model_info->id){
                            }
 
                         ?>
+                        <?php if (!$can_edit_car_status) { ?>
+
+                        <input type="hidden" name="car_status"
+                         value="<?php echo $model_info->car_status ? $model_info->car_status : ''; ?>" 
+                         />
+
+                        <?php }elseif(!$can_edit_rec_inv_status){ ?>
+
+                        <input type="hidden" name="rec_inv_status"
+                        value="<?php echo $model_info->rec_inv_status ? $model_info->rec_inv_status : ''; ?>" 
+                        />
+                        <?php }?>
+                                     
+
                         <div class=" col-md-4 mb-3 floating-label">
                             <?php
-                            echo form_dropdown("supplier_id", $suppliers_dropdown, array($model_info->supplier_id), "class='select2 validate-hidden' id='supplier_id' ".$disabled);
+                            echo form_dropdown("supplier_id", $suppliers_dropdown, array($model_info->supplier_id), "class='select2 validate-hidden' required id='supplier_id' ".$disabled);
                             ?>
                             <label for="supplier_id"><?php echo app_lang('supplier'); ?></label>
                         </div>
@@ -74,13 +88,16 @@ if($model_info->id){
 
                        
                         <div class=" col-md-4 mb-3 form-floating" id="dropdown-apploader-section">
-                           
+                        <?php $can_edit_statusOfCar = !$can_edit_car_status ? 'disabled' : '';
+                         $can_edit_statusOfinv = !$can_edit_rec_inv_status ? 'disabled' : '';
+                         ?>
                             <?php
                         echo form_input(array(
                             "id" => "car_status",
                             "name" => "car_status",
                             "value" =>  $model_info->car_status?$model_info->car_status:'',
                             "class" => "form-control typeahead",
+                            $can_edit_statusOfCar => true,
                             //"placeholder" => app_lang('car_status'),
                             $requerdOrNot=>"1",
                             
@@ -112,7 +129,7 @@ if($model_info->id){
                         $disabled => true,
                         //"data-rule-notNull" => "#act_out_time",
                         //"data-msg-notNull" => "يجب تحديد تاريخ الخروج او قم بمسخ وقت الخروج"
-                        //"data-rule-required" => true,
+                        "data-rule-required" => true,
                         //"data-msg-required" => app_lang("field_required"),
                     ));
                     ?>
@@ -130,7 +147,7 @@ if($model_info->id){
                     "autocomplete" => "off",
                     
                      $disabled => true,
-                    //"data-rule-required" => true,
+                    "data-rule-required" => true,
                     //"data-msg-required" => app_lang("field_required"),
                 ));
                 ?>
@@ -190,7 +207,7 @@ if($model_info->id){
                         $rec_inv_status["rec_inv"] =  app_lang("rec_inv");
                         
 
-                        echo form_dropdown("rec_inv_status", $rec_inv_status, $model_info->rec_inv_status ?array($model_info->rec_inv_status):1, "class='select2' id='rec_inv_status' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
+                        echo form_dropdown("rec_inv_status", $rec_inv_status, $model_info->rec_inv_status ?array($model_info->rec_inv_status):1, "class='select2' id='rec_inv_status' $can_edit_statusOfinv data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
                         ?>
                         <label for="rec_inv_status"><?php echo app_lang('rec_inv_status'); ?></label>
                         </div>
@@ -225,27 +242,26 @@ if($model_info->id){
                 </div>
 
 
-
+             
 
                 <div class="form-group">
                 <div class="row">
                     <div class=" col-md-6 mb5 mt2 floating-label">
                         <?php
-                        if($model_info->service_type == "with-driver"){
-                            $dis ="true";
+                        if($model_info->service_type == "with_driver"){
+                            $dis ="data-rule-required";
                         }elseif($model_info->service_type == "no_car"){
-                            $dis ="true";
+                            $dis ="data-rule-required";
                         }else{
-                            $dis="false";
+                            $dis="";
                         };
-                          
                         echo form_input(array(
                             "id" => "dres_number",
                             "name" => "dres_number",
                             "value" => $model_info->dres_number,
                             "placeholder" => app_lang('dres_number'),
                             "class" => "form-control",
-                            "data-rule-required" => $dis,
+                            $dis => true,
                             $disabled => true,
                         ));
                         ?>

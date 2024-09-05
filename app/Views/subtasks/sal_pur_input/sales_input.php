@@ -29,23 +29,23 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                         <div class=" col-md-4 mb5 mt5 floating-label" >
                             <?php
                             //$dis = $model_info->service_type == "deliver" ? false : true;
-                           $dis3 = $model_info->service_type == "no_car"?"disabled":"enabled required";
+                           $dis3 ="required";
                            
-                        echo form_dropdown("car_type_id", $cars_type_dropdown, array($model_info->car_type_id), "class='select2 validate-hidden ' id='car_type_id'  required  $dis3  value='".$model_info->car_type_id."' ",$model_info->car_type_id );
+                        echo form_dropdown("car_type_id", $cars_type_dropdown, array($model_info->car_type_id), "class='select2 validate-hidden ' id='car_type_id'  $dis3   value='".$model_info->car_type_id."' ",$model_info->car_type_id );
                         ?>
                         <label for="car_type" ><?php echo app_lang('car_type'); ?></label>
                         </div>
 
+                        
 
-
-
+                        <?php $disableFiledDriver= $model_info->service_type == 'no_driver'?"disabled":""; ?>
                                   
                         <div class=" col-md-4 mb5 mt5 floating-label" >
                         <?php
-                            $dis2=$model_info->service_type=="no_driver" ? "disabled" : "enabled required";
+                            $dis2="required";
                             $options = $drivers_dropdown[0];
                             $statuese = $drivers_dropdown[1];
-                            echo form_dropdown("driver_id", $options, array($model_info->driver_id), "class='select2 validate-hidden' id='driver_id' ".$dis2 , $statuese);
+                            echo form_dropdown("driver_id", $options, array($model_info->driver_id), "class='select2 validate-hidden' $disableFiledDriver id='driver_id'  ".$dis2 , $statuese);
                             
                         
                         ?>
@@ -94,7 +94,7 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                         "autocomplete" => "off",
                         // "data-rule-required" => true,
                         "data-msg-required" => app_lang("field_required"),
-                        "data-rule-notNull" => "#booking_period",
+                        "data-rule-notNull" => "#return_time",
                         //"data-rule-required" => $model_info->service_type=="deliver"? false : true,
                         // "data-msg-required" => app_lang("field_required"),
                         "data-rule-greaterThanOrEqual" => "#start_date",
@@ -135,8 +135,8 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                             "value" => $model_info->service_type!="deliver" ? $model_info->booking_period ? $model_info->booking_period : '' :'',
                             "type" => "number",
                             "class" => "form-control",
-                            "data-rule-notNull" => "#sales_act_return_date",
-                            "data-rule-notNull" => "#return_time",
+                            "data-rule-notNull" => "#end_date",
+                            // "data-rule-notNull" => "#return_time",
                             "data-msg-notNull" => "يجب كتبة عدد الايام",
                             "placeholder" => app_lang('booking_period'),
                             $dis => true,
@@ -383,15 +383,34 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
     document.addEventListener('DOMContentLoaded', function () {
         const serviceTypeField = document.getElementById('service_type');
         const carTypeField = document.getElementById('car_type_id');
+        const driverNameField = document.getElementById('driver_id')
 
         function toggleCarTypeRequired() {
             const serviceType = serviceTypeField.value;
+            carTypeField.value = '';
+            driverNameField.value = '';
 
             if (serviceType === 'no_car') {
                 carTypeField.disabled = true;
+                driverNameField.disabled = false;
                 carTypeField.removeAttribute('required');
-            } else {
+                driverNameField.setAttribute('required', 'required');
+            } 
+            // else {
+            //     carTypeField.disabled = false;
+            //     carTypeField.setAttribute('required', 'required');
+            // }
+
+            if(serviceType === 'no_driver'){
+                driverNameField.disabled = true;
                 carTypeField.disabled = false;
+                driverNameField.removeAttribute('required');
+                carTypeField.setAttribute('required', 'required');
+            }
+            if(serviceType === 'with_driver' || serviceType === "deliver" ) {
+                driverNameField.disabled = false;
+                carTypeField.disabled = false;
+                driverNameField.setAttribute('required', 'required');
                 carTypeField.setAttribute('required', 'required');
             }
         }

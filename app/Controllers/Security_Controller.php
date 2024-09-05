@@ -1386,6 +1386,27 @@ class Security_Controller extends App_Controller {
         } 
     }
 
+    protected function can_edit_rec_inv_status() {
+        if ($this->login_user->user_type == "staff") {
+            if ($this->can_manage_all_projects()) {
+                return true;
+            } else if (get_array_value($this->login_user->permissions, "can_edit_rec_inv_status") == "1") {
+                //check is user a project member
+                return true;
+            }
+        } 
+    }
+    protected function can_edit_car_status() {
+        if ($this->login_user->user_type == "staff") {
+            if ($this->can_manage_all_projects()) {
+                return true;
+            } else if (get_array_value($this->login_user->permissions, "can_edit_car_status") == "1") {
+                //check is user a project member
+                return true;
+            }
+        }
+    }
+
     protected function supplier_permission() {
         if ($this->login_user->user_type == "staff") {
             if ($this->login_user->is_admin) {

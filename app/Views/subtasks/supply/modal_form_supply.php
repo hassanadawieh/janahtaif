@@ -165,7 +165,7 @@ $newDate2 = $dateTime->format(get_setting("date_format"));
                         </div>
                         <div class="col-md-4 mb5 mt5 text-wrap">
                             <strong><?php echo app_lang('return_time') . ": "; ?></strong>
-                            <label ><?php echo $model_info->return_time; ?></label>
+                            <label ><?php echo $model_info->return_time !="00:00:01"?$model_info->return_time:"__"; ?></label>
                         </div>
                        
 

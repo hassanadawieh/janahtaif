@@ -1038,7 +1038,8 @@ class Sub_tasks_model extends Crud_model {
 
                DATE_FORMAT($sub_tasks_table.tmp_return_date,'%m/%d/%Y')
         ";*/
-
+        
+        $service_type_query = "SELECT service_type FROM sub_tasks WHERE id= '1610'";
 
         $supplier_status=$mang=="reserv" ? " (CASE
             WHEN $sub_tasks_table.status_id =5 THEN 5
@@ -1080,6 +1081,7 @@ class Sub_tasks_model extends Crud_model {
             AND (($sub_tasks_table.act_return_date='0000-00-00' OR $sub_tasks_table.act_return_date is NULL)
             OR ($sub_tasks_table.act_return_time='00:00:01' OR $sub_tasks_table.act_return_time is NULL)) THEN 3
 
+            
             WHEN (($sub_tasks_table.act_return_date!='0000-00-00' OR $sub_tasks_table.act_return_date is NOT NULL)
             OR ($sub_tasks_table.act_return_time!='00:00:01' OR $sub_tasks_table.act_return_time is NOT NULL))
             AND ($sub_tasks_table.rec_inv_status='wait_inv' AND $sub_tasks_table.service_type!='deliver') THEN 2

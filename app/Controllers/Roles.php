@@ -110,6 +110,10 @@ class Roles extends Security_Controller {
             $view_data['can_add_city'] = get_array_value($permissions, "can_add_city");
             $view_data['can_edit_city'] = get_array_value($permissions, "can_edit_city");
             $view_data['can_delete_city'] = get_array_value($permissions, "can_delete_city");
+            
+            $view_data['can_edit_rec_inv_status'] = get_array_value($permissions, "can_edit_rec_inv_status");
+            $view_data['can_edit_car_status'] = get_array_value($permissions, "can_edit_car_status");
+            
             //hassan
             $view_data['can_delete_driver'] = get_array_value($permissions, "can_delete_driver");
             $view_data['can_edit_driver'] = get_array_value($permissions, "can_edit_driver");
@@ -271,6 +275,9 @@ class Roles extends Security_Controller {
         $can_add_city = $this->request->getPost('can_add_city');
         $can_edit_city = $this->request->getPost('can_edit_city');
         $can_delete_city = $this->request->getPost('can_delete_city');
+
+        $can_edit_rec_inv_status = $this->request->getPost('can_edit_rec_inv_status');
+        $can_edit_car_status = $this->request->getPost('can_edit_car_status');
         //hassan
         $can_delete_driver = $this->request->getPost("can_delete_driver");
         $can_edit_driver = $this->request->getPost("can_edit_driver");
@@ -401,6 +408,9 @@ class Roles extends Security_Controller {
             "can_add_city" => $can_add_city,
             "can_edit_city" => $can_edit_city,
             "can_delete_city" => $can_delete_city,
+
+            "can_edit_rec_inv_status"=>$can_edit_rec_inv_status,
+            "can_edit_car_status"=>$can_edit_car_status,
             
             //hassan
             "can_edit_driver" => $can_edit_driver,
