@@ -39,6 +39,8 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                         
 
                         <?php $disableFiledDriver= $model_info->service_type == 'no_driver'?"disabled":""; ?>
+                        <?php echo($model_info->service_type)?>
+
                                   
                         <div class=" col-md-4 mb5 mt5 floating-label" >
                         <?php
@@ -359,9 +361,11 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
     $(document).ready(function () {
         $('#service_type').change(function () {
             var selectedService = $(this).val();
+            console.log(selectedService)
 
             if (selectedService === 'no_car') {
                 $('#car_type_id').prop('disabled', true);
+                $('#driver_id').prop('disabled',false);
             } else {
                 $('#car_type_id').prop('disabled', false);
             }
@@ -379,17 +383,20 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
     input.value = input.value.replace(/[^0-9]/g, '');
   }
 </script>
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
+        console.log("test")
         const serviceTypeField = document.getElementById('service_type');
         const carTypeField = document.getElementById('car_type_id');
         const driverNameField = document.getElementById('driver_id')
 
         function toggleCarTypeRequired() {
+            
             const serviceType = serviceTypeField.value;
             carTypeField.value = '';
             driverNameField.value = '';
-
+            console.log(serviceType)
+            return;
             if (serviceType === 'no_car') {
                 carTypeField.disabled = true;
                 driverNameField.disabled = false;
@@ -413,6 +420,7 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                 driverNameField.setAttribute('required', 'required');
                 carTypeField.setAttribute('required', 'required');
             }
+            
         }
 
         // Initially check the state on page load
@@ -421,7 +429,7 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
         // Listen to changes in the service type field
         serviceTypeField.addEventListener('change', toggleCarTypeRequired);
     });
-</script>
+</script> -->
 
 
                

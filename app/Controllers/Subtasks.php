@@ -1198,18 +1198,25 @@ class Subtasks extends Security_Controller {
             $model_info = $this->Sub_tasks_model->get_one($id);
     
             $createBy = $this->Users_model->get_one($model_info->created_by);
-    
+            $UpdateBy = $this->Users_model->get_one($model_info->updated_by);
             $login_user_id = $this->Users_model->login_user_id();
+            // return echo($login_user_id);
             if (!$login_user_id) {
                 show_404();
             }
+            
     
             $user_info = $this->Users_model->get_one($login_user_id);
             if ((!($createBy->first_name == $user_info->first_name) && !($createBy->last_name == $user_info->last_name))&&(!$this->login_user->is_admin)) {
                 // $permession_data["permession"] = "Just who create this task and admin can edit";
                 // return $this->template->view('subtasks/modal_form', $permession_data);
-                 return;
+                //  return;
+                if(!($model_info->updated_by == "0") && !($model_info->updated_by == $login_user_id)){
+                     echo json_encode("need access, please try again or connect with your admin to fixe the error");
+                     return;
+                }
             };
+            
 
         if (!$this->is_supply_mang()) {
             app_redirect("forbidden");
@@ -1338,7 +1345,7 @@ $myoptions = array(
         //$view_data['has_checklist'] = $this->Checklist_items_model->get_details(array("task_id" => $id))->resultID->num_rows;
         //$view_data['has_sub_task'] = count($this->Tasks_model->get_all_where(array("parent_task_id" => $id, "deleted" => 0))->getResult());
 
-
+        
         return $this->template->view('subtasks/supply/modal_form_supply', $view_data);
     }
 
