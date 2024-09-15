@@ -1083,7 +1083,7 @@ class Subtasks extends Security_Controller {
         }
 
         $user_info = $this->Users_model->get_one($login_user_id);
-        if ((!($createBy->first_name == $user_info->first_name) && !($createBy->last_name == $user_info->last_name)) && (!$this->login_user->is_admin)) {
+        if (($id && !($createBy->first_name == $user_info->first_name) && !($createBy->last_name == $user_info->last_name)) && (!$this->login_user->is_admin)) {
             // $permession_data["permession"] = "Just who create this task and admin can edit";
             // return $this->template->view('subtasks/modal_form', $permession_data);
             return;
