@@ -39,7 +39,7 @@ $dateTime2 = new DateTime($model_info->return_time ? $model_info->return_time:'n
                         
 
                         <?php $disableFiledDriver= $model_info->service_type == 'no_driver'?"disabled":""; ?>
-                        <?php echo($model_info->service_type)?>
+                       
 
                                   
                         <div class=" col-md-4 mb5 mt5 floating-label" >
