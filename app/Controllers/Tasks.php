@@ -2,7 +2,8 @@
 
 namespace App\Controllers;
 
-class Tasks extends Security_Controller {
+class Tasks extends Security_Controller
+{
 
     protected $Project_settings_model;
     protected $Checklist_items_model;
@@ -11,7 +12,8 @@ class Tasks extends Security_Controller {
     protected $File_category_model;
     protected $Task_priority_model;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         if (!$this->can_show_tasks()) {
             app_redirect("forbidden");
@@ -26,11 +28,12 @@ class Tasks extends Security_Controller {
     }
 
 
-   
 
-    private function can_delete_projects($project_id = 0) {
+
+    private function can_delete_projects($project_id = 0)
+    {
         if ($this->login_user->user_type == "staff") {
-          
+
 
             $can_delete_projects = get_array_value($this->login_user->permissions, "can_delete_projects");
             $can_delete_only_own_created_projects = get_array_value($this->login_user->permissions, "can_delete_only_own_created_projects");
@@ -51,22 +54,22 @@ class Tasks extends Security_Controller {
     }
 
 
-    private function can_view_tasks() {
+    private function can_view_tasks()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
             } else {
                 if (get_array_value($this->login_user->permissions, "can_show_tasks") == "1") {
-                    
-                        return true;
-                    
-                } 
+
+                    return true;
+                }
             }
         }
-        
     }
 
-    private function can_delete_tasks() {
+    private function can_delete_tasks()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
@@ -77,7 +80,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function can_update_maintask_status() {
+    private function can_update_maintask_status()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
@@ -85,16 +89,17 @@ class Tasks extends Security_Controller {
                 //check is user a project member
                 return true;
             }
-        } 
+        }
     }
 
 
-    
 
-    
+
+
     /* load the project settings into ci settings */
 
-    private function init_project_settings($project_id) {
+    private function init_project_settings($project_id)
+    {
         $settings = $this->Project_settings_model->get_all_where(array("project_id" => $project_id))->getResult();
         foreach ($settings as $setting) {
             config('Rise')->app_settings_array[$setting->setting_name] = $setting->setting_value;
@@ -105,17 +110,19 @@ class Tasks extends Security_Controller {
 
     /* load project view */
 
-    function index() {
+    function index()
+    {
         app_redirect("projects/all_projects");
     }
 
-   
-  
+
+
 
 
     /* Show a modal to clone a project */
 
-    function clone_project_modal_form() {
+    function clone_project_modal_form()
+    {
 
         $project_id = $this->request->getPost('id');
 
@@ -135,9 +142,10 @@ class Tasks extends Security_Controller {
         return $this->template->view('projects/clone_project_modal_form', $view_data);
     }
 
- 
 
-    private function _prepare_new_task_data_on_cloning_project($new_project_id, $milestones_array, $task, $copy_same_assignee_and_collaborators, $copy_tasks_start_date_and_deadline, $move_all_tasks_to_to_do, $change_the_tasks_start_date_and_deadline_based_on_project_start_date, $old_project_info, $project_start_date) {
+
+    private function _prepare_new_task_data_on_cloning_project($new_project_id, $milestones_array, $task, $copy_same_assignee_and_collaborators, $copy_tasks_start_date_and_deadline, $move_all_tasks_to_to_do, $change_the_tasks_start_date_and_deadline_based_on_project_start_date, $old_project_info, $project_start_date)
+    {
         //prepare new task data. 
         $task->project_id = $new_project_id;
         $milestone_id = get_array_value($milestones_array, $task->milestone_id);
@@ -179,7 +187,8 @@ class Tasks extends Security_Controller {
         return $task_data;
     }
 
-    private function _save_custom_fields_on_cloning_project($task, $new_taks_id) {
+    private function _save_custom_fields_on_cloning_project($task, $new_taks_id)
+    {
         $old_custom_fields = $this->Custom_field_values_model->get_all_where(array("related_to_type" => "tasks", "related_to_id" => $task->id, "deleted" => 0))->getResult();
 
         //prepare new custom fields data
@@ -193,11 +202,12 @@ class Tasks extends Security_Controller {
         }
     }
 
-  
+
 
     /* list of projcts, prepared for datatable  */
 
-    function list_data() {
+    function list_data()
+    {
 
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("projects", $this->login_user->is_admin, $this->login_user->user_type);
 
@@ -212,7 +222,7 @@ class Tasks extends Security_Controller {
         );
 
         //only admin/ the user has permission to manage all projects, can see all projects, other team mebers can see only their own projects.
-       
+
 
         $list_data = $this->Projects_model->get_details($options)->getResult();
         $result = array();
@@ -224,7 +234,8 @@ class Tasks extends Security_Controller {
 
     /* list of projcts, prepared for datatable  */
 
-    function projects_list_data_of_team_member($team_member_id = 0) {
+    function projects_list_data_of_team_member($team_member_id = 0)
+    {
         validate_numeric_value($team_member_id);
 
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("projects", $this->login_user->is_admin, $this->login_user->user_type);
@@ -250,25 +261,28 @@ class Tasks extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    
 
-    private function can_edit_timesheet_settings($project_id) {
+
+    private function can_edit_timesheet_settings($project_id)
+    {
         $this->init_project_permission_checker($project_id);
         if ($project_id && $this->login_user->user_type === "staff" && $this->can_view_timesheet($project_id)) {
             return true;
         }
     }
 
-    private function can_edit_slack_settings() {
+    private function can_edit_slack_settings()
+    {
         if ($this->login_user->user_type === "staff" && $this->can_create_projects()) {
             return true;
         }
     }
 
-    
 
 
-    private function _get_project_members_dropdown_list_for_filter($project_id) {
+
+    private function _get_project_members_dropdown_list_for_filter($project_id)
+    {
 
         $project_members = $this->Project_members_model->get_project_members_dropdown_list($project_id)->getResult();
         $project_members_dropdown = array(array("id" => "", "text" => "- " . app_lang("member") . " -"));
@@ -280,7 +294,8 @@ class Tasks extends Security_Controller {
 
     /* load timelog add/edit modal */
 
-    function timelog_modal_form() {
+    function timelog_modal_form()
+    {
         $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
         $model_info = $this->Timesheets_model->get_one($this->request->getPost('id'));
         $project_id = $this->request->getPost('project_id') ? $this->request->getPost('project_id') : $model_info->project_id;
@@ -311,7 +326,8 @@ class Tasks extends Security_Controller {
         return $this->template->view('projects/timesheets/modal_form', $view_data);
     }
 
-    private function _prepare_all_related_data_for_timelog($project_id = 0) {
+    private function _prepare_all_related_data_for_timelog($project_id = 0)
+    {
         //we have to check if any defined project exists, then go through with the project id
         $show_porject_members_dropdown = false;
         if ($project_id) {
@@ -352,7 +368,8 @@ class Tasks extends Security_Controller {
         );
     }
 
-    function get_all_related_data_of_selected_project_for_timelog($project_id = "") {
+    function get_all_related_data_of_selected_project_for_timelog($project_id = "")
+    {
         validate_numeric_value($project_id);
         if ($project_id) {
             $related_data = $this->_prepare_all_related_data_for_timelog($project_id);
@@ -366,7 +383,8 @@ class Tasks extends Security_Controller {
 
     /* insert/update a timelog */
 
-    function save_timelog() {
+    function save_timelog()
+    {
         $id = $this->request->getPost('id');
 
         $start_date_time = "";
@@ -438,7 +456,8 @@ class Tasks extends Security_Controller {
 
     /* delete/undo a timelog */
 
-    function delete_timelog() {
+    function delete_timelog()
+    {
 
         $id = $this->request->getPost('id');
 
@@ -459,7 +478,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function check_timelog_update_permission($log_id = null, $project_id = null, $user_id = null) {
+    private function check_timelog_update_permission($log_id = null, $project_id = null, $user_id = null)
+    {
         if ($log_id) {
             $info = $this->Timesheets_model->get_one($log_id);
             $user_id = $info->user_id;
@@ -506,12 +526,13 @@ class Tasks extends Security_Controller {
         app_redirect("forbidden");
     }
 
-    
-    
-    
+
+
+
     /* get all projects list */
 
-    private function _get_all_projects_dropdown_list() {
+    private function _get_all_projects_dropdown_list()
+    {
         $projects = $this->Projects_model->get_dropdown_list(array("title"));
 
         $projects_dropdown = array(array("id" => "", "text" => "- " . app_lang("project") . " -"));
@@ -521,14 +542,15 @@ class Tasks extends Security_Controller {
         return $projects_dropdown;
     }
 
-   
+
 
     /*
      * admin can manage all members timesheet
      * allowed member can manage other members timesheet accroding to permission
      */
 
-    private function _get_members_to_manage_timesheet() {
+    private function _get_members_to_manage_timesheet()
+    {
         $access_info = $this->get_access_info("timesheet_manage_permission");
         $access_type = $access_info->access_type;
 
@@ -545,13 +567,14 @@ class Tasks extends Security_Controller {
 
 
 
-   
-    
+
+
 
     /* load task list view tab */
 
-    
-    private function get_removed_task_status_ids($project_id = 0) {
+
+    private function get_removed_task_status_ids($project_id = 0)
+    {
         if (!$project_id) {
             return "";
         }
@@ -560,15 +583,16 @@ class Tasks extends Security_Controller {
         return get_setting("remove_task_statuses");
     }
 
-   
 
 
-    
 
-    
-   
 
-    private function _get_priorities_dropdown_list($priority_id = 0) {
+
+
+
+
+    private function _get_priorities_dropdown_list($priority_id = 0)
+    {
         $priorities = $this->Task_priority_model->get_details()->getResult();
         $priorities_dropdown = array(array("id" => "", "text" => "- " . app_lang("priority") . " -"));
 
@@ -588,7 +612,8 @@ class Tasks extends Security_Controller {
         return json_encode($priorities_dropdown);
     }
 
-    private function _get_project_members_dropdown_list($project_id = 0) {
+    private function _get_project_members_dropdown_list($project_id = 0)
+    {
         if ($this->login_user->user_type === "staff") {
             $assigned_to_dropdown = array(array("id" => "", "text" => "- " . app_lang("assigned_to") . " -"));
             $assigned_to_list = $this->Project_members_model->get_project_members_dropdown_list($project_id, array(), true, true)->getResult();
@@ -605,7 +630,8 @@ class Tasks extends Security_Controller {
         return json_encode($assigned_to_dropdown);
     }
 
-    function all_tasks($tab = "",$filter="") {
+    function all_tasks($tab = "", $filter = "")
+    {
         if (!$this->can_view_tasks()) {
             app_redirect("forbidden");
         }
@@ -614,10 +640,10 @@ class Tasks extends Security_Controller {
         );
         $list_data = $this->Tasks_model->get_details($myoptions)->getResult();
         foreach ($list_data as $data) {
-             $this->save_task_status_new($data->id,2);
+            $this->save_task_status_new($data->id, 2);
         }
 
-       
+
         $view_data['project_id'] = 0;
         $projects = $this->Tasks_model->get_my_projects_dropdown_list($this->login_user->id)->getResult();
         $projects_dropdown = array(array("id" => "", "text" => "- " . app_lang("project") . " -"));
@@ -627,11 +653,11 @@ class Tasks extends Security_Controller {
             }
         }
 
-        $clients = $this->Clients_model->get_details(array( "deleted" => 0/*,'client_status'=> "1"*/))->getResult();
-            $clients_dropdown = array(array("id" => "", "text" => "-" . app_lang("client_name") . "-"));
-            foreach ($clients as $client) {
-                $clients_dropdown[] = array("id" => $client->id, "text" => $client->company_name);
-            }
+        $clients = $this->Clients_model->get_details(array("deleted" => 0/*,'client_status'=> "1"*/))->getResult();
+        $clients_dropdown = array(array("id" => "", "text" => "-" . app_lang("client_name") . "-"));
+        foreach ($clients as $client) {
+            $clients_dropdown[] = array("id" => $client->id, "text" => $client->company_name);
+        }
 
         $team_members_dropdown = array(array("id" => "", "text" => "- " . app_lang("created_by") . " -"));
         $assigned_to_list = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0));
@@ -640,50 +666,49 @@ class Tasks extends Security_Controller {
             $team_members_dropdown[] = array("id" => $key, "text" => $value/*, "isSelected" => true*/);
         }
 
-        $drivers_dropdown = array(array("id" => "", "text" => ' - '.app_lang("driver_name").' - '));
-        $drivers = $this->Drivers_model->get_details(array( "deleted" => 0))->getResult();
-            
-            foreach ($drivers as $driver) {
-                $drivers_dropdown[] = array("id" => $driver->id, "text" => $driver->driver_nm);
-            }
+        $drivers_dropdown = array(array("id" => "", "text" => ' - ' . app_lang("driver_name") . ' - '));
+        $drivers = $this->Drivers_model->get_details(array("deleted" => 0))->getResult();
+
+        foreach ($drivers as $driver) {
+            $drivers_dropdown[] = array("id" => $driver->id, "text" => $driver->driver_nm);
+        }
 
 
-            $cars_type = $this->Cars_type_model->get_details(array( "deleted" => 0))->getResult();
-            $cars_type_dropdown = array(array("id" => "", "text" => app_lang("car_type")));
-            foreach ($cars_type as $car_type) {
-                $cars_type_dropdown[] = array("id" => $car_type->id, "text" => $car_type->car_type);
-            }
-            $cities = $this->Cities_model->get_details(array( "deleted" => 0))->getResult();
-            $cities_dropdown = array(array("id" => "", "text" => "-".app_lang("city_name")."-"));
-            foreach ($cities as $city) {
-                $cities_dropdown[] = array("id" => $city->id, "text" => $city->city_name);
-            }
-            
+        $cars_type = $this->Cars_type_model->get_details(array("deleted" => 0))->getResult();
+        $cars_type_dropdown = array(array("id" => "", "text" => app_lang("car_type")));
+        foreach ($cars_type as $car_type) {
+            $cars_type_dropdown[] = array("id" => $car_type->id, "text" => $car_type->car_type);
+        }
+        $cities = $this->Cities_model->get_details(array("deleted" => 0))->getResult();
+        $cities_dropdown = array(array("id" => "", "text" => "-" . app_lang("city_name") . "-"));
+        foreach ($cities as $city) {
+            $cities_dropdown[] = array("id" => $city->id, "text" => $city->city_name);
+        }
+
         $suppliers_dropdown = array(array("id" => "", "text" => app_lang("supplier_name")));
-        
-        if(!$this->is_reserv_mang()){
-        
 
-        $suppliers = $this->Suppliers_model->get_details(array( "deleted" => 0))->getResult();
-            
+        if (!$this->is_reserv_mang()) {
+
+
+            $suppliers = $this->Suppliers_model->get_details(array("deleted" => 0))->getResult();
+
             foreach ($suppliers as $supplier) {
                 $suppliers_dropdown[] = array("id" => $supplier->id, "text" => $supplier->name);
             }
-            
         }
 
-        
 
-            $maintask_cls = $this->Maintask_clsifications_model->get_details(array( "deleted" => 0))->getResult();
-            $maintask_clsifications_dropdown = array(array("id" => "", "text" => "-".app_lang("cls_title")."-"));
-            foreach ($maintask_cls as $maintask_clss) {
-                $maintask_clsifications_dropdown[] = array("id" => $maintask_clss->id, "text" => $maintask_clss->title);
-            }
-        
+
+        $maintask_cls = $this->Maintask_clsifications_model->get_details(array("deleted" => 0))->getResult();
+        $maintask_clsifications_dropdown = array(array("id" => "", "text" => "-" . app_lang("cls_title") . "-"));
+        foreach ($maintask_cls as $maintask_clss) {
+            $maintask_clsifications_dropdown[] = array("id" => $maintask_clss->id, "text" => $maintask_clss->title);
+        }
+
         $no_invoice = $filter;
 
         $view_data['tab'] = $tab;
-        $view_data['filter'] = $this->request->getPost('filter');//$no_invoice;
+        $view_data['filter'] = $this->request->getPost('filter'); //$no_invoice;
         $view_data['main_filter'] = $this->request->getPost('filter');
         //$view_data['selected_status_id'] = $status_id;
         $view_data['suppliers_dropdown'] = json_encode($suppliers_dropdown);
@@ -700,12 +725,12 @@ class Tasks extends Security_Controller {
         $view_data["custom_field_filters2"] = $this->Custom_fields_model->get_custom_field_filters("sub_tasks", $this->login_user->is_admin, $this->login_user->user_type);
 
         $view_data['task_statuses'] = $this->Task_status_model->get_details()->getResult();
-        $view_data['mang'] = $this->is_reserv_mang() ? 'yes':'no';
-        $view_data['is_admin'] =$this->login_user->is_admin;
+        $view_data['mang'] = $this->is_reserv_mang() ? 'yes' : 'no';
+        $view_data['is_admin'] = $this->login_user->is_admin;
         $view_data['projects_dropdown'] = json_encode($projects_dropdown);
 
 
-        $view_data['clients_dropdown'] = $this->is_reserv_mang()?json_encode($clients_dropdown):json_encode(array(array("id" => "", "text" => "-" . app_lang("client") . "-")));
+        $view_data['clients_dropdown'] = $this->is_reserv_mang() ? json_encode($clients_dropdown) : json_encode(array(array("id" => "", "text" => "-" . app_lang("client") . "-")));
         $view_data['can_create_tasks'] = $this->can_create_tasks(false);
         $view_data['can_create_subtasks'] = $this->can_create_subtasks();
 
@@ -714,7 +739,8 @@ class Tasks extends Security_Controller {
         return $this->template->rander("tasks/my_tasks", $view_data);
     }
 
-    function all_tasks_kanban() {
+    function all_tasks_kanban()
+    {
 
         $projects = $this->Tasks_model->get_my_projects_dropdown_list($this->login_user->id)->getResult();
         $projects_dropdown = array(array("id" => "", "text" => "- " . app_lang("project") . " -"));
@@ -735,17 +761,17 @@ class Tasks extends Security_Controller {
             }
         }
 
-        $clients = $this->Clients_model->get_details(array( "deleted" => 0))->getResult();
-            $clients_dropdown = array(array("id" => "", "text" => "-" . app_lang("client") . "-"));
-            foreach ($clients as $client) {
-                $clients_dropdown[] = array("id" => $client->id, "text" => $client->company_name);
-            }
+        $clients = $this->Clients_model->get_details(array("deleted" => 0))->getResult();
+        $clients_dropdown = array(array("id" => "", "text" => "-" . app_lang("client") . "-"));
+        foreach ($clients as $client) {
+            $clients_dropdown[] = array("id" => $client->id, "text" => $client->company_name);
+        }
 
         $view_data['team_members_dropdown'] = json_encode($team_members_dropdown);
         $view_data['priorities_dropdown'] = $this->_get_priorities_dropdown_list();
 
         $view_data['projects_dropdown'] = json_encode($projects_dropdown);
-        $view_data['clients_dropdown'] = $this->is_reserv_mang()?json_encode($clients_dropdown):json_encode(array(array("id" => "", "text" => "-" . app_lang("client") . "-")));
+        $view_data['clients_dropdown'] = $this->is_reserv_mang() ? json_encode($clients_dropdown) : json_encode(array(array("id" => "", "text" => "-" . app_lang("client") . "-")));
 
         $view_data['can_create_tasks'] = $this->can_create_tasks(false);
 
@@ -756,7 +782,8 @@ class Tasks extends Security_Controller {
     }
 
     //check user's task editting permission on changing of project
-    function can_edit_task_of_the_project($project_id = 0) {
+    function can_edit_task_of_the_project($project_id = 0)
+    {
         validate_numeric_value($project_id);
         if ($project_id) {
             $this->init_project_permission_checker($project_id);
@@ -769,7 +796,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    function all_tasks_kanban_data() {
+    function all_tasks_kanban_data()
+    {
 
 
         $status = $this->request->getPost('status_id') ? implode(",", $this->request->getPost('status_id')) : "";
@@ -795,7 +823,7 @@ class Tasks extends Security_Controller {
             "custom_field_filter" => $this->prepare_custom_field_filter_values("tasks", $this->login_user->is_admin, $this->login_user->user_type)
         );
 
-       
+
 
         $view_data["tasks"] = $this->Tasks_model->get_kanban_details($options)->getResult();
         $view_data["is_reserv_mang"] = $this->is_reserv_mang();
@@ -817,18 +845,20 @@ class Tasks extends Security_Controller {
 
     /* prepare data for the projuect view's kanban tab  */
 
-   
 
-    
 
-    function set_task_comments_as_read($task_id = 0) {
+
+
+    function set_task_comments_as_read($task_id = 0)
+    {
         if ($task_id) {
             validate_numeric_value($task_id);
             $this->Tasks_model->set_task_comments_as_read($task_id, $this->login_user->id);
         }
     }
 
-    function task_view($task_id = 0) {
+    function task_view($task_id = 0)
+    {
         validate_numeric_value($task_id);
         $view_type = "";
 
@@ -865,26 +895,26 @@ class Tasks extends Security_Controller {
 
         $view_data['custom_fields_list'] = $this->Custom_fields_model->get_combined_details("tasks", $task_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
-       
+
 
         //get checklist items
         $checklist_items_array = array();
         $checklist_items = $this->Checklist_items_model->get_details(array("task_id" => $task_id))->getResult();
-        
+
         $view_data["checklist_items"] = json_encode($checklist_items_array);
         $view_data["is_reserv_mang"] = $this->is_reserv_mang();
 
         //get sub tasks
         $sub_tasks_array = array();
-        $art = $this->is_reserv_mang() ? 'reserv':'supply';
-        $sub_tasks = $this->Sub_tasks_model->get_details(array("task_id" => $task_id,"mang" => $art/*,"selected_year" => $this->session->get('selected_year')*/))->getResult();
+        $art = $this->is_reserv_mang() ? 'reserv' : 'supply';
+        $sub_tasks = $this->Sub_tasks_model->get_details(array("task_id" => $task_id, "mang" => $art/*,"selected_year" => $this->session->get('selected_year')*/))->getResult();
         foreach ($sub_tasks as $sub_task) {
             $sub_tasks_array[] = $this->_make_sub_task_row($sub_task);
         }
         $view_data["sub_tasks"] = json_encode($sub_tasks_array);
-       
-        $view_data["total_sub_tasks"] = $this->Tasks_model->count_sub_task_status(array("parent_task_id" => $task_id,"is_reserv_mang" => $this->is_reserv_mang()/*,"selected_year" => $this->session->get('selected_year')*/));
-        $view_data["completed_sub_tasks"] = $this->Tasks_model->count_sub_task_status(array("parent_task_id" => $task_id, "status_id" => 4,"is_reserv_mang" => $this->is_reserv_mang()/*,"selected_year" => $this->session->get('selected_year')*/));
+
+        $view_data["total_sub_tasks"] = $this->Tasks_model->count_sub_task_status(array("parent_task_id" => $task_id, "is_reserv_mang" => $this->is_reserv_mang()/*,"selected_year" => $this->session->get('selected_year')*/));
+        $view_data["completed_sub_tasks"] = $this->Tasks_model->count_sub_task_status(array("parent_task_id" => $task_id, "status_id" => 4, "is_reserv_mang" => $this->is_reserv_mang()/*,"selected_year" => $this->session->get('selected_year')*/));
 
         $view_data["show_timer"] = get_setting("module_project_timesheet") ? true : false;
 
@@ -906,7 +936,7 @@ class Tasks extends Security_Controller {
             $view_data['timer_status'] = "";
         }
 
-        $view_data['project_id'] = $model_info->project_id?$model_info->project_id:0;
+        $view_data['project_id'] = $model_info->project_id ? $model_info->project_id : 0;
 
         $view_data['can_create_tasks'] = $this->can_create_tasks();
 
@@ -914,12 +944,12 @@ class Tasks extends Security_Controller {
 
         $view_data["view_type"] = $view_type;
 
-       
 
 
-       
 
-       
+
+
+
         if ($view_type == "details") {
             return $this->template->rander('tasks/view', $view_data);
         } else {
@@ -928,25 +958,26 @@ class Tasks extends Security_Controller {
     }
 
 
-  
-  
 
-    private function _initialize_all_related_data_of_project($project_id = 0, $collaborators = "", $task_labels = "") {
+
+
+    private function _initialize_all_related_data_of_project($project_id = 0, $collaborators = "", $task_labels = "")
+    {
         //we have to check if any defined project exists, then go through with the project id
-       
-            //$this->init_project_permission_checker($project_id);
 
-            $related_data = $this->get_all_related_data_of_project($project_id, $collaborators, $task_labels);
+        //$this->init_project_permission_checker($project_id);
 
-            $view_data['suppliers_dropdown'] = $related_data["suppliers_dropdown"];
+        $related_data = $this->get_all_related_data_of_project($project_id, $collaborators, $task_labels);
 
-            $view_data['maintask_clsifications_dropdown'] = $related_data["maintask_clsifications_dropdown"];
-            $view_data['is_closed_dropdown'] = $related_data["is_closed_dropdown"];
+        $view_data['suppliers_dropdown'] = $related_data["suppliers_dropdown"];
 
-            $view_data['clients_dropdown'] = $related_data["clients_dropdown"];
-            $view_data['label_suggestions'] = $related_data["label_suggestions"];
-       
-            $view_data["projects_dropdown"] = $this->_get_projects_dropdown();
+        $view_data['maintask_clsifications_dropdown'] = $related_data["maintask_clsifications_dropdown"];
+        $view_data['is_closed_dropdown'] = $related_data["is_closed_dropdown"];
+
+        $view_data['clients_dropdown'] = $related_data["clients_dropdown"];
+        $view_data['label_suggestions'] = $related_data["label_suggestions"];
+
+        $view_data["projects_dropdown"] = $this->_get_projects_dropdown();
 
 
         $task_points = array();
@@ -976,7 +1007,8 @@ class Tasks extends Security_Controller {
 
     /* task add/edit modal */
 
-    function task_modal_form() {
+    function task_modal_form()
+    {
         $id = $this->request->getPost('id');
         $add_type = $this->request->getPost('add_type');
         $last_id = $this->request->getPost('last_id');
@@ -1012,17 +1044,19 @@ class Tasks extends Security_Controller {
         $view_data["maintask_clsifications_dropdown"] = $this->_get_maintask_clsifications_dropdown();
 
         $view_data["clients_dropdown"] = $this->_get_myclients_dropdown();
-        $view_data["contacts_dropdown"] = $id ? $this->get_client_contact_dropdown($model_info->client_id,$model_info->client_contact_id):null;
+        $view_data["contacts_dropdown"] = $id ? $this->get_client_contact_dropdown($model_info->client_id, $model_info->client_contact_id) : null;
 
-         //projects dropdown is necessary on add multiple tasks
+        //projects dropdown is necessary on add multiple tasks
         $view_data["add_type"] = $add_type;
         $view_data['project_id'] = $project_id;
         $view_data['supplier_id'] = $model_info->supplier_id;
         $view_data['client_id'] = $model_info->client_id;
         $view_data['client_contact_id'] = $model_info->client_contact_id;
         $user_info = $this->Clients_contact_model->get_one($model_info->client_contact_id);
-        $view_data['contact_name'] = $user_info->first_name.' '.$user_info->last_name;
-        
+        $view_data['contact_name'] = $user_info->first_name . ' ' . $user_info->last_name;
+        $view_data['is_admin'] = $this->login_user->is_admin ? true : false;
+
+
 
         $view_data['show_assign_to_dropdown'] = true;
         if ($this->login_user->user_type == "client") {
@@ -1052,103 +1086,105 @@ class Tasks extends Security_Controller {
     }
 
 
-    function get_client_contact_dropdown($client_id,$contact_id) {
+    function get_client_contact_dropdown($client_id, $contact_id)
+    {
 
 
-        
 
-       $contacts = $this->Clients_contact_model->get_details(array("client_id" => $client_id, "deleted" => 0))->getResult();
-       $selected=false;
-            $contacts_dropdown = array(array("id" => "", "text" => "-"));
-            foreach ($contacts as $contact) {
-                 if($contact->id==$contact_id){
-                    $selected=true;
-                }else{
-                    $selected=false;
-                }
-                $contacts_dropdown[] = array("id" => $contact->id, "text" => $contact->first_name.' '.$contact->last_name,"isSelected" =>$selected);
+
+        $contacts = $this->Clients_contact_model->get_details(array("client_id" => $client_id, "deleted" => 0))->getResult();
+        $selected = false;
+        $contacts_dropdown = array(array("id" => "", "text" => "-"));
+        foreach ($contacts as $contact) {
+            if ($contact->id == $contact_id) {
+                $selected = true;
+            } else {
+                $selected = false;
             }
+            $contacts_dropdown[] = array("id" => $contact->id, "text" => $contact->first_name . ' ' . $contact->last_name, "isSelected" => $selected);
+        }
 
 
-            $options = array("status" => "open");
-            $options["client_id"] = $client_id;
-        
+        $options = array("status" => "open");
+        $options["client_id"] = $client_id;
+
 
         $projects = $this->Projects_model->get_details($options)->getResult();
 
-            $projects_dropdown = array();
+        $projects_dropdown = array();
         foreach ($projects as $project) {
             $projects_dropdown[] = array("id" => $project->id, "text" => $project->title);
         }
-            $related_data = array(
-                "contacts_dropdown" => $contacts_dropdown,
-                "projects_dropdown" => $projects_dropdown,
-               );
+        $related_data = array(
+            "contacts_dropdown" => $contacts_dropdown,
+            "projects_dropdown" => $projects_dropdown,
+        );
 
 
-            return json_encode(array(
-                "contacts_dropdown" => $related_data["contacts_dropdown"],
-                "projects_dropdown" => $projects_dropdown,
-               
-            ));
+        return json_encode(array(
+            "contacts_dropdown" => $related_data["contacts_dropdown"],
+            "projects_dropdown" => $projects_dropdown,
+
+        ));
     }
 
-    private function get_all_related_data_of_project($project_id, $collaborators = "", $task_labels = "") {
-
-       
-
-            //get milestone dropdown
-           
-            //$suppliers_model = model('App\Models\Suppliers_model');
-
-            $suppliers = $this->Suppliers_model->get_details(array( "deleted" => 0))->getResult();
-            $suppliers_dropdown = array(array("id" => "", "text" => "-"));
-            foreach ($suppliers as $supplier) {
-                $suppliers_dropdown[] = array("id" => $supplier->id, "text" => $supplier->name);
-            }
-
-            $maintask_cls = $this->Maintask_clsifications_model->get_details(array( "deleted" => 0))->getResult();
-            $maintask_clsifications_dropdown = array(array("id" => "", "text" => "-"));
-            foreach ($maintask_cls as $maintask_clss) {
-                $maintask_clsifications_dropdown[] = array("id" => $maintask_clss->id, "text" => $maintask_clss->title);
-            }
-
-            $is_closed_dropdown = array(array("id" => "", "text" => "-"));
-                $is_closed_dropdown[] = array("text" => app_lang('open'), "value" => 1);
-                $is_closed_dropdown[] = array("text" => app_lang('closed'), "value" => 2);
-            
+    private function get_all_related_data_of_project($project_id, $collaborators = "", $task_labels = "")
+    {
 
 
-            $clients = $this->Clients_model->get_details(array( "deleted" => 0,'client_status'=> "1"))->getResult();
-            $clients_dropdown = array(array("id" => "", "text" => "-"));
-            foreach ($clients as $client) {
-                $clients_dropdown[] = array("id" => $client->id, "text" => $client->company_name);
-            }
 
-            //get project members and collaborators dropdown
-           // $show_client_contacts = $this->can_access_clients();
-            //if ($this->login_user->user_type === "client" && get_setting("client_can_assign_tasks")) {
-                $show_client_contacts = true;
-           // }
-           
+        //get milestone dropdown
 
-            //get labels suggestion
-            $label_suggestions = $this->make_labels_dropdown("task", $task_labels);
+        //$suppliers_model = model('App\Models\Suppliers_model');
 
-            return array(
-                
-                "suppliers_dropdown" => $suppliers_dropdown,
-                "maintask_clsifications_dropdown" => $maintask_clsifications_dropdown,
-                "is_closed_dropdown" => $is_closed_dropdown,
-                "clients_dropdown" => $clients_dropdown,
-                "label_suggestions" => $label_suggestions
-            );
-        
+        $suppliers = $this->Suppliers_model->get_details(array("deleted" => 0))->getResult();
+        $suppliers_dropdown = array(array("id" => "", "text" => "-"));
+        foreach ($suppliers as $supplier) {
+            $suppliers_dropdown[] = array("id" => $supplier->id, "text" => $supplier->name);
+        }
+
+        $maintask_cls = $this->Maintask_clsifications_model->get_details(array("deleted" => 0))->getResult();
+        $maintask_clsifications_dropdown = array(array("id" => "", "text" => "-"));
+        foreach ($maintask_cls as $maintask_clss) {
+            $maintask_clsifications_dropdown[] = array("id" => $maintask_clss->id, "text" => $maintask_clss->title);
+        }
+
+        $is_closed_dropdown = array(array("id" => "", "text" => "-"));
+        $is_closed_dropdown[] = array("text" => app_lang('open'), "value" => 1);
+        $is_closed_dropdown[] = array("text" => app_lang('closed'), "value" => 2);
+
+
+
+        $clients = $this->Clients_model->get_details(array("deleted" => 0, 'client_status' => "1"))->getResult();
+        $clients_dropdown = array(array("id" => "", "text" => "-"));
+        foreach ($clients as $client) {
+            $clients_dropdown[] = array("id" => $client->id, "text" => $client->company_name);
+        }
+
+        //get project members and collaborators dropdown
+        // $show_client_contacts = $this->can_access_clients();
+        //if ($this->login_user->user_type === "client" && get_setting("client_can_assign_tasks")) {
+        $show_client_contacts = true;
+        // }
+
+
+        //get labels suggestion
+        $label_suggestions = $this->make_labels_dropdown("task", $task_labels);
+
+        return array(
+
+            "suppliers_dropdown" => $suppliers_dropdown,
+            "maintask_clsifications_dropdown" => $maintask_clsifications_dropdown,
+            "is_closed_dropdown" => $is_closed_dropdown,
+            "clients_dropdown" => $clients_dropdown,
+            "label_suggestions" => $label_suggestions
+        );
     }
 
     /* get all related data of selected project */
 
-    function get_all_related_data_of_selected_project($project_id) {
+    function get_all_related_data_of_selected_project($project_id)
+    {
 
         if ($project_id) {
             validate_numeric_value($project_id);
@@ -1164,7 +1200,8 @@ class Tasks extends Security_Controller {
 
 
 
-    function save_task() {
+    function save_task()
+    {
 
         $this->validate_submitted_data(array(
             "client_id" => "numeric|required",
@@ -1214,26 +1251,26 @@ class Tasks extends Security_Controller {
         //$this->save_task_status2($id,$this->request->getPost('status_id'));
 
 
-                $client_id = $this->request->getPost('client_id');
+        $client_id = $this->request->getPost('client_id');
         $client_contact_id = $this->request->getPost('contact_id');
         $cls_id = $this->request->getPost('cls_id');
         $christening_number = $this->request->getPost('christening_number');
         $invoice_number = $this->request->getPost('invoice_number');
         $ref_number = $this->request->getPost('ref_number');
-        
-        if($invoice_number){
-        $check_invoice_number = $this->Tasks_model->check_invoice_number($invoice_number,$id);
-        if ($check_invoice_number) {
-            return json_encode(array("success" => false, 'message' => "Invoice number already exists."));
-        }
-    }
-    if ($id && $invoice_number) {
 
-        $check_completed_subtasks = $this->list_data_status($id);
-        if (!$check_completed_subtasks) {
-            return json_encode(array("success" => false, 'message' => "The subtasks not completed. "));
+        if ($invoice_number) {
+            $check_invoice_number = $this->Tasks_model->check_invoice_number($invoice_number, $id);
+            if ($check_invoice_number) {
+                return json_encode(array("success" => false, 'message' => "Invoice number already exists."));
+            }
         }
-    }
+        if ($id && $invoice_number) {
+
+            $check_completed_subtasks = $this->list_data_status($id);
+            if (!$check_completed_subtasks) {
+                return json_encode(array("success" => false, 'message' => "The subtasks not completed. "));
+            }
+        }
 
         $data = array(
             "title" => $this->request->getPost('title'),
@@ -1245,10 +1282,10 @@ class Tasks extends Security_Controller {
             "christening_number" => $christening_number,
             "invoice_number" => $invoice_number,
             "ref_number" => $ref_number,
-            
-            
-            "status_id" => 1,//$status_id,
-            
+
+
+            "status_id" => 1, //$status_id,
+
             "start_date" => $start_date,
             "deadline" => $this->request->getPost('deadline'),
             "recurring" => $recurring,
@@ -1260,21 +1297,21 @@ class Tasks extends Security_Controller {
         $created_date = $this->request->getPost('created_date');
 
         if (!$id) {
-            $data["created_by"]= $this->login_user->id;
-            $created_date ? $data["created_date"] = $created_date:$data["created_date"] = $now;
-        }else{
+            $data["created_by"] = $this->login_user->id;
+            $created_date ? $data["created_date"] = $created_date : $data["created_date"] = $now;
+        } else {
             $data["created_date"] = $created_date;
         }
 
-       
 
 
-        
+
+
 
         $data = clean_data($data);
 
-       
-        
+
+
 
         //deadline must be greater or equal to start date
         if ($data["start_date"] && $data["deadline"] && $data["deadline"] < $data["start_date"]) {
@@ -1286,7 +1323,7 @@ class Tasks extends Security_Controller {
 
         $next_recurring_date = "";
 
-        
+
 
         //save status changing time for edit mode
         if ($id) {
@@ -1301,10 +1338,10 @@ class Tasks extends Security_Controller {
         $save_id = $this->Tasks_model->ci_save($data, $id);
         if ($save_id) {
 
-          
 
-           
-         
+
+
+
             $activity_log_id = get_array_value($data, "activity_log_id");
 
             $new_activity_log_id = save_custom_fields("tasks", $save_id, $this->login_user->is_admin, $this->login_user->user_type, $activity_log_id);
@@ -1312,16 +1349,14 @@ class Tasks extends Security_Controller {
             if ($id) {
                 //updated
                 log_notification("project_task_updated", array("project_id" => $project_id, "task_id" => $save_id, "activity_log_id" => $new_activity_log_id ? $new_activity_log_id : $activity_log_id));
-                $this->save_task_status_new($id,2);
+                $this->save_task_status_new($id, 2);
             } else {
                 //created
                 log_notification("project_task_created", array("project_id" => $project_id, "task_id" => $save_id));
             }
 
-            
-            echo json_encode(array("success" => true, "data" => $this->_task_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved'), "add_type" => $add_type));
 
-            
+            echo json_encode(array("success" => true, "data" => $this->_task_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved'), "add_type" => $add_type));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
@@ -1329,7 +1364,8 @@ class Tasks extends Security_Controller {
 
     /* insert/upadate/clone a task */
 
-    function save_task2() {
+    function save_task2()
+    {
 
         $project_id = $this->request->getPost('project_id');
         $id = $this->request->getPost('id');
@@ -1337,8 +1373,8 @@ class Tasks extends Security_Controller {
         $ticket_id = $this->request->getPost('ticket_id');
         //$supplier_id = $this->request->getPost('supplier_id');
 
-        
-        
+
+
 
 
         $now = get_current_utc_time();
@@ -1394,9 +1430,9 @@ class Tasks extends Security_Controller {
             "created_by" => $this->login_user->id,
             "assigned_to" => $this->login_user->id,
 
-            "milestone_id" => 0,//$this->request->getPost('milestone_id'),
+            "milestone_id" => 0, //$this->request->getPost('milestone_id'),
             "points" => $this->request->getPost('points'),
-            "status_id" => 1,//$status_id,
+            "status_id" => 1, //$status_id,
             "priority_id" => $priority_id ? $priority_id : 0,
             "labels" => $this->request->getPost('labels'),
             "start_date" => $now,
@@ -1408,11 +1444,11 @@ class Tasks extends Security_Controller {
             "created_date" => $this->request->getPost('created_date'),
         );
 
-      
+
 
         $data = clean_data($data);
 
-      
+
 
         $copy_checklist = $this->request->getPost("copy_checklist");
 
@@ -1473,7 +1509,6 @@ class Tasks extends Security_Controller {
                         $checklist_item = $this->Checklist_items_model->ci_save($checklist_item_data);
                     }
                 }
-
             }
 
             //save next recurring date 
@@ -1485,7 +1520,7 @@ class Tasks extends Security_Controller {
             }
 
             // if created from ticket then save the task id
-          
+
 
             $activity_log_id = get_array_value($data, "activity_log_id");
 
@@ -1501,8 +1536,6 @@ class Tasks extends Security_Controller {
                 //save uploaded files as comment
                 $target_path = get_setting("timeline_file_path");
                 $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "project_comment");
-
-                
             }
 
             echo json_encode(array("success" => true, "data" => $this->_task_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved'), "add_type" => $add_type));
@@ -1512,72 +1545,73 @@ class Tasks extends Security_Controller {
     }
 
     //parent task can't be marked as done if there is any sub task which is not done yet
-    private function check_sub_tasks_statuses($status_id = 0, $parent_task_id = 0) {
-     if ($status_id !== "2") {
+    private function check_sub_tasks_statuses($status_id = 0, $parent_task_id = 0)
+    {
+        if ($status_id !== "2") {
             //parent task isn't marking as done
             return true;
         }
         $sub_tasks = $this->Sub_tasks_model->check_subtask_status(array("pnt_task_id" => $parent_task_id, "deleted" => 0))->getResult();
 
-        if(count($sub_tasks)>0){
-        $tasks = $this->Tasks_model->get_one($parent_task_id);
-        if($tasks->christening_number && $tasks->invoice_number){
-        foreach ($sub_tasks as $sub_task) {
-            // if ($sub_task->reserv_status != 4 || $sub_task->supplier_status != 4) {
-            //     if ($sub_task->reserv_status != 5 || $sub_task->supplier_status != 5) {
-            if ($sub_task->reserv_status != 4) {
-                if ($sub_task->reserv_status != 5) {
-                //this sub task isn't done yet, show error and exit
-                echo json_encode(array("success" => false, 'message' => app_lang("parent_task_completing_error_message").'  '.count($sub_tasks)));
+        if (count($sub_tasks) > 0) {
+            $tasks = $this->Tasks_model->get_one($parent_task_id);
+            if ($tasks->christening_number && $tasks->invoice_number) {
+                foreach ($sub_tasks as $sub_task) {
+                    // if ($sub_task->reserv_status != 4 || $sub_task->supplier_status != 4) {
+                    //     if ($sub_task->reserv_status != 5 || $sub_task->supplier_status != 5) {
+                    if ($sub_task->reserv_status != 4) {
+                        if ($sub_task->reserv_status != 5) {
+                            //this sub task isn't done yet, show error and exit
+                            echo json_encode(array("success" => false, 'message' => app_lang("parent_task_completing_error_message") . '  ' . count($sub_tasks)));
+                            exit();
+                        }
+                    }
+                }
+            } else {
+                echo json_encode(array("success" => false, 'message' => "تاكد من كتابة رقم التعميد ورقم الفانوره"));
                 exit();
             }
+        } else {
+            echo json_encode(array("success" => false, 'message' => "لا يوجد مهام فرعية لهذه المهمة"));
+            exit();
         }
-        }
-    }else{
-        echo json_encode(array("success" => false, 'message' => "تاكد من كتابة رقم التعميد ورقم الفانوره"));
-                exit();
-    }
-}else{
-        echo json_encode(array("success" => false, 'message' => "لا يوجد مهام فرعية لهذه المهمة"));
-                exit();
     }
 
-    }
+    private function check_sub_tasks_statuses3($status_id = 0, $parent_task_id = 0)
+    {
+        $res = true;
 
-    private function check_sub_tasks_statuses3($status_id = 0, $parent_task_id = 0) {
-        $res=true;
-     
-        
 
-        
+
+
         $tasks = $this->Tasks_model->get_one($parent_task_id);
-        if($tasks->christening_number && $tasks->invoice_number){
+        if ($tasks->christening_number && $tasks->invoice_number) {
             $sub_tasks = $this->Sub_tasks_model->check_subtask_status(array("pnt_task_id" => $parent_task_id, "deleted" => 0))->getResult();
-            if(count($sub_tasks)>0){
-        foreach ($sub_tasks as $sub_task) {
-            // if ($sub_task->reserv_status != 4 || $sub_task->supplier_status != 4) {
-            //     if ($sub_task->reserv_status != 5 || $sub_task->supplier_status != 5) {
-            if ($sub_task->reserv_status != 4) {
-                if ($sub_task->reserv_status != 5) {
-                //this sub task isn't done yet, show error and exit
-                
-                $res=false;
-            }
-        }
-        }
-    }else{
-    $res=false;
-  } 
-    }else{
-    $res=false;
-  } 
-    return $res;
+            if (count($sub_tasks) > 0) {
+                foreach ($sub_tasks as $sub_task) {
+                    // if ($sub_task->reserv_status != 4 || $sub_task->supplier_status != 4) {
+                    //     if ($sub_task->reserv_status != 5 || $sub_task->supplier_status != 5) {
+                    if ($sub_task->reserv_status != 4) {
+                        if ($sub_task->reserv_status != 5) {
+                            //this sub task isn't done yet, show error and exit
 
+                            $res = false;
+                        }
+                    }
+                }
+            } else {
+                $res = false;
+            }
+        } else {
+            $res = false;
+        }
+        return $res;
     }
 
-   
 
-    private function _make_sub_task_row($data, $return_type = "row") {
+
+    private function _make_sub_task_row($data, $return_type = "row")
+    {
 
         $checkbox_class = "checkbox-blank";
         $title_class = "";
@@ -1588,26 +1622,23 @@ class Tasks extends Security_Controller {
         }
 
         $status = "";
-        
-            $status = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "data-id" => $data->id, "data-value" => $data->status_key_name === "done" ? "1" : "3", "data-act" => "update-sub-task-status-checkbox"));
-        
 
-       // $title = anchor(get_uri("subtasks/index/$data->pnt_task_id"), $data->guest_nm, array("class" => "font-13", "target" => "_blank"));
-            if ($this->can_show_subtasks()) {
-         if ($this->is_reserv_mang()) {
+        $status = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "data-id" => $data->id, "data-value" => $data->status_key_name === "done" ? "1" : "3", "data-act" => "update-sub-task-status-checkbox"));
 
-            $title = modal_anchor(get_uri("subtasks/task_view"), $data->sub_task_id.' # '.$data->guest_nm , array("title" => app_lang('reserv_mang').' - '.app_lang('task_info') . " #$data->id", "data-post-mang" => "reservmang", "data-post-id" => $data->id,  "data-modal-lg" => "2"));
 
-        }
-        elseif ($this->is_supply_mang()) {
-            //$main_task = $this->Tasks_model->get_details(array("id" => $data->pnt_task_id))->getRow();
-            $title = modal_anchor(get_uri("subtasks/task_view_supply"), $data->sub_task_id.' # '.$data->project_title , array("title" => app_lang('supply_mang').' - '.app_lang('task_info') . " #$data->id","data-post-mang" => "supplymang", "data-post-id" => $data->id,  "data-modal-lg" => "2"));
+        // $title = anchor(get_uri("subtasks/index/$data->pnt_task_id"), $data->guest_nm, array("class" => "font-13", "target" => "_blank"));
+        if ($this->can_show_subtasks()) {
+            if ($this->is_reserv_mang()) {
 
-        }else{
-            $title =$data->sub_task_id.' # '.$data->guest_nm;
-        }
-    }else{
-            $title =$data->sub_task_id.' # '.$data->guest_nm;
+                $title = modal_anchor(get_uri("subtasks/task_view"), $data->sub_task_id . ' # ' . $data->guest_nm, array("title" => app_lang('reserv_mang') . ' - ' . app_lang('task_info') . " #$data->id", "data-post-mang" => "reservmang", "data-post-id" => $data->id,  "data-modal-lg" => "2"));
+            } elseif ($this->is_supply_mang()) {
+                //$main_task = $this->Tasks_model->get_details(array("id" => $data->pnt_task_id))->getRow();
+                $title = modal_anchor(get_uri("subtasks/task_view_supply"), $data->sub_task_id . ' # ' . $data->project_title, array("title" => app_lang('supply_mang') . ' - ' . app_lang('task_info') . " #$data->id", "data-post-mang" => "supplymang", "data-post-id" => $data->id,  "data-modal-lg" => "2"));
+            } else {
+                $title = $data->sub_task_id . ' # ' . $data->guest_nm;
+            }
+        } else {
+            $title = $data->sub_task_id . ' # ' . $data->guest_nm;
         }
 
         $status_label = "<span class='float-end'><span class='badge mt0' style='background: $data->status_color;'>" . ($data->status_key_name ? app_lang($data->status_key_name) : $data->status_title) . "</span></span>";
@@ -1621,69 +1652,69 @@ class Tasks extends Security_Controller {
 
     /* upadate a task status */
 
-    function save_task_status_new($id = 0,$status_id=1) {
+    function save_task_status_new($id = 0, $status_id = 1)
+    {
         $closed_date = new \DateTime('now', new \DateTimeZone("Asia/Riyadh"));
         $data = array(
             "is_closed" => $status_id,
-            "closed_by"=> $this->login_user->id,
+            "closed_by" => $this->login_user->id,
             "closed_reason" => "تم اغلاق المهمة تلقائيا لإكتمال البيانات",
-            "closed_date"=> $closed_date->format('Y-m-d H:i:s'),
+            "closed_date" => $closed_date->format('Y-m-d H:i:s'),
         );
 
-        if($this->check_sub_tasks_statuses3($status_id, $id)){
+        if ($this->check_sub_tasks_statuses3($status_id, $id)) {
 
-        $task_info = $this->Tasks_model->get_details(array("id" => $id))->getRow();
+            $task_info = $this->Tasks_model->get_details(array("id" => $id))->getRow();
 
-        if ($task_info->status_id !== $status_id) {
-            $data["status_changed_at"] = get_current_utc_time();
+            if ($task_info->status_id !== $status_id) {
+                $data["status_changed_at"] = get_current_utc_time();
+            }
+
+            $save_id = $this->Tasks_model->ci_save($data, $id);
         }
-
-        $save_id = $this->Tasks_model->ci_save($data, $id);
     }
-        
-
-    }
-    function save_task_status($id = 0,$status_id=1) {
+    function save_task_status($id = 0, $status_id = 1)
+    {
         validate_numeric_value($id);
         $closed_date = new \DateTime('now', new \DateTimeZone("Asia/Riyadh"));
         //$status_id = $this->request->getPost('value');
         $data = array(
             "is_closed" => $status_id,
-            "closed_by"=> $this->login_user->id,
-            "closed_date"=> $closed_date->format('Y-m-d H:i:s'),
+            "closed_by" => $this->login_user->id,
+            "closed_date" => $closed_date->format('Y-m-d H:i:s'),
         );
         //echo modal_anchor(get_uri("subtasks/task_modal_form/".$id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_multiple_tasks'), array("class" => "btn btn-outline-light", "title" => app_lang('add_multiple_tasks'), "data-post-task_id" => $id, "data-post-add_type" => "multiple"));
-        if($this->can_update_maintask_status()){
-        $this->check_sub_tasks_statuses($status_id, $id);
+        if ($this->can_update_maintask_status()) {
+            $this->check_sub_tasks_statuses($status_id, $id);
 
 
-        $task_info = $this->Tasks_model->get_details(array("id" => $id))->getRow();
-
-       
-
-        if ($task_info->status_id !== $status_id) {
-            $data["status_changed_at"] = get_current_utc_time();
-        }
-
-        $save_id = $this->Tasks_model->ci_save($data, $id);
-        
-
-        if ($save_id) {
             $task_info = $this->Tasks_model->get_details(array("id" => $id))->getRow();
-            echo json_encode(array("success" => true, "data" => ( $this->_task_row_data($save_id)), 'id' => $save_id, "message" => app_lang('record_saved')));
 
-            log_notification("project_task_updated", array("project_id" => $task_info->project_id, "task_id" => $save_id, "activity_log_id" => get_array_value($data, "activity_log_id")));
-        } else {
-            echo json_encode(array("success" => false, app_lang('error_occurred')));
-        }
 
+
+            if ($task_info->status_id !== $status_id) {
+                $data["status_changed_at"] = get_current_utc_time();
+            }
+
+            $save_id = $this->Tasks_model->ci_save($data, $id);
+
+
+            if ($save_id) {
+                $task_info = $this->Tasks_model->get_details(array("id" => $id))->getRow();
+                echo json_encode(array("success" => true, "data" => ($this->_task_row_data($save_id)), 'id' => $save_id, "message" => app_lang('record_saved')));
+
+                log_notification("project_task_updated", array("project_id" => $task_info->project_id, "task_id" => $save_id, "activity_log_id" => get_array_value($data, "activity_log_id")));
+            } else {
+                echo json_encode(array("success" => false, app_lang('error_occurred')));
+            }
         } else {
             echo json_encode(array("success" => false, 'message' => "لا يسمح لك بتعديل حالة المهمة"));
         }
     }
 
 
-    function save_task_status2($id = 0) {
+    function save_task_status2($id = 0)
+    {
         validate_numeric_value($id);
 
         $status_id = $this->request->getPost('value');
@@ -1691,53 +1722,53 @@ class Tasks extends Security_Controller {
 
         if ($status_id == "2") {
             echo json_encode(array("success" => true, "data" => "ok", 'id' => $id, 'status_id' => $status_id));
-        }else{
+        } else {
 
-            $this->save_task_status($id,1);
-
+            $this->save_task_status($id, 1);
         }
-       
-       // echo json_encode(array("success" => true, "data" => "ok", 'id' => $id));
+
+        // echo json_encode(array("success" => true, "data" => "ok", 'id' => $id));
     }
 
-    function post_cuses_modal_form() {
+    function post_cuses_modal_form()
+    {
         $id = $this->request->getPost('id');
 
         $view_data['id'] = $id;
         return $this->template->view('tasks/close_modal_note', $view_data);
     }
-    function save_status(){
+    function save_status()
+    {
 
-        $id=$this->request->getPost('id');
+        $id = $this->request->getPost('id');
         $data = array(
             "closed_reason" => $this->request->getPost('closed_reason'),
             "is_closed" => 2
 
         );
-        if($this->can_update_maintask_status()){
-        if($id){
-        
-        $save_id = $this->Tasks_model->ci_save($data, $id);
-        if ($save_id) {
+        if ($this->can_update_maintask_status()) {
+            if ($id) {
 
-        $task_info = $this->Tasks_model->get_details(array("id" => $save_id))->getRow(); //get data after save
+                $save_id = $this->Tasks_model->ci_save($data, $id);
+                if ($save_id) {
 
-        $id = $this->request->getPost('id');
-            echo json_encode(array("success" => true, "data" => $this->_task_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
-        } else {
-            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
-        }
+                    $task_info = $this->Tasks_model->get_details(array("id" => $save_id))->getRow(); //get data after save
 
-        } else {
-            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
-        }
-
+                    $id = $this->request->getPost('id');
+                    echo json_encode(array("success" => true, "data" => $this->_task_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+                } else {
+                    echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+                }
+            } else {
+                echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+            }
         } else {
             echo json_encode(array("success" => false, 'message' => "لا يسمح لك بتعديل حالة المهمة"));
         }
     }
 
-    function update_task_info($id = 0, $data_field = "") {
+    function update_task_info($id = 0, $data_field = "")
+    {
         if (!$id) {
             return false;
         }
@@ -1787,26 +1818,25 @@ class Tasks extends Security_Controller {
 
         $success_array = array("success" => true, "data" => $this->_task_row_data($save_id), 'id' => $save_id, "message" => app_lang('record_saved'));
 
-        
-       
 
-        
+
+
+
 
         if ($data_field == "created_date") {
             if (is_date_exists($task_info->created_date)) {
                 $date = format_to_date($task_info->created_date, false);
                 $success_array["created_date"] = $date;
             }
-            
         }
 
-        
+
 
         if ($data_field == "status_id") {
             $success_array["status_color"] = $task_info->status_color;
         }
 
-        
+
 
         echo json_encode($success_array);
 
@@ -1814,36 +1844,34 @@ class Tasks extends Security_Controller {
     }
 
 
-    function save_task_status_kanpane() {
-        if($this->can_update_maintask_status()){
-        
-        $id = $this->request->getPost('id');
-        validate_numeric_value($id);
+    function save_task_status_kanpane()
+    {
+        if ($this->can_update_maintask_status()) {
 
-        //$mang = $this->request->getPost('mang');
-        $status_id = $this->request->getPost('status_id');
-        $sort = $this->request->getPost('sort');
-        $this->check_sub_tasks_statuses($status_id, $id);
+            $id = $this->request->getPost('id');
+            validate_numeric_value($id);
 
-        if ($status_id == "2") {
-            echo json_encode(array("success" => true, "data" => "ok", 'id' => $id, 'status_id' => $status_id));
-        }else{
+            //$mang = $this->request->getPost('mang');
+            $status_id = $this->request->getPost('status_id');
+            $sort = $this->request->getPost('sort');
+            $this->check_sub_tasks_statuses($status_id, $id);
 
-            //$this->save_task_status($id,$status_id,$mang);
-            $this->save_task_sort_and_status($id,$status_id,$sort);
+            if ($status_id == "2") {
+                echo json_encode(array("success" => true, "data" => "ok", 'id' => $id, 'status_id' => $status_id));
+            } else {
 
-        }
-
+                //$this->save_task_status($id,$status_id,$mang);
+                $this->save_task_sort_and_status($id, $status_id, $sort);
+            }
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang("you_can't_update_subtask_status")));
         }
-       
-        
     }
 
     /* upadate a task status */
 
-    function save_task_sort_and_status($id,$status_id,$sort) {
+    function save_task_sort_and_status($id, $status_id, $sort)
+    {
         //$project_id = $this->request->getPost('project_id');
         //$this->init_project_permission_checker($project_id);
 
@@ -1885,7 +1913,8 @@ class Tasks extends Security_Controller {
 
     /* delete or undo a task */
 
-    function delete_task() {
+    function delete_task()
+    {
 
         $id = $this->request->getPost('id');
         $info = $this->Tasks_model->get_one($id);
@@ -1894,36 +1923,36 @@ class Tasks extends Security_Controller {
 
         if ($this->can_delete_tasks()) {
             //app_redirect("forbidden");
-        //}
+            //}
 
-        if ($this->Tasks_model->delete_task_and_sub_items($id)) {
-            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+            if ($this->Tasks_model->delete_task_and_sub_items($id)) {
+                echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
 
-            $task_info = $this->Tasks_model->get_one($id);
-            log_notification("project_task_deleted", array("project_id" => $task_info->project_id, "task_id" => $id));
+                $task_info = $this->Tasks_model->get_one($id);
+                log_notification("project_task_deleted", array("project_id" => $task_info->project_id, "task_id" => $id));
 
-            try {
-                app_hooks()->do_action("app_hook_data_delete", array(
-                    "id" => $id,
-                    "table" => get_db_prefix() . "tasks"
-                ));
-            } catch (\Exception $ex) {
-                log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
+                try {
+                    app_hooks()->do_action("app_hook_data_delete", array(
+                        "id" => $id,
+                        "table" => get_db_prefix() . "tasks"
+                    ));
+                } catch (\Exception $ex) {
+                    log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
+                }
+            } else {
+                echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
             }
         } else {
-            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+            echo json_encode(array("success" => false, 'message' => "ليس لديك صلاحية"));
         }
-
-        } else {
-                echo json_encode(array("success" => false, 'message' => "ليس لديك صلاحية"));
-            }
     }
 
-    
+
 
     /* list of tasks, prepared for datatable  */
 
-    function my_tasks_list_data() {
+    function my_tasks_list_data()
+    {
 
         $project_id = $this->request->getPost('project_id');
 
@@ -1943,7 +1972,7 @@ class Tasks extends Security_Controller {
         $options = array(
             "specific_user_id" => $specific_user_id,
             "project_id" => $project_id,
-            "deleted_client"=> $this->request->getPost('deleted_client'),
+            "deleted_client" => $this->request->getPost('deleted_client'),
             "client_id" => $client_id,
             //"selected_year" => $this->session->get('selected_year'),
             "cls_id" => $this->request->getPost('cls_id'),
@@ -1957,7 +1986,7 @@ class Tasks extends Security_Controller {
             "custom_field_filter" => $this->prepare_custom_field_filter_values("tasks", $this->login_user->is_admin, $this->login_user->user_type)
         );
 
-        
+
 
         /*if (!$this->can_manage_all_projects()) {
             $options["project_member_id"] = $this->login_user->id; //don't show all tasks to non-admin users
@@ -1991,7 +2020,8 @@ class Tasks extends Security_Controller {
 
 
 
-    function dash_my_tasks_list_data() {
+    function dash_my_tasks_list_data()
+    {
 
         $project_id = $this->request->getPost('project_id');
 
@@ -2024,7 +2054,7 @@ class Tasks extends Security_Controller {
             "custom_field_filter" => $this->prepare_custom_field_filter_values("tasks", $this->login_user->is_admin, $this->login_user->user_type)
         );
 
-        
+
 
         /*if (!$this->can_manage_all_projects()) {
             $options["project_member_id"] = $this->login_user->id; //don't show all tasks to non-admin users
@@ -2054,7 +2084,8 @@ class Tasks extends Security_Controller {
 
     /* return a row of task list table */
 
-    private function _task_row_data($id) {
+    private function _task_row_data($id)
+    {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("tasks", $this->login_user->is_admin, $this->login_user->user_type);
 
         $options = array("id" => $id, "custom_fields" => $custom_fields);
@@ -2067,7 +2098,8 @@ class Tasks extends Security_Controller {
 
     /* prepare a row of task list table */
 
-    private function _make_task_row($data, $custom_fields) {
+    private function _make_task_row($data, $custom_fields)
+    {
 
         $unread_comments_class = "";
         $icon = "";
@@ -2080,9 +2112,9 @@ class Tasks extends Security_Controller {
 
         $title = "";
         $main_task_id = "#" . $data->id;
-        $project_title="";
-        $project_t =$data->project_title ? $data->project_title:" - ";
-        
+        $project_title = "";
+        $project_t = $data->project_title ? $data->project_title : " - ";
+
 
         /*$toggle_sub_task_icon = "";
 
@@ -2090,97 +2122,94 @@ class Tasks extends Security_Controller {
             $toggle_sub_task_icon = "<span class='filter-sub-task-button clickable ml5' title='" . app_lang("show_sub_tasks") . "' main-task-id= '$main_task_id'><i data-feather='filter' class='icon-16'></i></span>";
 
         }*/
-        $project_title ='';
+        $project_title = '';
         //if($data->client_status==1){
         if ($this->can_manage_all_projects()) {
-            $cn=$data->client_id? ($data->client_status==2?"<span style='color:red'>".$data->company_name.' - ('.  app_lang("disabled").")</span>":$data->company_name):'تحديد عميل';
-            $htm='<a class=" p-0" href="javascript:void(0);"  id="historyList" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$data->company_name.'
+            $cn = $data->client_id ? ($data->client_status == 2 ? "<span style='color:red'>" . $data->company_name . ' - (' .  app_lang("disabled") . ")</span>" : $data->company_name) : 'تحديد عميل';
+            $htm = '<a class=" p-0" href="javascript:void(0);"  id="historyList" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . $data->company_name . '
             </a>
             <div class="dropdown-menu " aria-labelledby="historyList" style="">
-            '.anchor(get_uri("subtasks/index/".$data->id), app_lang("reserv_mang"),array("class"=>'dropdown-item')).'
-            '.anchor(get_uri("subtasks/supply_mang/".$data->id), app_lang("supply_mang"),array("class"=>'dropdown-item')).'
-            '.modal_anchor(get_uri("tasks/task_view"), app_lang('task_info'), array("class" => "dropdown-item", "title" => app_lang('task_info'). " #$data->id", "data-post-id" => $data->id)).'
+            ' . anchor(get_uri("subtasks/index/" . $data->id), app_lang("reserv_mang"), array("class" => 'dropdown-item')) . '
+            ' . anchor(get_uri("subtasks/supply_mang/" . $data->id), app_lang("supply_mang"), array("class" => 'dropdown-item')) . '
+            ' . modal_anchor(get_uri("tasks/task_view"), app_lang('task_info'), array("class" => "dropdown-item", "title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id)) . '
             
           </div>';
 
-            $title .=$data->client_status==1?$htm:$cn;
-
-        }elseif ($this->is_reserv_mang()) {
-            $cn=$data->client_id? ($data->client_status==2?"<span style='color:red'>".$data->company_name.' - ('.  app_lang("disabled").")</span>":$data->company_name):'تحديد عميل';
-            $htm='<a class=" p-0" href="javascript:void(0);"  id="historyList" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$data->company_name.'
+            $title .= $data->client_status == 1 ? $htm : $cn;
+        } elseif ($this->is_reserv_mang()) {
+            $cn = $data->client_id ? ($data->client_status == 2 ? "<span style='color:red'>" . $data->company_name . ' - (' .  app_lang("disabled") . ")</span>" : $data->company_name) : 'تحديد عميل';
+            $htm = '<a class=" p-0" href="javascript:void(0);"  id="historyList" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . $data->company_name . '
             </a>
             <div class="dropdown-menu " aria-labelledby="historyList" style="">
-            '.anchor(get_uri("subtasks/index/".$data->id), app_lang("reserv_mang"),array("class"=>'dropdown-item')).'
-            '.modal_anchor(get_uri("tasks/task_view"), app_lang('task_info'), array("class" => "dropdown-item", "title" => app_lang('task_info'). " #$data->id", "data-post-id" => $data->id)).'
+            ' . anchor(get_uri("subtasks/index/" . $data->id), app_lang("reserv_mang"), array("class" => 'dropdown-item')) . '
+            ' . modal_anchor(get_uri("tasks/task_view"), app_lang('task_info'), array("class" => "dropdown-item", "title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id)) . '
             
           </div>';
 
             //$title .=$data->client_status==1?anchor(get_uri("subtasks/index/".$data->id), $cn):$cn;
-          $title .=$data->client_status==1?$htm:$cn;
-        }
-
-        elseif ($this->is_supply_mang()) {
-            $cn=$data->client_id? ($data->client_status==2?"<span style='color:red'>".$data->project_title.' - ('.  app_lang("disabled").")</span>":$data->project_title):'تحديد عميل';
+            $title .= $data->client_status == 1 ? $htm : $cn;
+        } elseif ($this->is_supply_mang()) {
+            $cn = $data->client_id ? ($data->client_status == 2 ? "<span style='color:red'>" . $data->project_title . ' - (' .  app_lang("disabled") . ")</span>" : $data->project_title) : 'تحديد عميل';
             //$project_title .=$data->client_status==1?anchor(get_uri("subtasks/supply_mang/".$data->id), $cn):$cn;
-            $htm='<a class=" p-0" href="javascript:void(0);"  id="historyList" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$data->project_title.'
+            $htm = '<a class=" p-0" href="javascript:void(0);"  id="historyList" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . $data->project_title . '
             </a>
             <div class="dropdown-menu " aria-labelledby="historyList" style="">
-            '.anchor(get_uri("subtasks/supply_mang/".$data->id), app_lang("supply_mang"),array("class"=>'dropdown-item')).'
-            '.modal_anchor(get_uri("tasks/task_view"), app_lang('task_info'), array("class" => "dropdown-item", "title" => app_lang('task_info'). " #$data->id", "data-post-id" => $data->id)).'
+            ' . anchor(get_uri("subtasks/supply_mang/" . $data->id), app_lang("supply_mang"), array("class" => 'dropdown-item')) . '
+            ' . modal_anchor(get_uri("tasks/task_view"), app_lang('task_info'), array("class" => "dropdown-item", "title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id)) . '
             
           </div>';
-          $project_title .=$data->client_status==1?$htm:$cn;
+            $project_title .= $data->client_status == 1 ? $htm : $cn;
             //$project_title .=anchor($data->client_status==1?get_uri("subtasks/supply_mang/".$data->id):'', $data->client_id? ($data->client_status==2?"<span style='color:red'>".$data->project_title.' - ('.  app_lang("disabled").")</span>":$data->project_title):'تحديد مشروع');
 
-        }else{
-            $title .= $data->client_id? $data->company_name:'تحديد عميل';
+        } else {
+            $title .= $data->client_id ? $data->company_name : 'تحديد عميل';
         }
-   
-        
 
-         
+
+
+
         if ($data->sub_task_count) {
             //this is a sub task
             if ($this->is_reserv_mang()) {
-            
-            $title.= "<span class='badge badge-light  mt0' title='".app_lang('sub_task')."'>".$data->sub_task_count."</span>";
-            $project_title =$data->project_title ? $data->project_title:" - ";
-        }else{
-            $project_title .= "<span class='badge badge-light  mt0' title='".app_lang('sub_task')."'>".$data->sub_task_count."</span>";
-        }
-        }else{
+
+                $title .= "<span class='badge badge-light  mt0' title='" . app_lang('sub_task') . "'>" . $data->sub_task_count . "</span>";
+                $project_title = $data->project_title ? $data->project_title : " - ";
+            } else {
+                $project_title .= "<span class='badge badge-light  mt0' title='" . app_lang('sub_task') . "'>" . $data->sub_task_count . "</span>";
+            }
+        } else {
             if ($this->is_reserv_mang()) {
-            $title.="<span class='badge badge-light  mt0' title='".app_lang('sub_task')."'>0</span>";
-            $project_title =$data->project_title ? $data->project_title:" - ";
-        }else{
-            $project_title .= "<span class='badge badge-light  mt0' title='".app_lang('sub_task')."'>0</span>";
-        }
+                $title .= "<span class='badge badge-light  mt0' title='" . app_lang('sub_task') . "'>0</span>";
+                $project_title = $data->project_title ? $data->project_title : " - ";
+            } else {
+                $project_title .= "<span class='badge badge-light  mt0' title='" . app_lang('sub_task') . "'>0</span>";
+            }
         }
 
-        
+
 
         //$project_title =$data->project_title ? $data->project_title:" - ";
 
-        
+
 
         $created_by = "-";
 
         if ($data->created_by) {
             $image_url = get_avatar($data->assigned_to_avatar);
-            $other_img=get_avatar("_file613bc2b05fbe1-avatar.jpg");
-            $r="this.src='$other_img';";
-            $r2='onerror="this.onerror=null;'.$r.'"';
+            $other_img = get_avatar("_file613bc2b05fbe1-avatar.jpg");
+            $r = "this.src='$other_img';";
+            $r2 = 'onerror="this.onerror=null;' . $r . '"';
 
             $assigned_to_user = "<span class='avatar avatar-xs mr10'><img src='$image_url' $r2 style='max-width: 30px;' alt='...'></span> $data->assigned_to_user";
             $created_by = get_team_member_profile_link($data->created_by, $data->assigned_to_user);
 
-              //  $created_by = get_team_member_profile_link($data->created_by, $assigned_to_user);
-            
+            //  $created_by = get_team_member_profile_link($data->created_by, $assigned_to_user);
+
         }
 
 
-            $checkbox_class = "checkbox-checked";
-        
+        $checkbox_class = "checkbox-checked";
+
 
 
         $created_date = "-";
@@ -2190,74 +2219,72 @@ class Tasks extends Security_Controller {
 
         $options = "";
         if ($this->can_edit_tasks()) {
-            $options .= modal_anchor(get_uri("tasks/task_view"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('task_info'). " #$data->id", "data-post-id" => $data->id));
+            $options .= modal_anchor(get_uri("tasks/task_view"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id));
         }
         /*if ($this->can_delete_tasks()) {
             $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_task'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("projects/delete_task"), "data-action" => "delete-confirmation"));
         }*/
 
 
-        $client_name = $data->client_id!=0?anchor(get_uri("clients/view/" . $data->client_id), $data->company_name):'لم يتم التحديد';
-        $status_color=$data->is_closed==1 ? '#4a9d27':'#e50f16bd';
-        $check_status = js_anchor("<span class=' ml10 float-end'>".$data->id."</span>", array('title' => "", "class" => "js-task", "data-id" => $data->id));
-        $check_status2 = "<label class=' mr15 float-start'>".$data->id."</label>";
-        
-        if($this->is_reserv_mang()){
-        $row_data = array(
-            $status_color,
-            $check_status,
-            $title,
-            $data->clients_contact_name?$data->clients_contact_name:'___',
-            $project_title,
-            $data->christening_number?$data->christening_number:'___',
-            $data->invoice_number?$data->invoice_number:'___',
-            $data->cls_title,
-            $data->description,
-            $data->created_date,
+        $client_name = $data->client_id != 0 ? anchor(get_uri("clients/view/" . $data->client_id), $data->company_name) : 'لم يتم التحديد';
+        $status_color = $data->is_closed == 1 ? '#4a9d27' : '#e50f16bd';
+        $check_status = js_anchor("<span class=' ml10 float-end'>" . $data->id . "</span>", array('title' => "", "class" => "js-task", "data-id" => $data->id));
+        $check_status2 = "<label class=' mr15 float-start'>" . $data->id . "</label>";
 
-            $created_by,
-            $data->cls_color,
-            //$data->is_closed==0 ? 'Open':'Closed'
-        );
-    }else{
-        $row_data = array(
-            $status_color,
-            $check_status,
-            $project_title,
-            '*****',
-            '*****',
-            '*****',
-            $data->cls_title,
-            '',
-            $data->created_date,
-            $data->cls_color,
-            
-            $created_by,
-            //$data->is_closed==0 ? 'Open':'Closed'
-        );
+        if ($this->is_reserv_mang()) {
+            $row_data = array(
+                $status_color,
+                $check_status,
+                $title,
+                $data->clients_contact_name ? $data->clients_contact_name : '___',
+                $project_title,
+                $data->christening_number ? $data->christening_number : '___',
+                $data->invoice_number ? $data->invoice_number : '___',
+                $data->cls_title,
+                $data->description,
+                $data->created_date,
 
-    }
+                $created_by,
+                $data->cls_color,
+                //$data->is_closed==0 ? 'Open':'Closed'
+            );
+        } else {
+            $row_data = array(
+                $status_color,
+                $check_status,
+                $project_title,
+                '*****',
+                '*****',
+                '*****',
+                $data->cls_title,
+                '',
+                $data->created_date,
+                $data->cls_color,
+
+                $created_by,
+                //$data->is_closed==0 ? 'Open':'Closed'
+            );
+        }
 
 
-        $row_data[] = js_anchor($data->is_closed==1 ? app_lang('open'):app_lang('closed'), array("style" => "background-color: $status_color", "class" => "badge", "data-id" => $data->id, "data-value" => $data->is_closed, "data-act" => "update-mytask-status"));
+        $row_data[] = js_anchor($data->is_closed == 1 ? app_lang('open') : app_lang('closed'), array("style" => "background-color: $status_color", "class" => "badge", "data-id" => $data->id, "data-value" => $data->is_closed, "data-act" => "update-mytask-status"));
 
         foreach ($custom_fields as $field) {
             $cf_id = "cfv_" . $field->id;
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        if($data->client_status==2){
-                $row_data[] = modal_anchor('', "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('task_info'). " #$data->id", "data-post-id" => $data->id))
+        if ($data->client_status == 2) {
+            $row_data[] = modal_anchor('', "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id))
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete_task"), "data-action" => "delete-confirmation"));
-
-            }else{
-        $row_data[] = modal_anchor(get_uri("tasks/task_view"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('task_info'). " #$data->id", "data-post-id" => $data->id)). js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete_task"), "data-action" => "delete-confirmation"));
-    }
-
+        } else {
+            $row_data[] = modal_anchor(get_uri("tasks/task_view"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id)) . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete_task"), "data-action" => "delete-confirmation"));
+        }
 
 
 
-               
+
+
 
         $row_data[] = $options;
 
@@ -2269,7 +2296,8 @@ class Tasks extends Security_Controller {
 
 
 
-    private function _make_task_row2($data, $custom_fields) {
+    private function _make_task_row2($data, $custom_fields)
+    {
         $unread_comments_class = "";
         $icon = "";
         if (isset($data->unread) && $data->unread && $data->unread != "0") {
@@ -2281,42 +2309,41 @@ class Tasks extends Security_Controller {
 
         $title = "";
         $main_task_id = "#" . $data->id;
-        $project_title="";
-        $project_t =$data->project_title ? $data->project_title:" - ";
+        $project_title = "";
+        $project_t = $data->project_title ? $data->project_title : " - ";
 
 
-         if ($this->is_reserv_mang()) {
-            $cn=$data->client_id? ($data->client_status==2?"<span style='color:red'>".$project_t.' - ('.  app_lang("disabled").")</span>":$project_t):'تحديد عميل';
+        if ($this->is_reserv_mang()) {
+            $cn = $data->client_id ? ($data->client_status == 2 ? "<span style='color:red'>" . $project_t . ' - (' .  app_lang("disabled") . ")</span>" : $project_t) : 'تحديد عميل';
 
-            $project_title .=$data->client_status==1?anchor(get_uri("subtasks/index/".$data->id), $cn):$cn;
+            $project_title .= $data->client_status == 1 ? anchor(get_uri("subtasks/index/" . $data->id), $cn) : $cn;
             //$project_title .=anchor(get_uri("subtasks/index/".$data->id), $project_t);
-        }
-        elseif ($this->is_supply_mang()) {
-            $cn=$data->client_id? ($data->client_status==2?"<span style='color:red'>".$project_t.' - ('.  app_lang("disabled").")</span>":$project_t):'تحديد عميل';
-            $project_title .=$data->client_status==1?anchor(get_uri("subtasks/supply_mang/".$data->id), $cn):$cn;
-        }else{
-            $project_title .=$project_t;
+        } elseif ($this->is_supply_mang()) {
+            $cn = $data->client_id ? ($data->client_status == 2 ? "<span style='color:red'>" . $project_t . ' - (' .  app_lang("disabled") . ")</span>" : $project_t) : 'تحديد عميل';
+            $project_title .= $data->client_status == 1 ? anchor(get_uri("subtasks/supply_mang/" . $data->id), $cn) : $cn;
+        } else {
+            $project_title .= $project_t;
         }
 
-        
-  
 
-         if ($data->sub_task_count) {
+
+
+        if ($data->sub_task_count) {
             //this is a sub task
-            $project_title.= "<span class='sub-task-icon mr5' style='border-radius: 25%; padding: 1px 3px 1px 5px;' title='" . app_lang("sub_task") . "'> ".$data->sub_task_count." </span>";
-        }else{
-            $project_title.= "<span class='sub-task-icon mr5' style='border-radius: 25%; padding: 1px 3px 1px 5px;' title='" . app_lang("sub_task") . "'> 0 </span>";
+            $project_title .= "<span class='sub-task-icon mr5' style='border-radius: 25%; padding: 1px 3px 1px 5px;' title='" . app_lang("sub_task") . "'> " . $data->sub_task_count . " </span>";
+        } else {
+            $project_title .= "<span class='sub-task-icon mr5' style='border-radius: 25%; padding: 1px 3px 1px 5px;' title='" . app_lang("sub_task") . "'> 0 </span>";
         }
 
-       
 
-       
 
-        
 
-       
-            $checkbox_class = "checkbox-checked";
-        
+
+
+
+
+        $checkbox_class = "checkbox-checked";
+
 
 
         $start_date = "-";
@@ -2326,24 +2353,24 @@ class Tasks extends Security_Controller {
 
         $options = "";
         if ($this->can_edit_tasks()) {
-            $options .= modal_anchor(get_uri("tasks/task_view"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('task_info'). " #$data->id", "data-post-id" => $data->id));
+            $options .= modal_anchor(get_uri("tasks/task_view"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id));
         }
-       
+
 
         //$client_name = $data->client_id!=0?anchor(get_uri("clients/view/" . $data->client_id), $data->company_name):'لم يتم التحديد';
-        $status_color=$data->is_closed==1 ? '#4a9d27':'#e50f16bd';
+        $status_color = $data->is_closed == 1 ? '#4a9d27' : '#e50f16bd';
         $check_status = js_anchor("<span class=' mr15 float-start'></span>", array('title' => "", "class" => "js-task", "data-id" => $data->id,  "data-act" => "update-task-status-checkbox")) . $data->id;
         $row_data = array(
             $status_color,
             $check_status,
             $project_title,
             $data->created_date,
-            
+
             //$data->is_closed==0 ? 'Open':'Closed'
         );
 
 
-        $row_data[] = js_anchor($data->is_closed==1 ? app_lang('open'):app_lang('closed'), array("style" => "background-color: $status_color", "class" => "badge", "data-id" => $data->id, "data-value" => $data->is_closed, "data-act" => "update-mytask-status"));
+        $row_data[] = js_anchor($data->is_closed == 1 ? app_lang('open') : app_lang('closed'), array("style" => "background-color: $status_color", "class" => "badge", "data-id" => $data->id, "data-value" => $data->is_closed, "data-act" => "update-mytask-status"));
 
         foreach ($custom_fields as $field) {
             $cf_id = "cfv_" . $field->id;
@@ -2352,44 +2379,47 @@ class Tasks extends Security_Controller {
 
 
 
-               
+
 
         $row_data[] = $options;
 
         return $row_data;
     }
 
-    
 
-   
 
-    
 
-    
 
-    
-   
 
-   
+
+
+
+
+
+
+
     /* upload a post file */
 
-    function upload_file() {
+    function upload_file()
+    {
         upload_file_to_temp();
     }
 
     /* check valid file for project */
 
-    function validate_project_file() {
+    function validate_project_file()
+    {
         return validate_post_file($this->request->getPost("file_name"));
     }
 
     /* delete a file */
 
-    
+
 
     /* download a file */
 
-    function download_file($id) {
+    function download_file($id)
+    {
 
         $file_info = $this->Project_files_model->get_one($id);
 
@@ -2407,7 +2437,8 @@ class Tasks extends Security_Controller {
 
     /* download multiple files as zip */
 
-    function download_multiple_files($files_ids = "") {
+    function download_multiple_files($files_ids = "")
+    {
 
         if ($files_ids) {
 
@@ -2446,7 +2477,8 @@ class Tasks extends Security_Controller {
 
     /* batch update modal form */
 
-    function batch_update_modal_form($task_ids = "") {
+    function batch_update_modal_form($task_ids = "")
+    {
         $project_id = $this->request->getPost("project_id");
 
         if ($task_ids && $project_id) {
@@ -2462,7 +2494,8 @@ class Tasks extends Security_Controller {
 
     /* save batch tasks */
 
-    function save_batch_update() {
+    function save_batch_update()
+    {
 
         $this->validate_submitted_data(array(
             "project_id" => "required|numeric"
@@ -2528,20 +2561,21 @@ class Tasks extends Security_Controller {
 
     /* download files by zip */
 
-    
+
 
     /* list of files, prepared for datatable  */
 
-   
- 
 
-    
-   
-   
+
+
+
+
+
 
     //save project status
-    function change_status($project_id, $status) {
-        if ($project_id && $this->can_create_projects() && ($status == "completed" || $status == "hold" || $status == "canceled" || $status == "open" )) {
+    function change_status($project_id, $status)
+    {
+        if ($project_id && $this->can_create_projects() && ($status == "completed" || $status == "hold" || $status == "canceled" || $status == "open")) {
             validate_numeric_value($project_id);
             $status_data = array("status" => $status);
             $save_id = $this->Projects_model->ci_save($status_data, $project_id);
@@ -2554,12 +2588,13 @@ class Tasks extends Security_Controller {
     }
 
 
-    
 
-   
+
+
 
     //get clients dropdown
-    private function _get_clients_dropdown() {
+    private function _get_clients_dropdown()
+    {
         $clients_dropdown = array(array("id" => "", "text" => "- " . app_lang("client") . " -"));
         $clients = $this->Clients_model->get_dropdown_list(array("company_name"), "id", array("is_lead" => 0));
         foreach ($clients as $key => $value) {
@@ -2568,22 +2603,23 @@ class Tasks extends Security_Controller {
         return $clients_dropdown;
     }
 
-    
 
-   
 
-   
+
+
+
 
 
 
     /* delete multiple files */
 
-  
-
-   
 
 
-    function validate_import_tasks_file() {
+
+
+
+    function validate_import_tasks_file()
+    {
         $file_name = $this->request->getPost("file_name");
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         if (!is_valid_file_to_upload($file_name)) {
@@ -2598,9 +2634,10 @@ class Tasks extends Security_Controller {
         }
     }
 
-      
 
-    private function _get_existing_custom_field_id($title = "") {
+
+    private function _get_existing_custom_field_id($title = "")
+    {
         if (!$title) {
             return false;
         }
@@ -2616,7 +2653,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _prepare_headers_for_submit($headers_row, $headers) {
+    private function _prepare_headers_for_submit($headers_row, $headers)
+    {
         foreach ($headers_row as $key => $header) {
             if (!((count($headers) - 1) < $key)) { //skip default headers
                 continue;
@@ -2634,9 +2672,10 @@ class Tasks extends Security_Controller {
         return $headers;
     }
 
-   
 
-    private function _save_custom_fields_of_task($task_id, $custom_field_values_array) {
+
+    private function _save_custom_fields_of_task($task_id, $custom_field_values_array)
+    {
         if (!$custom_field_values_array) {
             return false;
         }
@@ -2655,7 +2694,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_project_id($project = "") {
+    private function _get_project_id($project = "")
+    {
         if (!$project) {
             return false;
         }
@@ -2672,9 +2712,10 @@ class Tasks extends Security_Controller {
         }
     }
 
-   
 
-    private function _get_assigned_to_id($assigned_to = "") {
+
+    private function _get_assigned_to_id($assigned_to = "")
+    {
         $assigned_to = trim($assigned_to);
         if (!$assigned_to) {
             return false;
@@ -2688,7 +2729,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _check_task_points($points = "") {
+    private function _check_task_points($points = "")
+    {
         if (!$points) {
             return false;
         }
@@ -2700,7 +2742,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_collaborators_ids($collaborators_data) {
+    private function _get_collaborators_ids($collaborators_data)
+    {
         $explode_collaborators = explode(", ", $collaborators_data);
         if (!($explode_collaborators && count($explode_collaborators))) {
             return false;
@@ -2729,7 +2772,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_status_id($status = "") {
+    private function _get_status_id($status = "")
+    {
         if (!$status) {
             return false;
         }
@@ -2743,7 +2787,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_label_ids($labels = "") {
+    private function _get_label_ids($labels = "")
+    {
         $explode_labels = explode(", ", $labels);
         if (!($explode_labels && count($explode_labels))) {
             return false;
@@ -2774,7 +2819,8 @@ class Tasks extends Security_Controller {
         return $labels_ids;
     }
 
-    private function _get_allowed_headers() {
+    private function _get_allowed_headers()
+    {
         return array(
             "title",
             "description",
@@ -2790,7 +2836,8 @@ class Tasks extends Security_Controller {
         );
     }
 
-    private function _store_headers_position($headers_row = array()) {
+    private function _store_headers_position($headers_row = array())
+    {
         $allowed_headers = $this->_get_allowed_headers();
 
         //check if all headers are correct and on the right position
@@ -2831,7 +2878,8 @@ class Tasks extends Security_Controller {
         return $final_headers;
     }
 
-    function validate_import_tasks_file_data($check_on_submit = false) {
+    function validate_import_tasks_file_data($check_on_submit = false)
+    {
         $table_data = "";
         $error_message = "";
         $headers = array();
@@ -2954,7 +3002,8 @@ class Tasks extends Security_Controller {
         echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
     }
 
-    private function _row_data_validation_and_get_error_message($key, $data, $headers = array()) {
+    private function _row_data_validation_and_get_error_message($key, $data, $headers = array())
+    {
         $allowed_headers = $this->_get_allowed_headers();
         $header_value = get_array_value($allowed_headers, $key);
 
@@ -2970,11 +3019,11 @@ class Tasks extends Security_Controller {
 
         //existance required on this fields
         if ($data && (
-                ($header_value == "project" && !$this->_get_project_id($data)) ||
-                ($header_value == "status" && !$this->_get_status_id($data)) ||
-                ($header_value == "assigned_to" && !$this->_get_assigned_to_id($data)) ||
-                ($header_value == "collaborators" && !$this->_get_collaborators_ids($data))
-                )) {
+            ($header_value == "project" && !$this->_get_project_id($data)) ||
+            ($header_value == "status" && !$this->_get_status_id($data)) ||
+            ($header_value == "assigned_to" && !$this->_get_assigned_to_id($data)) ||
+            ($header_value == "collaborators" && !$this->_get_collaborators_ids($data))
+        )) {
             if ($header_value == "assigned_to" || $header_value == "collaborators") {
                 return sprintf(app_lang("import_not_exists_error_message"), app_lang("user"));
             } else {
@@ -3005,17 +3054,17 @@ class Tasks extends Security_Controller {
             "mang" => "reserv",
             "is_admin" => $this->login_user->is_admin ? "yes" : "no",
         );
-    
+
         $all_options = append_server_side_filtering_commmon_params($options);
         $result = $this->Sub_tasks_model->get_details_new($all_options);
-    
+
         if (get_array_value($all_options, "server_side")) {
             $list_data = get_array_value($result, "data");
         } else {
             $list_data = $result->getResult();
             $result = array();
         }
-    
+
         // Check each item in the data
         foreach ($list_data as $item) {
             // Check conditions
@@ -3023,8 +3072,8 @@ class Tasks extends Security_Controller {
                 (empty($item->act_out_date) || $item->act_out_date == '0000-00-00') ||
                 (empty($item->sales_act_return_date) || $item->sales_act_return_date == '0000-00-00')||
                 (empty($item->act_out_time) || $item->act_out_time == '00:00:01') ||
-                (empty($item->car_type_id) || $item->car_type_id == '0') ||
-                (empty($item->inv_day_count) || $item->inv_day_count == '0')
+                // (empty($item->car_type_id) || $item->car_type_id == '0') ||
+                (empty($item->inv_day_count) || $item->inv_day_count =='0')
             ) {
                 // If any condition is met, return false and stop further processing
                 // echo json_encode($list_data);
@@ -3033,7 +3082,7 @@ class Tasks extends Security_Controller {
                 return false;
             }
         }
-    
+
         // If none of the items meet the conditions, return true
         // echo json_encode($list_data);
 
@@ -3041,7 +3090,6 @@ class Tasks extends Security_Controller {
         // echo json_encode(true);
         return true;
     }
-
 }
 
 /* End of file projects.php */

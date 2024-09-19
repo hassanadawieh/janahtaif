@@ -397,14 +397,20 @@ class Sub_tasks_model extends Crud_model {
              WHEN ($sub_tasks_table.tmp_return_date is NOT NULL AND $sub_tasks_table.tmp_return_date!='0000-00-00' AND Format($sub_tasks_table.tmp_return_date,'d/mm/yyyy') <=  Format(NOW(),'d/mm/yyyy') AND ($sub_tasks_table.sales_act_return_date='0000-00-00' OR $sub_tasks_table.sales_act_return_date is NULL)) 
               THEN 2
 
-             WHEN ($sub_tasks_table.sales_act_return_date!='0000-00-00' AND $sub_tasks_table.sales_act_return_date is NOT NULL) AND  ($sub_tasks_table.service_type!='deliver' AND $sub_tasks_table.inv_day_count=0 OR $sub_tasks_table.car_type_id=0 ) THEN 6
              
              
+             WHEN ($sub_tasks_table.sales_act_return_date!='0000-00-00' AND $sub_tasks_table.sales_act_return_date is NOT NULL)
+              AND ($sub_tasks_table.out_date!='0000-00-00' AND $sub_tasks_table.out_date is NOT NULL)
+              
+              AND  ($sub_tasks_table.service_type='no_car' AND $sub_tasks_table.driver_id!=0 AND $sub_tasks_table.inv_day_count!=0) THEN 4
 
             WHEN ($sub_tasks_table.sales_act_return_date!='0000-00-00' AND $sub_tasks_table.sales_act_return_date is NOT NULL)
              AND ($sub_tasks_table.out_date!='0000-00-00' AND $sub_tasks_table.out_date is NOT NULL)
              
-             AND  ($sub_tasks_table.service_type='deliver' AND $sub_tasks_table.car_type_id!=0) OR ($sub_tasks_table.inv_day_count!=0 AND $sub_tasks_table.car_type_id!=0 ) THEN 4
+             AND  ($sub_tasks_table.service_type='deliver' AND $sub_tasks_table.car_type_id!=0) OR ($sub_tasks_table.inv_day_count!=0 AND $sub_tasks_table.car_type_id!=0) THEN 4
+
+
+            
 
            
             
@@ -420,6 +426,7 @@ class Sub_tasks_model extends Crud_model {
             AND (($sub_tasks_table.act_return_date='0000-00-00' OR $sub_tasks_table.act_return_date is NULL)
             OR ($sub_tasks_table.act_return_time='00:00:01' OR $sub_tasks_table.act_return_time is NULL)) THEN 3
 
+            
             WHEN (($sub_tasks_table.act_return_date!='0000-00-00' OR $sub_tasks_table.act_return_date is NOT NULL)
             OR ($sub_tasks_table.act_return_time!='00:00:01' OR $sub_tasks_table.act_return_time is NOT NULL))
             AND ($sub_tasks_table.rec_inv_status='wait_inv' AND $sub_tasks_table.service_type!='deliver') THEN 2
@@ -1058,7 +1065,6 @@ class Sub_tasks_model extends Crud_model {
              WHEN ($sub_tasks_table.tmp_return_date is NOT NULL AND $sub_tasks_table.tmp_return_date!='0000-00-00' AND Format($sub_tasks_table.tmp_return_date,'d/mm/yyyy') <=  Format(NOW(),'d/mm/yyyy') AND ($sub_tasks_table.sales_act_return_date='0000-00-00' OR $sub_tasks_table.sales_act_return_date is NULL)) 
               THEN 2
 
-            WHEN ($sub_tasks_table.sales_act_return_date!='0000-00-00' AND $sub_tasks_table.sales_act_return_date is NOT NULL) AND  ($sub_tasks_table.service_type!='deliver' AND $sub_tasks_table.inv_day_count=0 OR $sub_tasks_table.car_type_id=0 ) THEN 6
              
              
              WHEN ($sub_tasks_table.sales_act_return_date!='0000-00-00' AND $sub_tasks_table.sales_act_return_date is NOT NULL)
@@ -1123,7 +1129,6 @@ class Sub_tasks_model extends Crud_model {
              WHEN ($sub_tasks_table.tmp_return_date is NOT NULL AND $sub_tasks_table.tmp_return_date!='0000-00-00' AND Format($sub_tasks_table.tmp_return_date,'d/mm/yyyy') <=  Format(NOW(),'d/mm/yyyy') AND ($sub_tasks_table.sales_act_return_date='0000-00-00' OR $sub_tasks_table.sales_act_return_date is NULL)) 
               THEN 2
 
-             WHEN ($sub_tasks_table.sales_act_return_date!='0000-00-00' AND $sub_tasks_table.sales_act_return_date is NOT NULL) AND  ($sub_tasks_table.service_type!='deliver' AND $sub_tasks_table.inv_day_count=0 OR $sub_tasks_table.car_type_id=0 ) THEN 6
              
              WHEN ($sub_tasks_table.sales_act_return_date!='0000-00-00' AND $sub_tasks_table.sales_act_return_date is NOT NULL)
                AND ($sub_tasks_table.out_date!='0000-00-00' AND $sub_tasks_table.out_date is NOT NULL)

@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
-class Tasks_model extends Crud_model {
+class Tasks_model extends Crud_model
+{
 
     protected $table = null;
 
-    function __construct() {
+    function __construct()
+    {
         $this->table = 'tasks';
         parent::__construct($this->table);
         parent::init_activity_log("task", "title", "project", "project_id");
     }
 
-    function schema() {
+    function schema()
+    {
         return array(
             "id" => array(
                 "label" => app_lang("id"),
@@ -39,7 +42,7 @@ class Tasks_model extends Crud_model {
                 "linked_model" => model("App\Models\Users_model"),
                 "label_fields" => array("user_group_name"),
             ),
-           
+
             "labels" => array(
                 "label" => app_lang("labels"),
                 "type" => "foreign_key",
@@ -81,7 +84,7 @@ class Tasks_model extends Crud_model {
                 "label" => app_lang("priority"),
                 "type" => "int"
             ),
-           
+
             "no_of_cycles" => array(
                 "label" => app_lang("cycles"),
                 "type" => "int"
@@ -107,7 +110,8 @@ class Tasks_model extends Crud_model {
         );
     }
 
-    function get_details($options = array()) {
+    function get_details($options = array())
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $sub_tasks_table = $this->db->prefixTable('sub_tasks');
         $users_table = $this->db->prefixTable('users');
@@ -133,40 +137,43 @@ class Tasks_model extends Crud_model {
 
         $filter = $this->_get_clean_value($options, "filter");
         if ($filter) {
-            if ($filter=="no_invoice") {
-            $where .= " AND ($tasks_table.invoice_number='' OR $tasks_table.invoice_number IS NULL)";
-        } if ($filter=="no_christening_number") {
-           $where .= " AND ($tasks_table.christening_number='' OR $tasks_table.christening_number IS NULL)";
-        
-        } if ($filter=="no_project") {
-           $where .= " AND ($tasks_table.project_id=0 OR $tasks_table.project_id IS NULL)";
-        } if ($filter=="tasks_deleted") {
-            $where .= " AND ($sub_tasks_table.deleted=1)";
-         }if ($filter=="tasks_unpaid_driver") {
-            $where .= " AND ($sub_tasks_table.car_expens_stmnt IS NULL OR $sub_tasks_table.car_expens_stmnt = '')";
-         }
+            if ($filter == "no_invoice") {
+                $where .= " AND ($tasks_table.invoice_number='' OR $tasks_table.invoice_number IS NULL)";
+            }
+            if ($filter == "no_christening_number") {
+                $where .= " AND ($tasks_table.christening_number='' OR $tasks_table.christening_number IS NULL)";
+            }
+            if ($filter == "no_project") {
+                $where .= " AND ($tasks_table.project_id=0 OR $tasks_table.project_id IS NULL)";
+            }
+            if ($filter == "tasks_deleted") {
+                $where .= " AND ($sub_tasks_table.deleted=1)";
+            }
+            if ($filter == "tasks_unpaid_driver") {
+                $where .= " AND ($sub_tasks_table.car_expens_stmnt IS NULL OR $sub_tasks_table.car_expens_stmnt = '')";
+            }
         }
 
-        
+
         $parent_task_id = $this->_get_clean_value($options, "parent_task_id");
         if ($parent_task_id) {
             $where .= " AND $tasks_table.parent_task_id=$parent_task_id";
         }
-        $sub_tsk_selected_date=date("Y");
+        $sub_tsk_selected_date = date("Y");
         $selected_year = $this->_get_clean_value($options, "selected_year");
         $ci = new \App\Controllers\Security_Controller(false);
         $this_year = $ci->session->get('selected_year');
-        if($this_year!=1 && $selected_year){
+        if ($this_year != 1 && $selected_year) {
             $where .= " AND YEAR($tasks_table.created_date)=$this_year";
         }
-      
+
 
         $task_ids = $this->_get_clean_value($options, "task_ids");
         if ($task_ids) {
             $where .= " AND $tasks_table.ID IN($task_ids)";
         }
 
-       
+
 
 
         $status_ids = $this->_get_clean_value($options, "status_ids");
@@ -179,11 +186,11 @@ class Tasks_model extends Crud_model {
             $where .= " AND $tasks_table.is_closed=$update_status";
         }
 
-         $client_id = $this->_get_clean_value($options, "client_id");
+        $client_id = $this->_get_clean_value($options, "client_id");
         if ($client_id) {
             $where .= " AND $tasks_table.client_id=$client_id";
         }
-        
+
         $exclude_status_id = $this->_get_clean_value($options, "exclude_status_id");
         if ($exclude_status_id) {
             $where .= " AND $tasks_table.status_id!=$exclude_status_id ";
@@ -208,7 +215,7 @@ class Tasks_model extends Crud_model {
         if ($client_status) {
             $where .= " AND $clients.status=$client_status";
         }
-         
+
 
         $specific_user_id = $this->_get_clean_value($options, "specific_user_id");
         if ($specific_user_id) {
@@ -220,21 +227,21 @@ class Tasks_model extends Crud_model {
             $where .= " AND ($tasks_table.created_by=$show_assigned_tasks_only_user_id OR FIND_IN_SET('$show_assigned_tasks_only_user_id', $tasks_table.collaborators))";
         }
 
-       
+
 
         $task_status_id = $this->_get_clean_value($options, "task_status_id");
         if ($task_status_id) {
             $where .= " AND $tasks_table.status_id=$task_status_id";
         }
 
-        
+
 
         $exclude_reminder_date = $this->_get_clean_value($options, "exclude_reminder_date");
         if ($exclude_reminder_date) {
             $where .= " AND ($tasks_table.reminder_date !='$exclude_reminder_date') ";
         }
 
-        
+
         $order = "";
         $sort_by_project = $this->_get_clean_value($options, "sort_by_project");
         if ($sort_by_project) {
@@ -242,7 +249,7 @@ class Tasks_model extends Crud_model {
         }
 
         $extra_left_join = "";
-       /* $project_member_id = $this->_get_clean_value($options, "project_member_id");
+        /* $project_member_id = $this->_get_clean_value($options, "project_member_id");
         if ($project_member_id) {
             $where .= " AND $project_members_table.user_id=$project_member_id";
             $extra_left_join = " LEFT JOIN $project_members_table ON $tasks_table.project_id= $project_members_table.project_id AND $project_members_table.deleted=0 AND $project_members_table.user_id=$project_member_id";
@@ -275,7 +282,7 @@ class Tasks_model extends Crud_model {
             "created_date" => $tasks_table . ".created_date",
             "client_name" => $tasks_table . ".client_id",
             "is_closed" => $tasks_table . ".is_closed",
-            
+
             "created_by" => "assigned_to_user",
             "status" => $tasks_table . ".status_id",
             "project" => $projects . ".title",
@@ -307,7 +314,7 @@ class Tasks_model extends Crud_model {
                 $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
                 $where .= " OR $projects.title LIKE '%$search_by%' ESCAPE '!' ";
                 $where .= " OR $clients.company_name LIKE '%$search_by%' ESCAPE '!' ";
-                
+
                 $where .= $this->get_custom_field_search_query($tasks_table, "tasks", $search_by);
                 $where .= " )";
             }
@@ -341,7 +348,7 @@ class Tasks_model extends Crud_model {
         $join_custom_fieds 
         WHERE $tasks_table.deleted=0  $where  $custom_fields_where 
         $order $limit_offset";
-        
+
         $raw_query = $this->db->query($sql);
 
         $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
@@ -358,7 +365,8 @@ class Tasks_model extends Crud_model {
     }
 
 
-    function get_details_new($options = array()) {
+    function get_details_new($options = array())
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $sub_tasks_table = $this->db->prefixTable('sub_tasks');
         $task_status_table = $this->db->prefixTable('task_status');
@@ -366,9 +374,9 @@ class Tasks_model extends Crud_model {
         $projects = $this->db->prefixTable('projects');
         $cities = $this->db->prefixTable('cities');
         $suppliers = $this->db->prefixTable('suppliers');
-$drivers = $this->db->prefixTable('drivers');
-$task_priority_table = $this->db->prefixTable('task_priority');
-$cars_type_table = $this->db->prefixTable('cars_type');
+        $drivers = $this->db->prefixTable('drivers');
+        $task_priority_table = $this->db->prefixTable('task_priority');
+        $cars_type_table = $this->db->prefixTable('cars_type');
         $clients = $this->db->prefixTable('clients');
         $clients_contact = $this->db->prefixTable('clients_contact');
         $notifications_table = $this->db->prefixTable("notifications");
@@ -387,38 +395,37 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         }
 
 
-        
-       
-      
+
+
+
 
         $task_ids = $this->_get_clean_value($options, "task_ids");
         if ($task_ids) {
             $where .= " AND $tasks_table.id IN($task_ids)";
         }
 
-       $sub_tsk_selected_date=date("Y");
+        $sub_tsk_selected_date = date("Y");
         $selected_year = $this->_get_clean_value($options, "selected_year");
         if ($selected_year) {
             $where .= " AND YEAR($tasks_table.created_date)=$selected_year";
-            $sub_tsk_selected_date=$selected_year;
-        }else{
+            $sub_tsk_selected_date = $selected_year;
+        } else {
             $this_year = date("Y");
             $where .= " AND YEAR($tasks_table.created_date)=$this_year";
-            
         }
 
 
-     
+
         $update_status = $this->_get_clean_value($options, "update_status");
         if ($update_status) {
             $where .= " AND $tasks_table.is_closed=$update_status";
         }
 
-         $client_id = $this->_get_clean_value($options, "client_id");
+        $client_id = $this->_get_clean_value($options, "client_id");
         if ($client_id) {
             $where .= " AND $tasks_table.client_id=$client_id";
         }
-        
+
         $exclude_status_id = $this->_get_clean_value($options, "exclude_status_id");
         if ($exclude_status_id) {
             $where .= " AND $tasks_table.status_id!=$exclude_status_id ";
@@ -443,7 +450,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         if ($client_status) {
             $where .= " AND $clients.status=$client_status";
         }
-         
+
 
         $specific_user_id = $this->_get_clean_value($options, "specific_user_id");
         if ($specific_user_id) {
@@ -455,11 +462,11 @@ $cars_type_table = $this->db->prefixTable('cars_type');
             $where .= " AND ($tasks_table.created_by=$show_assigned_tasks_only_user_id OR FIND_IN_SET('$show_assigned_tasks_only_user_id', $tasks_table.collaborators))";
         }
 
-       
 
-       
+
+
         $task_id = $this->_get_clean_value($options, "task_id");
-        if ($task_id && $task_id!=0) {
+        if ($task_id && $task_id != 0) {
             $where .= " AND $sub_tasks_table.pnt_task_id=$task_id";
         }
 
@@ -483,16 +490,14 @@ $cars_type_table = $this->db->prefixTable('cars_type');
             $where .= " AND $sub_tasks_table.guest_phone LIKE '%$guest_phone_f%' ESCAPE '!'";
         }
 
-       
+
         $company_name_f = $this->_get_clean_value($options, "company_name_f");
         if ($company_name_f) {
             $where .= " AND $clients.company_name LIKE '%$company_name_f%' ESCAPE '!'";
-            
         }
         $clients_contact_f = $this->_get_clean_value($options, "clients_contact_f");
         if ($clients_contact_f) {
             $where .= " AND CONCAT($clients_contact.first_name, ' ', $clients_contact.last_name) LIKE '%$clients_contact_f%' ESCAPE '!'";
-            
         }
         $christ_num_f = $this->_get_clean_value($options, "christ_num_f");
         if ($christ_num_f) {
@@ -555,7 +560,6 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $created_by_f = $this->_get_clean_value($options, "created_by_f");
         if ($created_by_f) {
             $where .= " AND CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$created_by_f%' ESCAPE '!'";
-            
         }
 
         $supplier_id = $this->_get_clean_value($options, "supplier_id");
@@ -563,7 +567,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
             $where .= " AND $sub_tasks_table.supplier_id=$supplier_id";
         }
 
-       
+
 
 
         $city_id = $this->_get_clean_value($options, "city_id");
@@ -593,10 +597,9 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $selected_year = 2024;
         if ($selected_year) {
             $where .= " AND ($sub_tasks_table.created_at IS NULL OR YEAR($sub_tasks_table.created_at)=$selected_year)";
-        }else{
+        } else {
             $this_year = date("Y");
             $where .= " AND ($sub_tasks_table.created_at IS NULL OR YEAR($sub_tasks_table.created_at)=$this_year)";
-            
         }
 
 
@@ -615,28 +618,28 @@ $cars_type_table = $this->db->prefixTable('cars_type');
 
         $filter = $this->_get_clean_value($options, "filter");
         if ($filter) {
-            if ($filter=="no_supplier") {
-            $where .= " AND ($sub_tasks_table.supplier_id=0 OR $sub_tasks_table.supplier_id IS NULL)";
-        } if ($filter=="wait_inv") {
-           $where .= " AND ($sub_tasks_table.rec_inv_status='wait_inv')";
-        
-        }  if ($filter=="rec_inv") {
-           $where .= " AND ($sub_tasks_table.rec_inv_status='rec_inv')";
-        
-        } if ($filter=="no_act_return_date") {
-           $where .= " AND ($sub_tasks_table.act_return_date='0000-00-00' OR $sub_tasks_table.act_return_date IS NULL)";
-        } if ($filter=="no_act_out_time") {
-           $where .= " AND ($sub_tasks_table.act_out_time='00:00:01' OR $sub_tasks_table.act_out_time IS NULL)";
-        } 
-        if ($filter=="24houer") {
-           $where .= " AND ($sub_tasks_table.status_id=1 AND DATE($sub_tasks_table.act_out_date) - INTERVAL 24 HOUR <  NOW())";
-       }
-
-        
+            if ($filter == "no_supplier") {
+                $where .= " AND ($sub_tasks_table.supplier_id=0 OR $sub_tasks_table.supplier_id IS NULL)";
+            }
+            if ($filter == "wait_inv") {
+                $where .= " AND ($sub_tasks_table.rec_inv_status='wait_inv')";
+            }
+            if ($filter == "rec_inv") {
+                $where .= " AND ($sub_tasks_table.rec_inv_status='rec_inv')";
+            }
+            if ($filter == "no_act_return_date") {
+                $where .= " AND ($sub_tasks_table.act_return_date='0000-00-00' OR $sub_tasks_table.act_return_date IS NULL)";
+            }
+            if ($filter == "no_act_out_time") {
+                $where .= " AND ($sub_tasks_table.act_out_time='00:00:01' OR $sub_tasks_table.act_out_time IS NULL)";
+            }
+            if ($filter == "24houer") {
+                $where .= " AND ($sub_tasks_table.status_id=1 AND DATE($sub_tasks_table.act_out_date) - INTERVAL 24 HOUR <  NOW())";
+            }
         }
 
         $mang = $this->_get_clean_value($options, "mang");
-        $is_admin=$this->_get_clean_value($options,"is_admin");
+        $is_admin = $this->_get_clean_value($options, "is_admin");
         /*$drr=" IF $sub_tasks_table.status_id =5 THEN 5
                ELSEIF ($sub_tasks_table.out_date='0000-00-00' OR $sub_tasks_table.out_date is NULL) THEN 2
                ELSEIF (DATE_FORMAT(CONCAT($sub_tasks_table.out_date, ' ',$sub_tasks_table.exp_out_time),'%m/%d/%Y %H:%i') >  DATE_FORMAT(NOW(),'%m/%d/%Y %H:%i')) THEN 1
@@ -645,7 +648,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
                DATE_FORMAT($sub_tasks_table.tmp_return_date,'%m/%d/%Y')
         ";*/
 
-        $supplier_status=$mang=="reserv" ? " (CASE
+        $supplier_status = $mang == "reserv" ? " (CASE
             WHEN $sub_tasks_table.status_id =5 THEN 5
             WHEN ((($sub_tasks_table.out_date='0000-00-00' OR $sub_tasks_table.out_date is NULL OR $sub_tasks_table.out_date!='0000-00-00' OR $sub_tasks_table.out_date is NOT NULL)
             OR ($sub_tasks_table.exp_out_time='00:00:01' OR $sub_tasks_table.exp_out_time is NULL OR $sub_tasks_table.exp_out_time!='00:00:01' OR $sub_tasks_table.exp_out_time is NOT NULL)) 
@@ -720,36 +723,36 @@ $cars_type_table = $this->db->prefixTable('cars_type');
             ELSE 4
             END ) ";*/
 
-        
+
 
         $out_date = $this->_get_clean_value($options, "out_date");
-        if ($out_date && is_date_exists($out_date) && $out_date!='1') {
+        if ($out_date && is_date_exists($out_date) && $out_date != '1') {
             $where .= " AND (DATE($sub_tasks_table.out_date)='$out_date')";
         }
         $tmp_return_date = $this->_get_clean_value($options, "tmp_return_date");
-        if ($tmp_return_date && is_date_exists($tmp_return_date) && $tmp_return_date!='1') {
+        if ($tmp_return_date && is_date_exists($tmp_return_date) && $tmp_return_date != '1') {
 
             $where .= " AND (DATE($sub_tasks_table.tmp_return_date)='$tmp_return_date')";
         }
         $act_out_date = $this->_get_clean_value($options, "act_out_date");
-        if ($act_out_date && is_date_exists($act_out_date) && $act_out_date!='1') {
+        if ($act_out_date && is_date_exists($act_out_date) && $act_out_date != '1') {
             $where .= " AND ($sub_tasks_table.act_out_date IS NOT NULL  AND $sub_tasks_table.act_out_date='$act_out_date')";
         }
 
         $sales_act_return_date = $this->_get_clean_value($options, "sales_act_return_date");
-        if ($sales_act_return_date && is_date_exists($sales_act_return_date) && $sales_act_return_date!='2') {
+        if ($sales_act_return_date && is_date_exists($sales_act_return_date) && $sales_act_return_date != '2') {
 
             $where .= " AND ($sub_tasks_table.sales_act_return_date IS NOT NULL  AND $sub_tasks_table.sales_act_return_date='$sales_act_return_date')";
         }
 
         $act_return_date = $this->_get_clean_value($options, "act_return_date");
-        if ($act_return_date && is_date_exists($act_return_date) && $act_return_date!='1') {
-            
+        if ($act_return_date && is_date_exists($act_return_date) && $act_return_date != '1') {
+
             $where .= " AND (DATE($sub_tasks_table.act_return_date)='$act_return_date')";
         }
 
-        
-     
+
+
 
         $priority_id = $this->_get_clean_value($options, "priority_id");
         if ($priority_id) {
@@ -780,7 +783,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
             $where .= " AND ($tasks_table.reminder_date !='$exclude_reminder_date') ";
         }
 
-        
+
         $order = "";
         $sort_by_project = $this->_get_clean_value($options, "sort_by_project");
         if ($sort_by_project) {
@@ -788,7 +791,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         }
 
         $extra_left_join = "";
-       /* $project_member_id = $this->_get_clean_value($options, "project_member_id");
+        /* $project_member_id = $this->_get_clean_value($options, "project_member_id");
         if ($project_member_id) {
             $where .= " AND $project_members_table.user_id=$project_member_id";
             $extra_left_join = " LEFT JOIN $project_members_table ON $tasks_table.project_id= $project_members_table.project_id AND $project_members_table.deleted=0 AND $project_members_table.user_id=$project_member_id";
@@ -815,14 +818,14 @@ $cars_type_table = $this->db->prefixTable('cars_type');
             $limit_offset = " LIMIT $limit OFFSET $offset ";
         }
 
-       
-        $myorder_dir="";
-       $myorder_by = $this->_get_clean_value($options, "order_by");
+
+        $myorder_dir = "";
+        $myorder_by = $this->_get_clean_value($options, "order_by");
         if ($myorder_by) {
             $myorder_dir = $this->_get_clean_value($options, "order_dir");
         }
         $available_order_by_list = array(
-            "sub_task_id" => ($task_id && $task_id!=0)?$sub_tasks_table . ".id ".$myorder_dir.",".$sub_tasks_table . ".sub_task_id":$sub_tasks_table . ".pnt_task_id ".$myorder_dir.",".$sub_tasks_table . ".id",
+            "sub_task_id" => ($task_id && $task_id != 0) ? $sub_tasks_table . ".id " . $myorder_dir . "," . $sub_tasks_table . ".sub_task_id" : $sub_tasks_table . ".pnt_task_id " . $myorder_dir . "," . $sub_tasks_table . ".id",
             "guest_nm" => $sub_tasks_table . ".guest_nm",
             "supplier_id" => $sub_tasks_table . ".supplier_id",
             "guest_phone" => $sub_tasks_table . ".guest_phone",
@@ -837,14 +840,14 @@ $cars_type_table = $this->db->prefixTable('cars_type');
             "created_date" => $tasks_table . ".created_date",
             "client_name" => $tasks_table . ".client_id",
             "is_closed" => $tasks_table . ".is_closed",
-            
+
             "created_by" => "assigned_to_user",
             "project" => $projects . ".title",
             "act_return_date" => $sub_tasks_table . ".act_return_date",
             "driver_id" => $sub_tasks_table . ".driver_id",
-            "dres_number" => $sub_tasks_table .".dres_number",
-            "amount" => $sub_tasks_table .".amount",
-            "service_type" => $sub_tasks_table .".service_type",
+            "dres_number" => $sub_tasks_table . ".dres_number",
+            "amount" => $sub_tasks_table . ".amount",
+            "service_type" => $sub_tasks_table . ".service_type",
             "rec_inv_status" => $sub_tasks_table . ".rec_inv_status",
         );
 
@@ -866,22 +869,19 @@ $cars_type_table = $this->db->prefixTable('cars_type');
                 //get sub tasks of this task
                 $search_by = substr($search_by, 1);
                 $where .= " AND ($sub_tasks_table.id='$search_by' OR $sub_tasks_table.sub_task_id='$search_by')";
-            
-            }else  if (strpos($search_by, '*') !== false) {
+            } else  if (strpos($search_by, '*') !== false) {
                 //get sub tasks of this task
                 $search_by = substr($search_by, 1);
-                $where .= $mang=="reserv"?" AND ($sub_tasks_table.out_date LIKE '%$search_by%' ESCAPE '!')":" AND ($sub_tasks_table.act_out_date LIKE '%$search_by%' ESCAPE '!')";
-                
-                }else  if (strpos($search_by, '!') !== false) {
+                $where .= $mang == "reserv" ? " AND ($sub_tasks_table.out_date LIKE '%$search_by%' ESCAPE '!')" : " AND ($sub_tasks_table.act_out_date LIKE '%$search_by%' ESCAPE '!')";
+            } else  if (strpos($search_by, '!') !== false) {
                 //get sub tasks of this task
                 $search_by = substr($search_by, 1);
-                $where .= $mang=="reserv"?" AND ($sub_tasks_table.tmp_return_date LIKE '%$search_by%' ESCAPE '!')":" AND ($sub_tasks_table.act_return_date LIKE '%$search_by%' ESCAPE '!')";
-
+                $where .= $mang == "reserv" ? " AND ($sub_tasks_table.tmp_return_date LIKE '%$search_by%' ESCAPE '!')" : " AND ($sub_tasks_table.act_return_date LIKE '%$search_by%' ESCAPE '!')";
             } else {
                 $where .= " AND (";
                 $where .= " $sub_tasks_table.id LIKE '%$search_by%' ESCAPE '!' ";
                 $where .= " OR $sub_tasks_table.sub_task_id LIKE '%$search_by%' ESCAPE '!' ";
-                if($mang=="reserv" || $is_admin=="yes"){
+                if ($mang == "reserv" || $is_admin == "yes") {
                     $where .= " OR $sub_tasks_table.guest_nm LIKE '%$search_by%' ESCAPE '!' ";
                     $where .= " OR $sub_tasks_table.guest_phone LIKE '%$search_by%' ESCAPE '!' ";
                     $where .= " OR $drivers.driver_nm LIKE '%$search_by%' ESCAPE '!' ";
@@ -897,9 +897,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
                     $where .= " OR $sub_tasks_table.out_date LIKE '%$search_by' ESCAPE '!' ";
                     $where .= " OR $sub_tasks_table.tmp_return_date LIKE '%$search_by' ESCAPE '!' ";
                     $where .= " OR $sub_tasks_table.note LIKE '%$search_by%' ESCAPE '!' ";
-
                 }
-                if($mang=="supply" || $is_admin=="yes"){
+                if ($mang == "supply" || $is_admin == "yes") {
                     $where .= " OR $sub_tasks_table.guest_nm LIKE '%$search_by%' ESCAPE '!' ";
                     $where .= " OR $suppliers.name LIKE '%$search_by%' ESCAPE '!' ";
                     $where .= " OR $sub_tasks_table.car_status LIKE '%$search_by%' ESCAPE '!' ";
@@ -912,9 +911,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
                     $where .= " OR $sub_tasks_table.act_out_date LIKE '%$search_by' ESCAPE '!' ";
                     $where .= " OR $sub_tasks_table.act_return_date LIKE '%$search_by' ESCAPE '!' ";
                     $where .= " OR $sub_tasks_table.note_2 LIKE '%$search_by%' ESCAPE '!' ";
-
                 }
-                
+
                 $where .= $this->get_custom_field_search_query($sub_tasks_table, "sub_tasks", $search_by);
                 $where .= " )";
             }
@@ -952,7 +950,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $join_custom_fieds 
         WHERE $tasks_table.deleted=0  $where and ($sub_tasks_table.deleted=0 OR $sub_tasks_table.deleted IS NULL)  $custom_fields_where 
         $order $limit_offset";
-        
+
         $raw_query = $this->db->query($sql);
 
         $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
@@ -969,7 +967,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
     }
 
 
-    private function make_quick_filter_query($filter, $tasks_table) {
+    private function make_quick_filter_query($filter, $tasks_table)
+    {
         $project_comments_table = $this->db->prefixTable("project_comments");
         $query = "";
 
@@ -1006,7 +1005,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $query;
     }
 
-    function get_kanban_details($options = array()) {
+    function get_kanban_details($options = array())
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $users_table = $this->db->prefixTable('users');
         $projects = $this->db->prefixTable('projects');
@@ -1057,11 +1057,11 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $selected_year = $this->_get_clean_value($options, "selected_year");
         $ci = new \App\Controllers\Security_Controller(false);
         $this_year = $ci->session->get('selected_year');
-        if($this_year!=1 && $selected_year){
+        if ($this_year != 1 && $selected_year) {
             $where .= " AND YEAR($tasks_table.created_date)=$this_year";
         }
 
-        
+
         $assigned_to = $this->_get_clean_value($options, "assigned_to");
         if ($assigned_to) {
             $where .= " AND $tasks_table.created_by=$assigned_to";
@@ -1082,8 +1082,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
             $where .= " AND ($tasks_table.created_by=$show_assigned_tasks_only_user_id OR FIND_IN_SET('$show_assigned_tasks_only_user_id', $tasks_table.collaborators))";
         }
 
-        
-        
+
+
 
         $search = get_array_value($options, "search");
 
@@ -1147,7 +1147,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql);
     }
 
-    function count_my_open_tasks($user_id) {
+    function count_my_open_tasks($user_id)
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $projects_table = $this->db->prefixTable('projects');
         $sql = "SELECT COUNT($tasks_table.id) AS totals
@@ -1162,7 +1163,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql)->getRow()->totals;
     }
 
-    function get_label_suggestions($project_id) {
+    function get_label_suggestions($project_id)
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $sql = "SELECT GROUP_CONCAT(labels) as label_groups
         FROM $tasks_table
@@ -1170,11 +1172,12 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql)->getRow()->label_groups;
     }
 
-    function get_my_projects_dropdown_list($user_id = 0,$client_id = 0) {
+    function get_my_projects_dropdown_list($user_id = 0, $client_id = 0)
+    {
         $projects_table = $this->db->prefixTable('projects');
         $clients = $this->db->prefixTable('clients');
 
-         $where="";
+        $where = "";
         if ($client_id) {
             $where .= " AND $projects_table.client_id=$client_id";
         }
@@ -1186,11 +1189,12 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         GROUP BY $projects_table.id";
         return $this->db->query($sql);
     }
-    function get_my_projects_dropdown_list2($user_id = 0,$client_id = 0) {
+    function get_my_projects_dropdown_list2($user_id = 0, $client_id = 0)
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $projects_table = $this->db->prefixTable('projects');
 
-         $where="";
+        $where = "";
         if ($client_id) {
             $where .= " AND $projects_table.client_id=$client_id";
         }
@@ -1203,7 +1207,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql);
     }
 
-    function get_task_statistics2($options = array()) {
+    function get_task_statistics2($options = array())
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $users_table = $this->db->prefixTable('users');
         $projects = $this->db->prefixTable('projects');
@@ -1215,7 +1220,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         LEFT JOIN $projects ON $tasks_table.project_id=$projects.id 
         
         WHERE $tasks_table.deleted=0 AND $tasks_table.project_id=$project_id ";
-        
+
         $raw_query = $this->db->query($sql);
 
         $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
@@ -1229,11 +1234,11 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         } else {
             return $raw_query;
         }
-
     }
 
 
-    function count_total_info($options = array()) {
+    function count_total_info($options = array())
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $sub_tasks_table =  $this->db->prefixTable('sub_tasks');
 
@@ -1241,10 +1246,10 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $selected_year = $this->_get_clean_value($options, "selected_year");
         $ci = new \App\Controllers\Security_Controller(false);
         $this_year = $ci->session->get('selected_year');
-        if($this_year!=1 && $selected_year){
+        if ($this_year != 1 && $selected_year) {
             $where .= "  YEAR($tasks_table.created_date)=$this_year";
         }
-      
+
         $no_invoice = $this->_get_clean_value($options, "no_invoice");
         if ($no_invoice) {
             $where .= " AND $tasks_table.invoice_number='' OR $tasks_table.invoice_number IS NULL";
@@ -1262,19 +1267,19 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $no_project = $this->_get_clean_value($options, "no_project");
         if ($no_project) {
             $where .= " AND $tasks_table.project_id=0 OR $tasks_table.project_id IS NULL";
-        } 
+        }
         $tasks_deleted = $this->_get_clean_value($options, "tasks_deleted");
         if ($tasks_deleted) {
             $where .= " AND $tasks_table.deleted=1";
-         }
+        }
         $tasks_unpaid_driver = $this->_get_clean_value($options, "tasks_unpaid_driver");
         if ($tasks_unpaid_driver) {
             $sub_tasks_query = "SELECT pnt_task_id FROM $sub_tasks_table where ($sub_tasks_table.car_expens_stmnt IS NULL OR $sub_tasks_table.car_expens_stmnt = '') AND $sub_tasks_table.deleted = 0 And $sub_tasks_table.service_type = 'with_driver'";
-            $where .= " AND id IN ($sub_tasks_query)";         
+            $where .= " AND id IN ($sub_tasks_query)";
         }
-        
 
-        
+
+
 
         $sql = "SELECT COUNT($tasks_table.id) AS total
         FROM $tasks_table 
@@ -1282,7 +1287,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql)->getRow()->total;
     }
 
-    function get_task_statistics($options = array()) {
+    function get_task_statistics($options = array())
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $task_status_table = $this->db->prefixTable('task_status');
         $task_priority_table = $this->db->prefixTable('task_priority');
@@ -1291,7 +1297,6 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         try {
             $this->db->query("SET sql_mode = ''");
         } catch (\Exception $e) {
-            
         }
         $where = "";
 
@@ -1307,7 +1312,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $selected_year = $this->_get_clean_value($options, "selected_year");
         $ci = new \App\Controllers\Security_Controller(false);
         $this_year = $ci->session->get('selected_year');
-        if($this_year!=1 && $selected_year){
+        if ($this_year != 1 && $selected_year) {
             $where .= " AND YEAR($tasks_table.created_date)=$this_year";
         }
 
@@ -1330,7 +1335,7 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         WHERE $tasks_table.deleted=0 $where
         GROUP BY $tasks_table.is_closed";
 
-       
+
 
         $info = new \stdClass();
         $info->task_statuses = $this->db->query($task_statuses)->getResult();
@@ -1338,7 +1343,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $info;
     }
 
-    function set_task_comments_as_read($task_id, $user_id = 0) {
+    function set_task_comments_as_read($task_id, $user_id = 0)
+    {
         $notifications_table = $this->db->prefixTable('notifications');
 
         $sql = "UPDATE $notifications_table SET $notifications_table.read_by = CONCAT($notifications_table.read_by,',',$user_id)
@@ -1346,7 +1352,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql);
     }
 
-    function save_reminder_date(&$data = array(), $id = 0) {
+    function save_reminder_date(&$data = array(), $id = 0)
+    {
         if ($id) {
             $where = array("id" => $id);
             $this->update_where($data, $where);
@@ -1354,7 +1361,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
     }
 
     //get the recurring tasks which are ready to renew as on a given date
-    function get_renewable_tasks($date) {
+    function get_renewable_tasks($date)
+    {
         $tasks_table = $this->db->prefixTable('tasks');
 
         $sql = "SELECT * FROM $tasks_table
@@ -1365,7 +1373,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql);
     }
 
-    function get_all_dependency_for_this_task($task_id, $type) {
+    function get_all_dependency_for_this_task($task_id, $type)
+    {
         $tasks_table = $this->db->prefixTable('tasks');
 
         $where = "";
@@ -1380,7 +1389,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql)->getRow()->dependency_task_ids;
     }
 
-    function update_custom_data(&$data = array(), $id = 0) {
+    function update_custom_data(&$data = array(), $id = 0)
+    {
         if ($id) {
             $where = array("id" => $id);
             $this->update_where($data, $where);
@@ -1389,14 +1399,15 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         }
     }
 
-    function get_search_suggestion($search = "", $options = array()) {
+    function get_search_suggestion($search = "", $options = array())
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $projects = $this->db->prefixTable('projects');
-        
+
         $clients = $this->db->prefixTable('clients');
         $where = "";
 
-       
+
 
         if ($search) {
             $search = $this->db->escapeLikeString($search);
@@ -1415,7 +1426,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql);
     }
 
-    function get_all_tasks_where_have_dependency($project_id) {
+    function get_all_tasks_where_have_dependency($project_id)
+    {
         $tasks_table = $this->db->prefixTable('tasks');
 
         $sql = "SELECT $tasks_table.id, $tasks_table.blocked_by, $tasks_table.blocking
@@ -1425,19 +1437,21 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql);
     }
 
-    function save_gantt_task_date($data, $task_id) {
+    function save_gantt_task_date($data, $task_id)
+    {
         parent::disable_log_activity();
         return $this->ci_save($data, $task_id);
     }
 
-    function count_sub_task_status($options = array()) {
+    function count_sub_task_status($options = array())
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $sub_tasks_table = $this->db->prefixTable('sub_tasks');
 
         $where = "";
         $mang = $this->_get_clean_value($options, "is_reserv_mang");
-        
-        $supplier_status=$mang ? " (CASE
+
+        $supplier_status = $mang ? " (CASE
             WHEN $sub_tasks_table.status_id =5 THEN 5
             WHEN ((($sub_tasks_table.out_date='0000-00-00' OR $sub_tasks_table.out_date is NULL OR $sub_tasks_table.out_date!='0000-00-00' OR $sub_tasks_table.out_date is NOT NULL)
             OR ($sub_tasks_table.exp_out_time='00:00:01' OR $sub_tasks_table.exp_out_time is NULL OR $sub_tasks_table.exp_out_time!='00:00:01' OR $sub_tasks_table.exp_out_time is NOT NULL)) 
@@ -1504,12 +1518,11 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $selected_year = $this->_get_clean_value($options, "selected_year");
         if ($selected_year) {
             $where .= " AND YEAR($sub_tasks_table.created_at)=$selected_year";
-        }else{
+        } else {
             $this_year = date("Y");
             $where .= " AND YEAR($sub_tasks_table.created_at)=$this_year";
-            
         }
-       /* $supplier_id = $this->_get_clean_value($options, "supplier_id");
+        /* $supplier_id = $this->_get_clean_value($options, "supplier_id");
         if ($supplier_id) {
             $where .= " AND $tasks_table.supplier_id=$supplier_id";
         }*/
@@ -1520,7 +1533,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         return $this->db->query($sql)->getRow()->total;
     }
 
-    function count_supplier_tasks($supplier_id) {
+    function count_supplier_tasks($supplier_id)
+    {
         $tasks_table = $this->db->prefixTable('tasks');
 
         $sql = "SELECT COUNT($tasks_table.id) AS total
@@ -1537,10 +1551,8 @@ $cars_type_table = $this->db->prefixTable('cars_type');
             if ($task_id) {
 
                 $query = "SELECT * FROM tasks WHERE invoice_number = '$invoice_number' and id !=$task_id limit 1";
-
             } else {
                 $query = "SELECT * FROM tasks WHERE invoice_number = '$invoice_number' limit 1";
-
             }
         }
         return $this->db->query($query)->getResult();
@@ -1553,21 +1565,21 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         if ($task_id) {
             // $query = "SELECT * FROM $tasks_table WHERE pnt_task_id = $task_id and status_id != 4 limit 1";
             $query = "SELECT * FROM $tasks_table WHERE pnt_task_id = $task_id AND rec_inv_status != 'rec_inv' limit 1";
-
         }
 
         return $this->db->query($query)->getResult();
     }
 
-    function delete_task_and_sub_items($task_id) {
+    function delete_task_and_sub_items($task_id)
+    {
         $tasks_table = $this->db->prefixTable('tasks');
         $project_comments_table = $this->db->prefixTable("project_comments");
         $checklist_items_table = $this->db->prefixTable("checklist_items");
         $sub_tasks_table = $this->db->prefixTable('sub_tasks');
 
         //get task comment files info to delete the files from directory 
-       
-       
+
+
         //delete task
         $delete_task_sql = "UPDATE $tasks_table SET $tasks_table.deleted=1 WHERE $tasks_table.id=$task_id; ";
         $this->db->query($delete_task_sql);
@@ -1577,11 +1589,10 @@ $cars_type_table = $this->db->prefixTable('cars_type');
         $this->db->query($delete_checklists_sql);
 
         //delete the task comment files from directory
-       
 
-        
+
+
 
         return true;
     }
-
 }
